@@ -1,0 +1,19 @@
+namespace wg_pad_library {
+    namespace Log {
+        public enum LogInfoType {
+            INFO,
+            WARNING,
+            ERROR
+        }
+      
+        public interface ILog {
+            void Print(string message, LogInfoType logType);
+        }
+
+        public class LogIntoConsole : ILog {
+            public void Print(string message, LogInfoType logType) {
+                Console.WriteLine(message);
+            }
+        }
+    }
+}
