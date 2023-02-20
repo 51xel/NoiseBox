@@ -1,7 +1,7 @@
 ﻿using NAudio.Wave;
-using wg_pad_library.Log;
+using NoiseBox.Log;
 
-namespace wg_pad_library {
+namespace NoiseBox {
     public class AudioStream {
         private WaveOutEvent _outputDevice;
         private ILog _log;

@@ -6,4 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Reference Include="NAudio">
+      <HintPath>C:\Users\pixel\source\repos\51xel\wg_pad\wg_pad_library\NAudio.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

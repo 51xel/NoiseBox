@@ -1,4 +1,4 @@
-namespace wg_pad_library {
+namespace NoiseBox {
     namespace Log {
         public enum LogInfoType {
             INFO,

@@ -1,6 +1,6 @@
 ﻿using NAudio.Wave;
 
-namespace wg_pad_library {
+namespace NoiseBox {
     public class DeviceControll {
         public static int GetDeviceId(string nameDevice) {
             if (nameDevice == null || String.IsNullOrWhiteSpace(nameDevice)) {
