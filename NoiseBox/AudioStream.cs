@@ -5,19 +5,65 @@ namespace NoiseBox {
     public class AudioStream {
         private WaveOutEvent _outputDevice;
         private ILog _log;
+        private AudioFileReader _audioFile;
+
+        public double CurrentTrackLength {
+            get {
+                if (_audioFile != null) {
+                    return _audioFile.Length / _audioFile.WaveFormat.AverageBytesPerSecond;
+                }
+                else {
+                    return 0;
+                }
+            }
+        }
+
+        public double CurrentTrackPosition {
+            get {
+                if (_audioFile != null) {
+                    return _audioFile.Position / _audioFile.WaveFormat.AverageBytesPerSecond;
+                }
+                else {
+                    return 0;
+                }
+            }
+            set {
+                if (_audioFile != null) {
+                    long newPos = (long)(_audioFile.WaveFormat.AverageBytesPerSecond * value); // value in seconds
+                    if ((newPos % _audioFile.WaveFormat.BlockAlign) != 0) {
+                        newPos -= newPos % _audioFile.WaveFormat.BlockAlign;
+                    }
+
+                    newPos = Math.Max(0, Math.Min(_audioFile.Length, newPos));
+                    
+                    _audioFile.Position = newPos;
+                }
+            }
+        }
+
+        public void Seek(double offset) {
+            CurrentTrackPosition += offset;
+        }
 
         public string PathToMusic { get; set; }
 
         public float Volume {
             get {
-                return _outputDevice.Volume;
+                return _audioFile.Volume;
             }
             set {
-                if (value < 0 || value > 100) {
-                    _log.Print("[ERROR][AudioStream] Volume < 0 or > 100", LogInfoType.ERROR);
+                if (value < 0 || value > 1) {
+                    _log.Print("[ERROR][AudioStream] Volume < 0.0 or > 1.0", LogInfoType.ERROR);
+                    if (value < 0) {
+                        _audioFile.Volume = 0;
+                    }
+                    else {
+                        _audioFile.Volume = 1;
+                    }
                 }
-
-                _outputDevice.Volume = value;
+                else {
+                    _audioFile.Volume = value;
+                }
             }
         }
 
@@ -53,16 +99,15 @@ namespace NoiseBox {
                     _outputDevice.Play();
                 }
                 else {
-                    using (var audioFile = new AudioFileReader(PathToMusic)) {
-                        _outputDevice.Init(audioFile);
-                        _outputDevice.Play();
+                    _audioFile = new AudioFileReader(PathToMusic);
+                    _outputDevice.Init(_audioFile);
+                    _outputDevice.Play();
 
-                        //TEMPORARY while for test
-                        while (IsPlaying) {
-                            Thread.Sleep(1000);
-                        }
-                        //========================
-                    }
+                    //TEMPORARY while for test
+                    //while (IsPlaying) {
+                    //    Thread.Sleep(1000);
+                    //}
+                    //========================
                 }
             }
         }
@@ -84,6 +129,12 @@ namespace NoiseBox {
         public bool IsPaused {
             get {
                 return _outputDevice.PlaybackState == PlaybackState.Paused;
+            }
+        }
+
+        public bool IsStopped {
+            get {
+                return _outputDevice.PlaybackState == PlaybackState.Stopped;
             }
         }
     }
