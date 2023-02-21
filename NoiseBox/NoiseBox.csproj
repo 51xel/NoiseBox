@@ -8,14 +8,12 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="taglib-sharp-netstandard2.0" Version="2.1.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="NAudio">
       <HintPath>C:\Users\pixel\source\repos\51xel\wg_pad\wg_pad_library\NAudio.dll</HintPath>
-    </Reference>
-    <Reference Include="taglib-sharp">
-      <HintPath>taglib-sharp.dll</HintPath>
     </Reference>
   </ItemGroup>
 
