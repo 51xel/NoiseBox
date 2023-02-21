@@ -4,8 +4,8 @@ using NoiseBox.Log;
 namespace NoiseBox {
     public class AudioStream {
         private WaveOutEvent _outputDevice;
-        private ILog _log;
         private AudioFileReader _audioFile;
+        private ILog _log;
 
         public double CurrentTrackLength {
             get {
@@ -30,6 +30,7 @@ namespace NoiseBox {
             set {
                 if (_audioFile != null) {
                     long newPos = (long)(_audioFile.WaveFormat.AverageBytesPerSecond * value); // value in seconds
+
                     if ((newPos % _audioFile.WaveFormat.BlockAlign) != 0) {
                         newPos -= newPos % _audioFile.WaveFormat.BlockAlign;
                     }
@@ -52,8 +53,9 @@ namespace NoiseBox {
                 return _audioFile.Volume;
             }
             set {
-                if (value < 0 || value > 1) {
+                if (value < 0f || value > 1f) {
                     _log.Print("[ERROR][AudioStream] Volume < 0.0 or > 1.0", LogInfoType.ERROR);
+
                     if (value < 0) {
                         _audioFile.Volume = 0;
                     }
@@ -85,6 +87,8 @@ namespace NoiseBox {
             _outputDevice = new WaveOutEvent() { 
                 DeviceNumber = DeviceControll.GetDeviceId(nameDevice)
             };
+
+            _log.Print("[INFO][AudioStream] Device has been selected", LogInfoType.INFO);
         }
 
         public void Play() {
@@ -95,6 +99,8 @@ namespace NoiseBox {
                 _log.Print("[WARNING][AudioStream] File does not exist", LogInfoType.WARNING);
             }
             else {
+                _log.Print("[INFO][AudioStream] Playing to " + DeviceControll.GetNameById(_outputDevice.DeviceNumber), LogInfoType.INFO);
+
                 if (IsPaused) {
                     _outputDevice.Play();
                 }
@@ -110,13 +116,18 @@ namespace NoiseBox {
                     //========================
                 }
             }
+            
         }
 
         public void Stop() {
+            _log.Print("[INFO][AudioStream] Stopped " + DeviceControll.GetNameById(_outputDevice.DeviceNumber), LogInfoType.INFO);
+
             _outputDevice.Stop();
         }
 
         public void Pause() {
+            _log.Print("[INFO][AudioStream] Paused " + DeviceControll.GetNameById(_outputDevice.DeviceNumber), LogInfoType.INFO);
+
             _outputDevice.Pause();
         }
 

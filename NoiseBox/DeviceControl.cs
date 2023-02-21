@@ -25,5 +25,9 @@ namespace NoiseBox {
 
             return list;
         }
+
+        public static string GetNameById(int id) {
+            return WaveOut.GetCapabilities(id).ProductName;
+        }
     }
 }
