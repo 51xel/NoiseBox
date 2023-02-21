@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace NoiseBox {
     namespace Log {
         public enum LogInfoType {
@@ -17,8 +19,34 @@ namespace NoiseBox {
         }
 
         public class LogIntoFile : ILog {
+            private string _pathToFile;
+
+            public LogIntoFile(string path = "./logs.txt") {
+                if (path == null || String.IsNullOrWhiteSpace(path)) {
+                    throw new ArgumentNullException("Path can`t be null");
+                }
+
+                _pathToFile = path;
+
+                if (!File.Exists(_pathToFile)) {
+                    byte[] buffer = Encoding.Default.GetBytes("===Created " + DateTime.Now + "\n");
+
+                    var tempFile = File.Create(_pathToFile);
+                    tempFile.WriteAsync(buffer, 0, buffer.Length);
+
+                    tempFile.Close();
+                }
+                else {
+                    using (StreamWriter writer = new StreamWriter(_pathToFile, true)) {
+                        writer.WriteLine("===New Starting [" + DateTime.Now + "]\n");
+                    }
+                }
+            }
+
             public void Print(string message, LogInfoType logType) {
-                //Console.WriteLine(message);
+                using (StreamWriter writer = new StreamWriter(_pathToFile, true)) {
+                    writer.WriteLine($"[{DateTime.Now}]" + message);
+                }
             }
         }
     }
