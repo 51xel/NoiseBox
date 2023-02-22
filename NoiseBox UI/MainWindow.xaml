@@ -3,8 +3,80 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:NoiseBox_UI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid/>
+        Title="NoiseBox" Height="600" Width="800"
+    xmlns:converters="clr-namespace:MaterialDesignThemes.Wpf.Converters;assembly=MaterialDesignThemes.Wpf"
+    xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf">
+    <Window.Resources>
+        <Style x:Key="PlayPauseButton" TargetType="{x:Type Button}">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid x:Name="ButtonGrid">
+                            <Border x:Name="border" CornerRadius="100" BorderBrush="LightGray" BorderThickness="3">
+                                <Border.Background>
+                                    <SolidColorBrush Color="Gray"/>
+                                </Border.Background>
+                                <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          TextElement.FontWeight="Bold">
+                                </ContentPresenter>
+                            </Border>
+                            <Grid.RenderTransform>
+                                <ScaleTransform />
+                            </Grid.RenderTransform>
+
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" TargetName="border">
+                                    <Setter.Value>
+                                        <SolidColorBrush Color="LightGray"/>
+                                        <!--TODO image-->
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Effect" TargetName="border" >
+                                    <Setter.Value>
+                                        <DropShadowEffect BlurRadius="10" ShadowDepth="0" Color="LightGray"/>
+                                    </Setter.Value>
+                                </Setter>
+                                
+                                <Setter Property="RenderTransformOrigin" Value="0.5, 0.5"/>
+                                <Setter Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="1.05" ScaleY="1.05"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            
+                            <!--<Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" TargetName="grid" Value="0.25"/>
+                            </Trigger>-->
+
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+        </Style>
+    </Window.Resources>
+    <Grid Background="#4682B4">
+        <Border MinWidth="400" MaxWidth="800" Margin="5" Padding="5" Background="White" VerticalAlignment="Bottom" CornerRadius="20">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="5" Color="#D49455" ShadowDepth="0"/>
+            </Border.Effect>
+            <StackPanel>
+                <Button x:Name="myButton" Style="{DynamicResource PlayPauseButton}" HorizontalAlignment="Left" Width="65" Height="65"/>
+            </StackPanel>
+        </Border>
+    </Grid>
 </Window>
