@@ -47,9 +47,13 @@ namespace NoiseBox {
 
                 _songs = ((JArray)data["songs"]).ToObject<List<Song>>();
                 _playlists = ((JArray)data["playlists"]).ToObject<List<Playlist>>();
+
+                _log.Print("[INFO][MusicLibrary] Data loaded from json", LogInfoType.INFO);
             }
             else {
                 File.Create(_jsonFilePath).Close();
+
+                _log.Print("[INFO][MusicLibrary] Empty json file created", LogInfoType.INFO);
             }
         }
         public void SaveToJson() {
@@ -62,6 +66,8 @@ namespace NoiseBox {
             var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
             string json = JsonConvert.SerializeObject(data, Formatting.Indented, settings);
             File.WriteAllText(_jsonFilePath, json);
+
+            _log.Print("[INFO][MusicLibrary] Data saved to json", LogInfoType.INFO);
         }
         public void AddSong(Song song) {
             if (File.Exists(song.Path) && Path.GetExtension(song.Path).Equals(".mp3", StringComparison.OrdinalIgnoreCase)) {
@@ -73,6 +79,9 @@ namespace NoiseBox {
                 song.Duration = tagFile.Properties.Duration;
 
                 _songs.Add(song);
+
+                _log.Print($"[INFO][MusicLibrary] New song with id {song.Id} added", LogInfoType.INFO);
+
                 SaveToJson();
             }
         }
@@ -84,18 +93,25 @@ namespace NoiseBox {
                 playlist.SongIds.Remove(songId);
             }
 
+            _log.Print($"[INFO][MusicLibrary] Song with id {songId} removed", LogInfoType.INFO);
+
             SaveToJson();
         }
 
         public void AddPlaylist(Playlist playlist) {
             if (_playlists.Find(p => p.Name == playlist.Name) == null) {
                 _playlists.Add(playlist);
+
+                _log.Print($"[INFO][MusicLibrary] New playlist \'{playlist.Name}\' added", LogInfoType.INFO);
+
                 SaveToJson();
             } 
         }
 
         public void RemovePlaylist(string playlistName) {
             _playlists.RemoveAll(p => p.Name == playlistName);
+
+            _log.Print($"[INFO][MusicLibrary] Playlist \'{playlistName}\' removed", LogInfoType.INFO);
 
             SaveToJson();
         }
@@ -107,6 +123,9 @@ namespace NoiseBox {
                 // Check if the song is already in the playlist
                 if (!playlist.SongIds.Contains(songId)) {
                     playlist.SongIds.Add(songId);
+
+                    _log.Print($"[INFO][MusicLibrary] Song with id {songId} added to playlist \'{playlistName}\'", LogInfoType.INFO);
+
                     SaveToJson();
                 }
             }
@@ -117,6 +136,9 @@ namespace NoiseBox {
 
             if (playlist != null) {
                 playlist.SongIds.Remove(songId);
+
+                _log.Print($"[INFO][MusicLibrary] Song with id {songId} removed from playlist \'{playlistName}\'", LogInfoType.INFO);
+
                 SaveToJson();
             }
         }
@@ -128,6 +150,9 @@ namespace NoiseBox {
             if (from != null && to != null) {
                 from.SongIds.Remove(songId);
                 to.SongIds.Add(songId);
+
+                _log.Print($"[INFO][MusicLibrary] Song with id {songId} moved from \'{fromPlaylist}\' to \'{toPlaylist}\'", LogInfoType.INFO);
+
                 SaveToJson();
             }
         }
