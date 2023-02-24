@@ -27,15 +27,9 @@ namespace NoiseBox {
         private const string _jsonFilePath = "music_library.json";
         private List<Song> _songs = new List<Song>();
         private List<Playlist> _playlists = new List<Playlist>();
-        private ILog _log;
+        private ILog _log = ILogSettings.SelectedLog;
 
-        public MusicLibrary(ILog log) {
-            if (log == null) {
-                throw new ArgumentNullException("Log can`t be null");
-            }
-
-            _log = log;
-
+        public MusicLibrary() {
             LoadFromJson();
         }
 

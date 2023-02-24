@@ -8,6 +8,26 @@ namespace NoiseBox {
             ERROR
         }
       
+        public class ILogSettings {
+            private static ILog _selectedLog;
+            public static ILog SelectedLog {
+                get {
+                    return _selectedLog;
+                }
+                set { 
+                    if (value == null) {
+                        throw new ArgumentNullException("Log can`t be null");
+                    }
+
+                    _selectedLog = value;
+                } 
+            }
+
+            static ILogSettings() {
+                SelectedLog = new LogIntoFile();
+            }
+        }
+
         public interface ILog {
             void Print(string message, LogInfoType logType);
         }

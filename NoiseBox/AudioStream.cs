@@ -5,7 +5,7 @@ namespace NoiseBox {
     public class AudioStream {
         private WaveOutEvent _outputDevice;
         private AudioFileReader _audioFile;
-        private ILog _log;
+        private ILog _log = ILogSettings.SelectedLog;
 
         public double CurrentTrackLength {
             get {
@@ -69,13 +69,7 @@ namespace NoiseBox {
             }
         }
 
-        public AudioStream(ILog log, string nameDevice = "CABLE Input (VB-Audio Virtual C") {
-            if(log == null) {
-                throw new ArgumentNullException("Log can`t be null");
-            }
-
-            _log = log;
-
+        public AudioStream(string nameDevice = "CABLE Input (VB-Audio Virtual C") {
             SelectDevice(nameDevice);
         }
 
