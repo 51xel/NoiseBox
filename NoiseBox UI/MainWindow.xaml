@@ -7,6 +7,8 @@
         xmlns:local="clr-namespace:NoiseBox_UI"
         mc:Ignorable="d"
         Title="NoiseBox" Height="600" Width="800"
+        MinWidth="400"
+        MinHeight="300"
     xmlns:converters="clr-namespace:MaterialDesignThemes.Wpf.Converters;assembly=MaterialDesignThemes.Wpf"
     xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf">
     <Window.Resources>
@@ -19,9 +21,9 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
                         <Grid x:Name="ButtonGrid">
-                            <Border x:Name="border" CornerRadius="100" BorderBrush="LightGray" BorderThickness="3">
+                            <Border x:Name="border" CornerRadius="100">
                                 <Border.Background>
-                                    <SolidColorBrush Color="Gray"/>
+                                    <SolidColorBrush Color="White"/>
                                 </Border.Background>
                                 <ContentPresenter HorizontalAlignment="Center"
                                           VerticalAlignment="Center"
@@ -37,27 +39,29 @@
                             <Trigger Property="IsPressed" Value="True">
                                 <Setter Property="Background" TargetName="border">
                                     <Setter.Value>
-                                        <SolidColorBrush Color="LightGray"/>
+                                        <SolidColorBrush Opacity="0.8" Color="White"/>
                                         <!--TODO image-->
+                                    </Setter.Value>
+                                </Setter>
+                                
+                                
+                            </Trigger>
+
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <!--<Setter Property="Effect" TargetName="border" >
+                                    <Setter.Value>
+                                        <DropShadowEffect BlurRadius="10" ShadowDepth="0" Color="LightGray"/>
+                                    </Setter.Value>
+                                </Setter>-->
+
+                                <Setter Property="RenderTransformOrigin" Value="0.5, 0.5"/>
+                                <Setter Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="1.03" ScaleY="1.03"/>
                                     </Setter.Value>
                                 </Setter>
                             </Trigger>
 
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Effect" TargetName="border" >
-                                    <Setter.Value>
-                                        <DropShadowEffect BlurRadius="10" ShadowDepth="0" Color="LightGray"/>
-                                    </Setter.Value>
-                                </Setter>
-                                
-                                <Setter Property="RenderTransformOrigin" Value="0.5, 0.5"/>
-                                <Setter Property="RenderTransform">
-                                    <Setter.Value>
-                                        <ScaleTransform ScaleX="1.05" ScaleY="1.05"/>
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                            
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
@@ -65,14 +69,14 @@
 
         </Style>
     </Window.Resources>
-    <Grid Background="#4682B4">
-        <Border MinWidth="400" MaxWidth="800" Margin="5" Padding="5" Background="White" VerticalAlignment="Bottom" CornerRadius="20">
-            <Border.Effect>
-                <DropShadowEffect BlurRadius="5" Color="#D49455" ShadowDepth="0"/>
-            </Border.Effect>
-            <StackPanel>
-                <Button x:Name="myButton" Style="{DynamicResource PlayPauseButton}" HorizontalAlignment="Left" Width="65" Height="65"/>
-            </StackPanel>
+    <Grid Background="White">
+        <Border Padding="15" Background="#212121" VerticalAlignment="Bottom">
+            <Border VerticalAlignment="Center" HorizontalAlignment="Left" Width="200">
+                <StackPanel>
+                    <Button x:Name="myButton" Style="{DynamicResource PlayPauseButton}" Width="55" Height="55" HorizontalAlignment="Center">
+                    </Button>
+                </StackPanel>
+            </Border>
         </Border>
     </Grid>
 </Window>
