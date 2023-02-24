@@ -5,13 +5,94 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:NoiseBox_UI"
+        xmlns:converters="clr-namespace:MaterialDesignThemes.Wpf.Converters;assembly=MaterialDesignThemes.Wpf"
+        xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
         mc:Ignorable="d"
-        Title="NoiseBox" Height="600" Width="800"
+        Title="NoiseBox" Height="720" Width="1280"
         MinWidth="400"
         MinHeight="300"
-    xmlns:converters="clr-namespace:MaterialDesignThemes.Wpf.Converters;assembly=MaterialDesignThemes.Wpf"
-    xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf">
+        WindowStyle="None"
+        AllowsTransparency="True"
+        >
+    
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="35"/>
+    </WindowChrome.WindowChrome>
+    
     <Window.Resources>
+        <Style x:Key="MinimizeMaximizeButtons" TargetType="{x:Type Button}">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid x:Name="ButtonGrid">
+                            <Border x:Name="border">
+                                <Border.Background>
+                                    <SolidColorBrush Color="Transparent"/>
+                                </Border.Background>
+                                <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          TextElement.FontWeight="Bold">
+                                </ContentPresenter>
+                            </Border>
+                            
+                            
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" TargetName="border">
+                                    <Setter.Value>
+                                        <SolidColorBrush Opacity="0.1" Color="White"/>
+                                    </Setter.Value>
+                                </Setter>
+
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="CloseButton" TargetType="{x:Type Button}">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid x:Name="ButtonGrid">
+                            <Border x:Name="border">
+                                <Border.Background>
+                                    <SolidColorBrush Color="Transparent"/>
+                                </Border.Background>
+                                <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          TextElement.FontWeight="Bold">
+                                </ContentPresenter>
+                            </Border>
+                            <Image x:Name="Image" Source="/Images/Icons/close.png" Width="15" Height="15" Opacity="0.6"/>
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" TargetName="border">
+                                    <Setter.Value>
+                                        <SolidColorBrush Opacity="0.9" Color="Red"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="Image" Property="Image.Opacity" Value="1"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <Style x:Key="PlayPauseButton" TargetType="{x:Type Button}">
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -23,28 +104,27 @@
                         <Grid x:Name="ButtonGrid">
                             <Border x:Name="border" CornerRadius="100">
                                 <Border.Background>
-                                    <SolidColorBrush Color="White"/>
+                                    <SolidColorBrush Color="#EBEBEB"/>
                                 </Border.Background>
                                 <ContentPresenter HorizontalAlignment="Center"
                                           VerticalAlignment="Center"
                                           TextElement.FontWeight="Bold">
                                 </ContentPresenter>
                             </Border>
-                            <Grid.RenderTransform>
-                                <ScaleTransform />
-                            </Grid.RenderTransform>
 
+                            <Grid.RenderTransform>
+                                <ScaleTransform/>
+                            </Grid.RenderTransform>
                         </Grid>
+
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsPressed" Value="True">
                                 <Setter Property="Background" TargetName="border">
                                     <Setter.Value>
-                                        <SolidColorBrush Opacity="0.8" Color="White"/>
+                                        <SolidColorBrush Opacity="0.8" Color="#EBEBEB"/>
                                         <!--TODO image-->
                                     </Setter.Value>
                                 </Setter>
-                                
-                                
                             </Trigger>
 
                             <Trigger Property="IsMouseOver" Value="True">
@@ -61,7 +141,6 @@
                                     </Setter.Value>
                                 </Setter>
                             </Trigger>
-
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
@@ -69,11 +148,33 @@
 
         </Style>
     </Window.Resources>
-    <Grid Background="White">
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="#FF0A192F"/>
+                <GradientStop Color="Black" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <Grid VerticalAlignment="Top">
+            <StackPanel WindowChrome.IsHitTestVisibleInChrome="True" 
+                        VerticalAlignment="Center" 
+                        HorizontalAlignment="Right" 
+                        Orientation="Horizontal">
+
+                <Button Width="55" Height="25" Name="MinimizeButton" Style="{DynamicResource MinimizeMaximizeButtons}">
+                    
+                </Button>
+                <Button Width="55" Height="25" Name="MaximizeButton" Style="{DynamicResource MinimizeMaximizeButtons}"/>
+                <Button Width="55" Height="25" Name="CloseButton" Style="{DynamicResource CloseButton}"/>
+
+            </StackPanel>
+        </Grid>
+
         <Border Padding="15" Background="#212121" VerticalAlignment="Bottom">
             <Border VerticalAlignment="Center" HorizontalAlignment="Left" Width="200">
                 <StackPanel>
-                    <Button x:Name="myButton" Style="{DynamicResource PlayPauseButton}" Width="55" Height="55" HorizontalAlignment="Center">
+                    <Button x:Name="PlayPauseButton" Style="{DynamicResource PlayPauseButton}" Width="55" Height="55" HorizontalAlignment="Center">
                     </Button>
                 </StackPanel>
             </Border>
