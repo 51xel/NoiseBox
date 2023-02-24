@@ -25,15 +25,15 @@ namespace NoiseBox {
     }
     public class MusicLibrary {
         private const string _jsonFilePath = "music_library.json";
-        private List<Song> _songs = new List<Song>();
-        private List<Playlist> _playlists = new List<Playlist>();
-        private ILog _log = ILogSettings.SelectedLog;
+        private static List<Song> _songs = new List<Song>();
+        private static List<Playlist> _playlists = new List<Playlist>();
+        private static ILog _log = ILogSettings.SelectedLog;
 
-        public MusicLibrary() {
+        static MusicLibrary() {
             LoadFromJson();
         }
 
-        private void LoadFromJson() {
+        private static void LoadFromJson() {
             if (File.Exists(_jsonFilePath)) {
                 string json = File.ReadAllText(_jsonFilePath);
                 var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
@@ -50,7 +50,7 @@ namespace NoiseBox {
                 _log.Print("[INFO][MusicLibrary] Empty json file created", LogInfoType.INFO);
             }
         }
-        public void SaveToJson() {
+        private static void SaveToJson() {
             var data = new Dictionary<string, object>
             {
                 { "songs", JArray.FromObject(_songs) },
@@ -63,7 +63,7 @@ namespace NoiseBox {
 
             _log.Print("[INFO][MusicLibrary] Data saved to json", LogInfoType.INFO);
         }
-        public void AddSong(Song song) {
+        public static void AddSong(Song song) {
             if (File.Exists(song.Path) && Path.GetExtension(song.Path).Equals(".mp3", StringComparison.OrdinalIgnoreCase)) {
                 // Generate a unique ID for the song
                 song.Id = Guid.NewGuid().ToString();
@@ -80,7 +80,7 @@ namespace NoiseBox {
             }
         }
 
-        public void RemoveSong(string songId) {
+        public static void RemoveSong(string songId) {
             _songs.RemoveAll(s => s.Id == songId);
 
             foreach (var playlist in _playlists) {
@@ -92,7 +92,7 @@ namespace NoiseBox {
             SaveToJson();
         }
 
-        public void AddPlaylist(Playlist playlist) {
+        public static void AddPlaylist(Playlist playlist) {
             if (_playlists.Find(p => p.Name == playlist.Name) == null) {
                 _playlists.Add(playlist);
 
@@ -102,7 +102,7 @@ namespace NoiseBox {
             } 
         }
 
-        public void RemovePlaylist(string playlistName) {
+        public static void RemovePlaylist(string playlistName) {
             _playlists.RemoveAll(p => p.Name == playlistName);
 
             _log.Print($"[INFO][MusicLibrary] Playlist \'{playlistName}\' removed", LogInfoType.INFO);
@@ -110,7 +110,7 @@ namespace NoiseBox {
             SaveToJson();
         }
 
-        public void AddSongToPlaylist(string songId, string playlistName) {
+        public static void AddSongToPlaylist(string songId, string playlistName) {
             var playlist = _playlists.Find(p => p.Name == playlistName);
 
             if (playlist != null) {
@@ -125,7 +125,7 @@ namespace NoiseBox {
             }
         }
 
-        public void RemoveSongFromPlaylist(string songId, string playlistName) {
+        public static void RemoveSongFromPlaylist(string songId, string playlistName) {
             var playlist = _playlists.Find(p => p.Name == playlistName);
 
             if (playlist != null) {
@@ -137,7 +137,7 @@ namespace NoiseBox {
             }
         }
 
-        public void MoveSongToPlaylist(string songId, string fromPlaylist, string toPlaylist) {
+        public static void MoveSongToPlaylist(string songId, string fromPlaylist, string toPlaylist) {
             var from = _playlists.Find(p => p.Name == fromPlaylist);
             var to = _playlists.Find(p => p.Name == toPlaylist);
 
@@ -151,13 +151,13 @@ namespace NoiseBox {
             }
         }
 
-        public IEnumerable<Song> GetSongs() {
+        public static IEnumerable<Song> GetSongs() {
             return _songs;
         }
-        public IEnumerable<Playlist> GetPlaylists() {
+        public static IEnumerable<Playlist> GetPlaylists() {
             return _playlists;
         }
-        public List<Song> GetSongsFromPlaylist(string playlistName) {
+        public static List<Song> GetSongsFromPlaylist(string playlistName) {
             var playlist = _playlists.Find(p => p.Name == playlistName);
             var songsFromPlaylist = new List<Song>();
 
