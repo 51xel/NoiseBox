@@ -9,7 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Fonts\Montserrat.ttf" />
     <None Remove="Images\Icons\close.png" />
+    <None Remove="Images\Icons\maximize.png" />
+    <None Remove="Images\Icons\minimize.png" />
+    <None Remove="Images\Icons\restore.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,7 +25,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Fonts\Montserrat.ttf" />
     <Resource Include="Images\Icons\close.png" />
+    <Resource Include="Images\Icons\maximize.png" />
+    <Resource Include="Images\Icons\minimize.png" />
+    <Resource Include="Images\Icons\restore.png" />
   </ItemGroup>
 
 </Project>

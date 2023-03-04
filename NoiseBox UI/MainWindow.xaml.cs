@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using NoiseBox.Log;
 
 namespace NoiseBox_UI {
     public partial class MainWindow : Window {
@@ -127,9 +128,27 @@ namespace NoiseBox_UI {
                 HwndSource.FromHwnd(handle).AddHook(new HwndSourceHook(WindowProc));
             };
 
-            MinimizeButton.Click += (s, e) => WindowState = WindowState.Minimized;
-            MaximizeButton.Click += (s, e) => WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
-            CloseButton.Click += (s, e) => Close();
+            SizeControlWindowButtons.MinimizeButton.Click += (s, e) => WindowState = WindowState.Minimized;
+            SizeControlWindowButtons.MaximizeButton.Click += (s, e) => WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+            SizeControlWindowButtons.CloseButton.Click += (s, e) => Close();
+
+            BottomControlPanel.PlayPauseButton.Click += PlayPauseButton_Click;
+        }
+
+        private void WindowSizeChanged(object sender, SizeChangedEventArgs e) {
+            if (WindowState == WindowState.Maximized) {
+                Uri uri = new Uri("/Images/Icons/restore.png", UriKind.Relative);
+                ImageSource imgSource = new BitmapImage(uri);
+                SizeControlWindowButtons.MaximizeButtonImage.Source = imgSource;
+            }
+            else if (WindowState == WindowState.Normal) {
+                Uri uri = new Uri("/Images/Icons/maximize.png", UriKind.Relative);
+                ImageSource imgSource = new BitmapImage(uri);
+                SizeControlWindowButtons.MaximizeButtonImage.Source = imgSource;
+            }
+        }
+        private void PlayPauseButton_Click(object sender, RoutedEventArgs e) {
+            SongList.List.Items.Add("1");
         }
     }
 }
