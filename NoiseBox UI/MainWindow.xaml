@@ -9,32 +9,32 @@
         xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
         xmlns:userControls="clr-namespace:NoiseBox_UI.View.UserControls"
         mc:Ignorable="d"
-        Title="NoiseBox" Height="720" Width="1280"
         WindowStyle="None"
+        Title="NoiseBox" Height="720" Width="1280"
         AllowsTransparency="True"
         
-        SizeChanged="WindowSizeChanged"
-        >
+        SizeChanged="WindowSizeChanged">
 
     <WindowChrome.WindowChrome>
-        <WindowChrome CaptionHeight="35"/>
+        <WindowChrome CaptionHeight="25"/>
     </WindowChrome.WindowChrome>
 
     <Window.Resources>
-     
+
     </Window.Resources>
+    
     <Grid>
         <Grid.Background>
-            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
                 <GradientStop Color="#FF0A192F"/>
                 <GradientStop Color="Black" Offset="1"/>
             </LinearGradientBrush>
         </Grid.Background>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="99"/>
-            <RowDefinition/>
-            <RowDefinition Height="114"/>
+            <RowDefinition Height="80"/>
+            <RowDefinition MinHeight="200"/>
+            <RowDefinition Height="80"/>
         </Grid.RowDefinitions>
 
         <userControls:SizeControlWindowButtons x:Name="SizeControlWindowButtons" Grid.Row="0" Panel.ZIndex="1"/>
@@ -51,7 +51,7 @@
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="290"/>
-                <ColumnDefinition/>
+                <ColumnDefinition MinWidth="300"/>
                 <ColumnDefinition Width="120"/>
             </Grid.ColumnDefinitions>
 

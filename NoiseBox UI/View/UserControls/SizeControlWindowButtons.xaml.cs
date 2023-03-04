@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -19,25 +20,12 @@ namespace NoiseBox_UI.View.UserControls {
             InitializeComponent();
         }
 
-        private void MaximizeButtonOverMouseEnter(object sender, MouseEventArgs e) {
-            MaximizeButtonImage.Opacity = 1;
-        }
-        private void MaximizeButtonOverMouseLeave(object sender, MouseEventArgs e) {
-            MaximizeButtonImage.Opacity = 0.6;
+        private void ButtonMouseEnter(object sender, MouseEventArgs e) {
+            ((sender as Button).Content as Image).Opacity = 1;
         }
 
-        private void MinimizeButtonOverMouseEnter(object sender, MouseEventArgs e) {
-            MinimizeButtonImage.Opacity = 1;
-        }
-        private void MinimizeButtonOverMouseLeave(object sender, MouseEventArgs e) {
-            MinimizeButtonImage.Opacity = 0.6;
-        }
-
-        private void CloseButtonOverMouseEnter(object sender, MouseEventArgs e) {
-            CloseButtonImage.Opacity = 1;
-        }
-        private void CloseButtonOverMouseLeave(object sender, MouseEventArgs e) {
-            CloseButtonImage.Opacity = 0.6;
+        private void ButtonMouseLeave(object sender, MouseEventArgs e) {
+            ((sender as Button).Content as Image).Opacity = 0.6;
         }
     }
 }
