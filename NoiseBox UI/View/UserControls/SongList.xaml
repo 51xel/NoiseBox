@@ -9,18 +9,17 @@
     <UserControl.Resources>
         <Style TargetType="{x:Type ListView}">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="FontFamily" Value="/Fonts/#Montserrat"/>
             <Setter Property="OverridesDefaultStyle" Value="False"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Margin" Value="10"/>
         </Style>
 
+        <local:ToolTipConverter x:Key="TConvert"></local:ToolTipConverter>
         <Style TargetType="{x:Type ListViewItem}">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ListBoxItem">
-                        <Button Name="ElementRow"
+                        <Button Name="RowElement"
                                 Padding="0"
                                 HorizontalContentAlignment="Left"
                                 Background="Transparent"
@@ -36,7 +35,9 @@
 
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" TargetName="ElementRow">
+                                <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=Content, Converter={StaticResource TConvert} }"/>
+                                
+                                <Setter Property="Background" TargetName="RowElement">
                                     <Setter.Value>
                                         <SolidColorBrush Opacity="0.1" Color="White"/>
                                     </Setter.Value>
@@ -52,15 +53,16 @@
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="Foreground" Value="#BDBDBD" />
             <Setter Property="FontSize" Value="22" />
-            
+            <Setter Property="FontFamily" Value="/Fonts/#Montserrat"/>
+
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
-                        <TextBlock Name="NameColumn" Text="{TemplateBinding Content}" Width="{TemplateBinding Width}" TextAlignment="Left"/>
+                        <TextBlock Name="ColumnName" Text="{TemplateBinding Content}" TextAlignment="Left"/>
 
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" TargetName="NameColumn">
+                                <Setter Property="Background" TargetName="ColumnName">
                                     <Setter.Value>
                                         <SolidColorBrush Opacity="0.1" Color="White"/>
                                     </Setter.Value>
@@ -74,7 +76,7 @@
     </UserControl.Resources>
     <Grid>
 
-        <ListView Name="List" IsSynchronizedWithCurrentItem="False">
+        <ListView Name="List">
             <ListView.View>
                 <GridView AllowsColumnReorder="False">
                     <GridViewColumn Header="#" Width="40" DisplayMemberBinding="{Binding Id}"/>
