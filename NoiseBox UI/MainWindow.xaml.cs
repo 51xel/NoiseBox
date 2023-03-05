@@ -18,11 +18,30 @@ using NoiseBox.Log;
 
 namespace NoiseBox_UI {
     public partial class MainWindow : Window {
+
+        public double MainWindowMinHeight {
+            get {
+                var mainGridRows = (this.Content as Grid).RowDefinitions;
+                return mainGridRows[0].Height.Value +
+                       mainGridRows[1].MinHeight +
+                       mainGridRows[2].Height.Value;
+            }
+        }
+
+        public double MainWindowMinWidth {
+            get {
+                var mainGridCols = MainGridRow1.ColumnDefinitions;
+                return mainGridCols[0].Width.Value +
+                       mainGridCols[1].MinWidth +
+                       mainGridCols[2].Width.Value;
+            }
+        }
+
         private static IntPtr WindowProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled) {
             switch (msg) {
                 case 0x0024:
                     WmGetMinMaxInfo(hwnd, lParam);
-                    handled = true;
+                    handled = false;
                     break;
             }
             return (IntPtr)0;
@@ -121,6 +140,7 @@ namespace NoiseBox_UI {
 
         public MainWindow() {
             InitializeComponent();
+            this.DataContext = this;
 
             SourceInitialized += (s, e) =>
             {
