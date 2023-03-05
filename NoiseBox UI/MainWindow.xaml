@@ -55,7 +55,7 @@
                 <ColumnDefinition Width="120"/>
             </Grid.ColumnDefinitions>
 
-            <userControls:SongList x:Name="SongList" Grid.Column="1"/>
+            <userControls:SongList x:Name="SongsList" Grid.Column="1"/>
         </Grid>
 
         <userControls:BottomControlPanel x:Name="BottomControlPanel" Grid.Row="2"/>

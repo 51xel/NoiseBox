@@ -133,6 +133,8 @@ namespace NoiseBox_UI {
             SizeControlWindowButtons.CloseButton.Click += (s, e) => Close();
 
             BottomControlPanel.PlayPauseButton.Click += PlayPauseButton_Click;
+
+            SongsList.ClickRowElement += (s, e) => MessageBox.Show((((s as Button).Content as GridViewRowPresenter).Content as Song).Name);
         }
 
         private void WindowSizeChanged(object sender, SizeChangedEventArgs e) {
@@ -147,8 +149,20 @@ namespace NoiseBox_UI {
                 SizeControlWindowButtons.MaximizeButtonImage.Source = imgSource;
             }
         }
+
+        public class Song {
+            public int Id { get; set; }
+            public string Name { get; set; }
+            public string PathToFile { get; set; }
+            public string Duration { get; set; }
+        }
+
+        public List<Song> listOfSongs = new List<Song>();
+
         private void PlayPauseButton_Click(object sender, RoutedEventArgs e) {
-            SongList.List.Items.Add("1");
+            listOfSongs.Add(new Song() { Id = listOfSongs.Count * 10, Name = "Test" + listOfSongs.Count, PathToFile = "Test/test", Duration = "0.00" });
+
+            SongsList.List.Items.Add(listOfSongs.Last());
         }
     }
 }

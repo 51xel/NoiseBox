@@ -7,27 +7,80 @@
              mc:Ignorable="d" 
              d:DesignHeight="507" d:DesignWidth="800">
     <UserControl.Resources>
-        <Style x:Key="ListViewStyle1" TargetType="{x:Type ListView}">
-            <Setter Property="Background" Value="White"/>
-            <Setter Property="FontSize" Value="22"/>
-            <Setter Property="Foreground" Value="Black"/>
-            <!--<Setter Property="ItemContainerStyle" Value="{Binding View, Converter={StaticResource MaterialDesignListViewItemContainerStyleConverter}, RelativeSource={RelativeSource Self}}"/>-->
+        <Style TargetType="{x:Type ListView}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="FontFamily" Value="/Fonts/#Montserrat"/>
             <Setter Property="OverridesDefaultStyle" Value="False"/>
-            <Setter Property="SnapsToDevicePixels" Value="True"/>
-            <!--<Setter Property="Template" Value="{Binding View, Converter={StaticResource MaterialDesignListViewTemplateConverter}, RelativeSource={RelativeSource Self}}"/>-->
             <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Margin" Value="10"/>
+        </Style>
+
+        <Style TargetType="{x:Type ListViewItem}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Button Name="ElementRow"
+                                Padding="0"
+                                HorizontalContentAlignment="Left"
+                                Background="Transparent"
+                                BorderBrush="Transparent"
+                                FontFamily="/Fonts/#Montserrat"
+                                FontSize="22"
+                                Foreground="#BDBDBD"
+                                FontWeight="Normal"
+                                Click="ClickRowElement"
+                                >
+                            <GridViewRowPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Button>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" TargetName="ElementRow">
+                                    <Setter.Value>
+                                        <SolidColorBrush Opacity="0.1" Color="White"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="{x:Type GridViewColumnHeader}">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="#BDBDBD" />
+            <Setter Property="FontSize" Value="22" />
+            
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
+                        <TextBlock Name="NameColumn" Text="{TemplateBinding Content}" Width="{TemplateBinding Width}" TextAlignment="Left"/>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" TargetName="NameColumn">
+                                    <Setter.Value>
+                                        <SolidColorBrush Opacity="0.1" Color="White"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
     </UserControl.Resources>
     <Grid>
-        <ListView Style="{DynamicResource ListViewStyle1}" Name="List" >
+
+        <ListView Name="List" IsSynchronizedWithCurrentItem="False">
             <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="#" Width="auto" DisplayMemberBinding="{Binding Name}">
-                        
-                    </GridViewColumn>
-                    <GridViewColumn Header="Name" Width="auto" DisplayMemberBinding="{Binding Age}" />
-                    <GridViewColumn Header="Path To File" Width="auto" DisplayMemberBinding="{Binding Mail}"/>
-                    <GridViewColumn Header="Duration" Width="auto" DisplayMemberBinding="{Binding Mail}"/>
+                <GridView AllowsColumnReorder="False">
+                    <GridViewColumn Header="#" Width="40" DisplayMemberBinding="{Binding Id}"/>
+                    <GridViewColumn Header="Name" Width="200" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="Path To File" Width="200" DisplayMemberBinding="{Binding PathToFile}"/>
+                    <GridViewColumn Header="Duration" Width="200" DisplayMemberBinding="{Binding Duration}"/>
                 </GridView>
             </ListView.View>
         </ListView>

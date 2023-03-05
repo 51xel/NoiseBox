@@ -18,6 +18,8 @@ namespace NoiseBox_UI.View.UserControls {
     /// Interaction logic for SongList.xaml
     /// </summary>
     public partial class SongList : UserControl {
+        public RoutedEventHandler ClickRowElement;
+
         public SongList() {
             InitializeComponent();
         }
