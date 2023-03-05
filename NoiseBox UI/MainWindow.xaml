@@ -11,6 +11,8 @@
         mc:Ignorable="d"
         WindowStyle="None"
         Title="NoiseBox" Height="720" Width="1280"
+        MinHeight="{Binding MainWindowMinHeight}"
+        MinWidth="{Binding MainWindowMinWidth}"
         AllowsTransparency="True"
         
         SizeChanged="WindowSizeChanged">
@@ -48,7 +50,7 @@
             <userControls:PlaylistText x:Name="PlaylistTextName" Grid.Row="0" Grid.Column="1"/>
         </Grid>
         
-        <Grid Grid.Row="1">
+        <Grid Name="MainGridRow1" Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="290"/>
                 <ColumnDefinition MinWidth="300"/>
