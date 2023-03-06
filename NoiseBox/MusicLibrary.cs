@@ -27,7 +27,7 @@ namespace NoiseBox {
         private const string _jsonFilePath = "music_library.json";
         private static List<Song> _songs = new List<Song>();
         private static List<Playlist> _playlists = new List<Playlist>();
-        private static ILog _log = ILogSettings.SelectedLog;
+        private static ILog _log = LogSettings.SelectedLog;
 
         static MusicLibrary() {
             LoadFromJson();

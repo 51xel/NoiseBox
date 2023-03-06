@@ -5,7 +5,7 @@ namespace NoiseBox {
     public class AudioStream {
         private WaveOutEvent _outputDevice;
         private AudioFileReader _audioFile;
-        private ILog _log = ILogSettings.SelectedLog;
+        private ILog _log = LogSettings.SelectedLog;
 
         public double CurrentTrackLength {
             get {

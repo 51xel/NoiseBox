@@ -8,7 +8,7 @@ namespace NoiseBox {
             ERROR
         }
       
-        public class ILogSettings {
+        public class LogSettings {
             private static ILog _selectedLog;
             public static ILog SelectedLog {
                 get {
@@ -23,7 +23,7 @@ namespace NoiseBox {
                 } 
             }
 
-            static ILogSettings() {
+            static LogSettings() {
                 SelectedLog = new LogIntoFile();
             }
         }
@@ -41,7 +41,7 @@ namespace NoiseBox {
         public class LogIntoFile : ILog {
             private string _pathToFile;
 
-            public LogIntoFile(string path = "./logs.txt") {
+            public LogIntoFile(string path = "./Logs/logs.txt") {
                 if (path == null || String.IsNullOrWhiteSpace(path)) {
                     throw new ArgumentNullException("Path can`t be null");
                 }
@@ -49,23 +49,25 @@ namespace NoiseBox {
                 _pathToFile = path;
 
                 if (!File.Exists(_pathToFile)) {
-                    byte[] buffer = Encoding.Default.GetBytes("===Created " + DateTime.Now + "\n");
+                    if (!Directory.Exists(Path.GetDirectoryName(path))) {
+                        Directory.CreateDirectory(Path.GetDirectoryName(path));
+                    }
+                    File.Create(_pathToFile).Close();
 
-                    var tempFile = File.Create(_pathToFile);
-                    tempFile.WriteAsync(buffer, 0, buffer.Length);
-
-                    tempFile.Close();
+                    WriteMessageIntoFile("===Created " + DateTime.Now + "\n");
                 }
                 else {
-                    using (StreamWriter writer = new StreamWriter(_pathToFile, true)) {
-                        writer.WriteLine("===New Starting [" + DateTime.Now + "]\n");
-                    }
+                    WriteMessageIntoFile("===New Starting [" + DateTime.Now + "]\n");
                 }
             }
 
             public void Print(string message, LogInfoType logType) {
+                WriteMessageIntoFile($"[{DateTime.Now}]" + message);
+            }
+
+            private void WriteMessageIntoFile(string message) {
                 using (StreamWriter writer = new StreamWriter(_pathToFile, true)) {
-                    writer.WriteLine($"[{DateTime.Now}]" + message);
+                    writer.WriteLine(message);
                 }
             }
         }
