@@ -24,7 +24,7 @@
                                 Background="Transparent"
                                 BorderBrush="Transparent"
                                 FontFamily="/Fonts/#Montserrat"
-                                FontSize="22"
+                                FontSize="18"
                                 Foreground="#BDBDBD"
                                 FontWeight="Normal"
                                 Click="ClickRowElement">
@@ -53,8 +53,9 @@
                                    Text="{TemplateBinding Content}"
                                    TextAlignment="Left"
                                    Foreground="#BDBDBD"
-                                   FontSize="22"
-                                   FontFamily="/Fonts/#Montserrat"/>
+                                   FontSize="20"
+                                   FontFamily="/Fonts/#Montserrat"
+                                   Padding="4,5,4,5"/>
 
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
@@ -79,10 +80,10 @@
         </Style>
     </UserControl.Resources>
     <Grid>
-        <ListView Name="List">
+        <ListView Name="List" SizeChanged="ListView_SizeChanged" ScrollViewer.VerticalScrollBarVisibility="Hidden">
             <ListView.View>
                 <GridView AllowsColumnReorder="False">
-                    <GridViewColumn Header="#" Width="80">
+                    <GridViewColumn Header="#" Width="60">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Style="{DynamicResource GridViewCell}" Text="{Binding Id}"/>
@@ -90,7 +91,7 @@
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
 
-                    <GridViewColumn Header="Name" Width="200">
+                    <GridViewColumn Header="Name">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Style="{DynamicResource GridViewCell}" Text="{Binding Name}"/>
@@ -98,7 +99,7 @@
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
 
-                    <GridViewColumn Header="Path To File" Width="200">
+                    <GridViewColumn Header="Path To File">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Style="{DynamicResource GridViewCell}" Text="{Binding PathToFile}"/>
@@ -106,7 +107,7 @@
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
 
-                    <GridViewColumn Header="Duration" Width="200">
+                    <GridViewColumn Header="🕓" Width="90">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Style="{DynamicResource GridViewCell}" Text="{Binding Duration}"/>

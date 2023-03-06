@@ -19,24 +19,6 @@ using NoiseBox.Log;
 namespace NoiseBox_UI {
     public partial class MainWindow : Window {
 
-        public double MainWindowMinHeight {
-            get {
-                var mainGridRows = (this.Content as Grid).RowDefinitions;
-                return mainGridRows[0].Height.Value +
-                       mainGridRows[1].MinHeight +
-                       mainGridRows[2].Height.Value;
-            }
-        }
-
-        public double MainWindowMinWidth {
-            get {
-                var mainGridCols = MainGridRow1.ColumnDefinitions;
-                return mainGridCols[0].Width.Value +
-                       mainGridCols[1].MinWidth +
-                       mainGridCols[2].Width.Value;
-            }
-        }
-
         private static IntPtr WindowProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled) {
             switch (msg) {
                 case 0x0024:
@@ -179,7 +161,7 @@ namespace NoiseBox_UI {
         public List<Song> songsList = new List<Song>();
 
         private void PlayPauseButton_Click(object sender, RoutedEventArgs e) {
-            songsList.Add(new Song() { Id = songsList.Count * 100, Name = "Test" + songsList.Count, PathToFile = "Test/test", Duration = "0.00" });
+            songsList.Add(new Song() { Id = songsList.Count * 100, Name = "In The End " + songsList.Count, PathToFile = @"D:\Music\Linkin Park", Duration = "3:36" });
 
             SongsList.List.Items.Add(songsList.Last());
         }
