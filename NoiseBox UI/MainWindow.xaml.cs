@@ -154,9 +154,8 @@ namespace NoiseBox_UI {
 
             BottomControlPanel.PlayPauseButton.Click += PlayPauseButton_Click;
 
-            SongsList.ClickRowElement += (s, e) => MessageBox.Show((((s as Button).Content as GridViewRowPresenter).Content as Song).Name);
+            SongsList.ClickRowElement += (s, e) => MessageBox.Show("1");
         }
-
         private void WindowSizeChanged(object sender, SizeChangedEventArgs e) {
             if (WindowState == WindowState.Maximized) {
                 Uri uri = new Uri("/Images/Icons/restore.png", UriKind.Relative);
@@ -177,12 +176,12 @@ namespace NoiseBox_UI {
             public string Duration { get; set; }
         }
 
-        public List<Song> listOfSongs = new List<Song>();
+        public List<Song> songsList = new List<Song>();
 
         private void PlayPauseButton_Click(object sender, RoutedEventArgs e) {
-            listOfSongs.Add(new Song() { Id = listOfSongs.Count * 10, Name = "Test" + listOfSongs.Count, PathToFile = "Test/test", Duration = "0.00" });
+            songsList.Add(new Song() { Id = songsList.Count * 100, Name = "Test" + songsList.Count, PathToFile = "Test/test", Duration = "0.00" });
 
-            SongsList.List.Items.Add(listOfSongs.Last());
+            SongsList.List.Items.Add(songsList.Last());
         }
     }
 }

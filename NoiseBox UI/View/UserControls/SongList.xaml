@@ -6,19 +6,18 @@
              xmlns:local="clr-namespace:NoiseBox_UI.View.UserControls"
              mc:Ignorable="d" 
              d:DesignHeight="507" d:DesignWidth="800">
+    
     <UserControl.Resources>
         <Style TargetType="{x:Type ListView}">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="OverridesDefaultStyle" Value="False"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Margin" Value="10"/>
         </Style>
 
-        <local:ToolTipConverter x:Key="TConvert"></local:ToolTipConverter>
         <Style TargetType="{x:Type ListViewItem}">
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="ListBoxItem">
+                    <ControlTemplate TargetType="ListViewItem">
                         <Button Name="RowElement"
                                 Padding="0"
                                 HorizontalContentAlignment="Left"
@@ -28,15 +27,12 @@
                                 FontSize="22"
                                 Foreground="#BDBDBD"
                                 FontWeight="Normal"
-                                Click="ClickRowElement"
-                                >
-                            <GridViewRowPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                Click="ClickRowElement">
+                            <GridViewRowPresenter/>
                         </Button>
 
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=Content, Converter={StaticResource TConvert} }"/>
-                                
                                 <Setter Property="Background" TargetName="RowElement">
                                     <Setter.Value>
                                         <SolidColorBrush Opacity="0.1" Color="White"/>
@@ -50,15 +46,15 @@
         </Style>
 
         <Style TargetType="{x:Type GridViewColumnHeader}">
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Foreground" Value="#BDBDBD" />
-            <Setter Property="FontSize" Value="22" />
-            <Setter Property="FontFamily" Value="/Fonts/#Montserrat"/>
-
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
-                        <TextBlock Name="ColumnName" Text="{TemplateBinding Content}" TextAlignment="Left"/>
+                        <TextBlock Name="ColumnName"
+                                   Text="{TemplateBinding Content}"
+                                   TextAlignment="Left"
+                                   Foreground="#BDBDBD"
+                                   FontSize="22"
+                                   FontFamily="/Fonts/#Montserrat"/>
 
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
@@ -73,16 +69,50 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <Style x:Key="GridViewCell" TargetType="{x:Type TextBlock}">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=Text}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </UserControl.Resources>
     <Grid>
-
         <ListView Name="List">
             <ListView.View>
                 <GridView AllowsColumnReorder="False">
-                    <GridViewColumn Header="#" Width="40" DisplayMemberBinding="{Binding Id}"/>
-                    <GridViewColumn Header="Name" Width="200" DisplayMemberBinding="{Binding Name}"/>
-                    <GridViewColumn Header="Path To File" Width="200" DisplayMemberBinding="{Binding PathToFile}"/>
-                    <GridViewColumn Header="Duration" Width="200" DisplayMemberBinding="{Binding Duration}"/>
+                    <GridViewColumn Header="#" Width="80">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Style="{DynamicResource GridViewCell}" Text="{Binding Id}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="Name" Width="200">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Style="{DynamicResource GridViewCell}" Text="{Binding Name}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="Path To File" Width="200">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Style="{DynamicResource GridViewCell}" Text="{Binding PathToFile}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="Duration" Width="200">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Style="{DynamicResource GridViewCell}" Text="{Binding Duration}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>

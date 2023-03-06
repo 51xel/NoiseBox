@@ -25,20 +25,4 @@ namespace NoiseBox_UI.View.UserControls {
             InitializeComponent();
         }
     }
-
-    public class ToolTipConverter : IValueConverter {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-            if (value.ToString().Length > 20) {
-                return value.;
-            }
-            else {
-                return null;
-            }
-            //throw new NotImplementedException();
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
-            throw new NotImplementedException();
-        }
-    }
 }
