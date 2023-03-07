@@ -80,7 +80,7 @@
         </Style>
     </UserControl.Resources>
     <Grid>
-        <ListView Name="List" SizeChanged="ListView_SizeChanged" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+        <ListView Name="List" SizeChanged="ListView_SizeChanged" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.CanContentScroll="False">
             <ListView.View>
                 <GridView AllowsColumnReorder="False">
                     <GridViewColumn Header="#" Width="60">

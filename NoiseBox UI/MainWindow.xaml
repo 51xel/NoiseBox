@@ -48,18 +48,10 @@
             </Grid.ColumnDefinitions>
 
             <Border Grid.Column="0" Background="Black" BorderBrush="White" BorderThickness="0 0 0 2" Opacity="0.4"/>
-            
-            <Button Grid.Column="0" Width="50" Height="50" 
-                    HorizontalAlignment="Left" Margin="15" Background="#212128" 
-                    Padding="15" BorderBrush="Transparent">
-                <Border CornerRadius="30" >
-                    <Image Source="/Images/Icons/plus.png" Width="20" Height="20"/>
-                </Border>
-            </Button>
 
-            <TextBlock Text="New Playlist" FontFamily="/Fonts/#Montserrat" FontSize="22" FontWeight="DemiBold" Foreground="#BDBDBD" VerticalAlignment="Center" Margin="80,0,0,0"/>
+            <userControls:NewPlaylistButton Grid.Column="0"/>
 
-            <userControls:PlaylistText x:Name="PlaylistTextName" Grid.Row="0" Grid.Column="1"/>
+            <userControls:PlaylistText x:Name="PlaylistTextName" Grid.Column="1"/>
         </Grid>
         
         <Grid Grid.Row="1">
@@ -70,7 +62,9 @@
             </Grid.ColumnDefinitions>
 
             <Border Grid.Column="0" Background="Black" Opacity="0.4"/>
-            
+
+            <userControls:PlaylistList x:Name="PlaylistList" Grid.Column="0"/>
+
             <userControls:SongList x:Name="SongsList" Grid.Column="1"/>
 
             <Border Grid.Column="2" Background="Black" Opacity="0.4"/>

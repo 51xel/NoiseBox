@@ -137,6 +137,7 @@ namespace NoiseBox_UI {
             BottomControlPanel.PlayPauseButton.Click += PlayPauseButton_Click;
 
             SongsList.ClickRowElement += (s, e) => MessageBox.Show("1");
+            PlaylistList.ClickRowElement += (s, e) => MessageBox.Show("2");
         }
         private void WindowSizeChanged(object sender, SizeChangedEventArgs e) {
             if (WindowState == WindowState.Maximized) {
