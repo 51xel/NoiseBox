@@ -7,9 +7,6 @@ using System.Threading.Tasks;
 using System.Windows;
 
 namespace NoiseBox_UI {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App : Application {
     }
 }

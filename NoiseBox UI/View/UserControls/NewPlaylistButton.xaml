@@ -18,7 +18,7 @@
                    Foreground="#BDBDBD" VerticalAlignment="Center" Margin="80,0,0,0"/>
 
         <Popup x:Name="EnterNamePopup" PlacementTarget="{Binding ElementName=AddButton}" StaysOpen="False"
-               Placement="Bottom" Width="290" VerticalOffset="15">
+               Placement="Bottom" Width="290" VerticalOffset="15" HorizontalOffset="0">
             <Border Background="#212128" Padding="15">
                 <TextBox Name="PopupTextBox" FontFamily="/Fonts/#Montserrat" FontSize="22" FontWeight="DemiBold" 
                          Foreground="#BDBDBD" KeyDown="PopupTextBox_KeyDown"/>

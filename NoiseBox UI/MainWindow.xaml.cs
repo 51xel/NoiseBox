@@ -160,11 +160,19 @@ namespace NoiseBox_UI {
         }
 
         public List<Song> songsList = new List<Song>();
+        public bool TempCheckStatusPlayPauseButton = false;
 
         private void PlayPauseButton_Click(object sender, RoutedEventArgs e) {
             songsList.Add(new Song() { Id = songsList.Count * 100, Name = "In The End " + songsList.Count, PathToFile = @"D:\Music\Linkin Park", Duration = "3:36" });
 
             SongsList.List.Items.Add(songsList.Last());
+
+            if (BottomControlPanel.State == View.UserControls.BottomControlPanel.ButtonState.Paused) {
+                BottomControlPanel.State = View.UserControls.BottomControlPanel.ButtonState.Playing;
+            }
+            else {
+                BottomControlPanel.State = View.UserControls.BottomControlPanel.ButtonState.Paused;
+            }
         }
     }
 }

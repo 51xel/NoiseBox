@@ -8,11 +8,20 @@
              d:DesignHeight="80" d:DesignWidth="800">
     <UserControl.Resources>
         <Style x:Key="PlayPauseButton" TargetType="{x:Type Button}">
+            <Setter Property="Width" Value="50"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
                         <Grid>
-                            <Border x:Name="border" CornerRadius="100" Background="#EBEBEB"/>
+                            <Border x:Name="border" CornerRadius="100" Background="#EBEBEB">
+                                <Image Source="{Binding PathToImage}" Height="20" Width="20" RenderOptions.BitmapScalingMode ="HighQuality"/>
+                            </Border>
 
                             <Grid.RenderTransform>
                                 <ScaleTransform/>
@@ -47,7 +56,7 @@
                 <ColumnDefinition Width="200"/>
             </Grid.ColumnDefinitions>
 
-            <Button Name="PlayPauseButton" Style="{DynamicResource PlayPauseButton}" Width="50" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Button Name="PlayPauseButton" Style="{StaticResource PlayPauseButton}"/>
         </Grid>
     </Grid>
 </UserControl>

@@ -13,6 +13,8 @@
     <None Remove="Images\Icons\close.png" />
     <None Remove="Images\Icons\maximize.png" />
     <None Remove="Images\Icons\minimize.png" />
+    <None Remove="Images\Icons\pause.png" />
+    <None Remove="Images\Icons\play.png" />
     <None Remove="Images\Icons\plus.png" />
     <None Remove="Images\Icons\restore.png" />
   </ItemGroup>
@@ -30,6 +32,8 @@
     <Resource Include="Images\Icons\close.png" />
     <Resource Include="Images\Icons\maximize.png" />
     <Resource Include="Images\Icons\minimize.png" />
+    <Resource Include="Images\Icons\pause.png" />
+    <Resource Include="Images\Icons\play.png" />
     <Resource Include="Images\Icons\plus.png" />
     <Resource Include="Images\Icons\restore.png" />
   </ItemGroup>
