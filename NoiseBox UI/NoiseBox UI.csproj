@@ -12,11 +12,13 @@
     <None Remove="Fonts\Montserrat.ttf" />
     <None Remove="Images\Icons\close.png" />
     <None Remove="Images\Icons\maximize.png" />
+    <None Remove="Images\Icons\mic.png" />
     <None Remove="Images\Icons\minimize.png" />
     <None Remove="Images\Icons\pause.png" />
     <None Remove="Images\Icons\play.png" />
     <None Remove="Images\Icons\plus.png" />
     <None Remove="Images\Icons\restore.png" />
+    <None Remove="Images\Icons\speaker.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,11 +33,13 @@
     <Resource Include="Fonts\Montserrat.ttf" />
     <Resource Include="Images\Icons\close.png" />
     <Resource Include="Images\Icons\maximize.png" />
+    <Resource Include="Images\Icons\mic.png" />
     <Resource Include="Images\Icons\minimize.png" />
     <Resource Include="Images\Icons\pause.png" />
     <Resource Include="Images\Icons\play.png" />
     <Resource Include="Images\Icons\plus.png" />
     <Resource Include="Images\Icons\restore.png" />
+    <Resource Include="Images\Icons\speaker.png" />
   </ItemGroup>
 
 </Project>
