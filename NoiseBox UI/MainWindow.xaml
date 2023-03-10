@@ -38,38 +38,31 @@
             <RowDefinition/>
             <RowDefinition Height="80"/>
         </Grid.RowDefinitions>
-
-        <userControls:SizeControlWindowButtons x:Name="SizeControlWindowButtons" Grid.Row="0" Panel.ZIndex="1"/>
-
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="290"/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-
-            <Border Grid.Column="0" Background="Black" BorderBrush="White" BorderThickness="0 0 0 2" Opacity="0.4"/>
-
-            <userControls:NewPlaylistButton Grid.Column="0"/>
-
-            <userControls:PlaylistText x:Name="PlaylistTextName" Grid.Column="1"/>
-        </Grid>
         
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="290"/>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="80"/>
-            </Grid.ColumnDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="25*" MinWidth="240" MaxWidth="340"/>
+            <ColumnDefinition Width="75*"/>
+            <ColumnDefinition Width="60"/>
+        </Grid.ColumnDefinitions>
 
-            <Border Grid.Column="0" Background="Black" Opacity="0.4"/>
+        <!--Row 0-->
+        <userControls:TitlebarButtons x:Name="TitlebarButtons" Grid.Row="0" Grid.ColumnSpan="3" Panel.ZIndex="1"/>
+        
+        <Border Grid.Row="0" Grid.Column="0" Background="Black" BorderBrush="White" BorderThickness="0 0 0 2" Opacity="0.4"/>
+        <userControls:NewPlaylistButton Grid.Row="0" Grid.Column="0"/>
 
-            <userControls:PlaylistList x:Name="PlaylistList" Grid.Column="0"/>
+        <userControls:PlaylistText x:Name="PlaylistTextName" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"/>
 
-            <userControls:SongList x:Name="SongsList" Grid.Column="1"/>
+        <!--Row 1-->
+        <Border Grid.Row="1" Grid.Column="0" Background="Black" Opacity="0.4"/>
+        <userControls:PlaylistList x:Name="PlaylistList" Grid.Row="1" Grid.Column="0"/>
 
-            <userControls:FunctionListButtons x:Name="FunctionListButtons" Grid.Column="2"/>
-        </Grid>
+        <userControls:SongList x:Name="SongsList" Grid.Row="1" Grid.Column="1"/>
 
-        <userControls:BottomControlPanel x:Name="BottomControlPanel" Grid.Row="2"/>
+        <Border Grid.Row="1" Grid.Column="2" Background="Black" Opacity="0.4"/>
+        <userControls:FunctionButtons x:Name="FunctionButtons" Grid.Row="1" Grid.Column="2"/>
+
+        <!--Row 2-->
+        <userControls:BottomControlPanel x:Name="BottomControlPanel" Grid.Row="2" Grid.ColumnSpan="3"/>
     </Grid>
 </Window>

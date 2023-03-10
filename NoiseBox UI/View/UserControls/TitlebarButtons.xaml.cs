@@ -15,8 +15,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace NoiseBox_UI.View.UserControls {
-    public partial class SizeControlWindowButtons : UserControl {
-        public SizeControlWindowButtons() {
+    public partial class TitlebarButtons : UserControl {
+        public TitlebarButtons() {
             InitializeComponent();
         }
 

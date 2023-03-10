@@ -130,9 +130,9 @@ namespace NoiseBox_UI {
                 HwndSource.FromHwnd(handle).AddHook(new HwndSourceHook(WindowProc));
             };
 
-            SizeControlWindowButtons.MinimizeButton.Click += (s, e) => WindowState = WindowState.Minimized;
-            SizeControlWindowButtons.MaximizeButton.Click += (s, e) => WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
-            SizeControlWindowButtons.CloseButton.Click += (s, e) => Close();
+            TitlebarButtons.MinimizeButton.Click += (s, e) => WindowState = WindowState.Minimized;
+            TitlebarButtons.MaximizeButton.Click += (s, e) => WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+            TitlebarButtons.CloseButton.Click += (s, e) => Close();
 
             BottomControlPanel.PlayPauseButton.Click += PlayPauseButton_Click;
 
@@ -143,12 +143,12 @@ namespace NoiseBox_UI {
             if (WindowState == WindowState.Maximized) {
                 Uri uri = new Uri("/Images/Icons/restore.png", UriKind.Relative);
                 ImageSource imgSource = new BitmapImage(uri);
-                SizeControlWindowButtons.MaximizeButtonImage.Source = imgSource;
+                TitlebarButtons.MaximizeButtonImage.Source = imgSource;
             }
             else if (WindowState == WindowState.Normal) {
                 Uri uri = new Uri("/Images/Icons/maximize.png", UriKind.Relative);
                 ImageSource imgSource = new BitmapImage(uri);
-                SizeControlWindowButtons.MaximizeButtonImage.Source = imgSource;
+                TitlebarButtons.MaximizeButtonImage.Source = imgSource;
             }
         }
 
@@ -166,8 +166,6 @@ namespace NoiseBox_UI {
             songsList.Add(new Song() { Id = songsList.Count * 100, Name = "In The End " + songsList.Count, PathToFile = @"D:\Music\Linkin Park", Duration = "3:36" });
 
             SongsList.List.Items.Add(songsList.Last());
-
-            FunctionListButtons.List.Items.Add("123");
 
             if (BottomControlPanel.State == View.UserControls.BottomControlPanel.ButtonState.Paused) {
                 BottomControlPanel.State = View.UserControls.BottomControlPanel.ButtonState.Playing;

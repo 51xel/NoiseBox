@@ -14,8 +14,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace NoiseBox_UI.View.UserControls {
-    public partial class FunctionListButtons : UserControl {
-        public FunctionListButtons() {
+    public partial class FunctionButtons : UserControl {
+        public FunctionButtons() {
             InitializeComponent();
         }
     }
