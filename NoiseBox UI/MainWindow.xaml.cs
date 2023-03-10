@@ -167,6 +167,8 @@ namespace NoiseBox_UI {
 
             SongsList.List.Items.Add(songsList.Last());
 
+            FunctionListButtons.List.Items.Add("123");
+
             if (BottomControlPanel.State == View.UserControls.BottomControlPanel.ButtonState.Paused) {
                 BottomControlPanel.State = View.UserControls.BottomControlPanel.ButtonState.Playing;
             }

@@ -67,7 +67,7 @@
 
             <userControls:SongList x:Name="SongsList" Grid.Column="1"/>
 
-            <Border Grid.Column="2" Background="Black" Opacity="0.4"/>
+            <userControls:FunctionListButtons x:Name="FunctionListButtons" Grid.Column="2"/>
         </Grid>
 
         <userControls:BottomControlPanel x:Name="BottomControlPanel" Grid.Row="2"/>
