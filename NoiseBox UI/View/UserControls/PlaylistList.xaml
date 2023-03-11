@@ -46,7 +46,7 @@
                 </Setter.Value>
             </Setter>
             <Setter Property="AllowDrop" Value="True"/>
-            <EventSetter Event="Drop" Handler="RowElement_Drop"/>
+            <EventSetter Event="Drop" Handler="ListViewItem_Drop"/>
         </Style>
     </UserControl.Resources>
 

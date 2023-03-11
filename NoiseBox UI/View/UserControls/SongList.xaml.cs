@@ -42,7 +42,7 @@ namespace NoiseBox_UI.View.UserControls {
             }
         }
 
-        private void RowElement_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+        private void ListViewItem_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
             var draggedItem = sender as ListViewItem;
 
             if (draggedItem != null) {
@@ -50,7 +50,7 @@ namespace NoiseBox_UI.View.UserControls {
             }
         }
 
-        private void RowElement_Drop(object sender, DragEventArgs e) {
+        private void ListViewItem_Drop(object sender, DragEventArgs e) {
             var droppedData = e.Data.GetData(typeof(MainWindow.Song)) as MainWindow.Song;
             var target = ((ListViewItem)(sender)).DataContext as MainWindow.Song;
 
@@ -69,6 +69,13 @@ namespace NoiseBox_UI.View.UserControls {
                         SongsOC.RemoveAt(remIdx);
                     }
                 }
+            }
+        }
+
+        private void ListView_Drop(object sender, DragEventArgs e) {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                MessageBox.Show(String.Join(" ", files) + " dropped into current playlist");
             }
         }
     }

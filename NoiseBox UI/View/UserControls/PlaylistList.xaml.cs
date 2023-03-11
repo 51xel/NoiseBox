@@ -24,13 +24,17 @@ namespace NoiseBox_UI.View.UserControls
             InitializeComponent();
         }
 
-        private void RowElement_Drop(object sender, DragEventArgs e) {
+        private void ListViewItem_Drop(object sender, DragEventArgs e) {
             var droppedData = e.Data.GetData(typeof(MainWindow.Song)) as MainWindow.Song;
+            var target = ((ListViewItem)(sender)).DataContext;
 
             if (droppedData != null) {
-                var target = ((ListViewItem)(sender)).DataContext;
-
                 MessageBox.Show(droppedData.Name + " to " + target);
+            }
+
+            if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                MessageBox.Show(String.Join(" ", files) + $" dropped into {target} playlist");
             }
         }
     }
