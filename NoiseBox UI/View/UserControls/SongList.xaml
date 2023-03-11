@@ -12,8 +12,6 @@
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Margin" Value="10"/>
-            <Setter Property="AllowDrop" Value="True"/>
-            <EventSetter Event="Drop" Handler="ListView_Drop"/>
         </Style>
 
         <Style TargetType="{x:Type ListViewItem}">
@@ -28,8 +26,7 @@
                                 FontFamily="/Fonts/#Montserrat"
                                 FontSize="18"
                                 Foreground="#BDBDBD"
-                                FontWeight="Normal"
-                                Click="ClickRowElement">
+                                FontWeight="Normal">
                             <GridViewRowPresenter/>
                         </Button>
 
@@ -89,7 +86,7 @@
                   ItemsSource="{Binding SongsOC}">
             <ListView.View>
                 <GridView AllowsColumnReorder="False">
-                    <GridViewColumn Header="#" Width="60">
+                    <GridViewColumn Header="#" Width="0">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Style="{DynamicResource GridViewCell}" Text="{Binding Id}"/>

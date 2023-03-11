@@ -33,13 +33,10 @@ namespace NoiseBox_UI.View.UserControls {
             var gridView = listView.View as GridView;
 
             var workingWidth = listView.ActualWidth - SystemParameters.VerticalScrollBarWidth; // take into account vertical scrollbar
-            workingWidth -= (gridView.Columns.First().Width + gridView.Columns.Last().Width);
+            workingWidth -= gridView.Columns.Last().Width;
 
-            double ratio = 1.0 / (gridView.Columns.Count() - 2); // even width between all cols except first and last
-
-            for (int i = 1; i < gridView.Columns.Count() - 1; i++) {
-                gridView.Columns[i].Width = workingWidth * ratio;
-            }
+            gridView.Columns[1].Width = workingWidth * 0.4;
+            gridView.Columns[2].Width = workingWidth * 0.6;
         }
 
         private void ListViewItem_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
@@ -62,20 +59,23 @@ namespace NoiseBox_UI.View.UserControls {
                     SongsOC.Insert(targetIdx + 1, droppedData);
                     SongsOC.RemoveAt(removedIdx);
                 }
-                else {
+                else if (removedIdx > targetIdx) {
                     int remIdx = removedIdx + 1;
                     if (List.Items.Count + 1 > remIdx) {
                         SongsOC.Insert(targetIdx, droppedData);
                         SongsOC.RemoveAt(remIdx);
                     }
                 }
+                else {
+                    ClickRowElement?.Invoke(sender, null);
+                }
             }
-        }
 
-        private void ListView_Drop(object sender, DragEventArgs e) {
             if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                MessageBox.Show(String.Join(" ", files) + " dropped into current playlist");
+                int targetIdx = List.Items.IndexOf(target);
+
+                SongsOC.Insert(targetIdx, new MainWindow.Song() { Id = 0, Name = "Dropped file", PathToFile = files[0], Duration = "00:00" });
             }
         }
     }
