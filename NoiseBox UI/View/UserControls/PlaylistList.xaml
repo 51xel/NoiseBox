@@ -45,6 +45,8 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+            <Setter Property="AllowDrop" Value="True"/>
+            <EventSetter Event="Drop" Handler="RowElement_Drop"/>
         </Style>
     </UserControl.Resources>
 

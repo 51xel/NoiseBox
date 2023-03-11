@@ -136,9 +136,10 @@ namespace NoiseBox_UI {
 
             BottomControlPanel.PlayPauseButton.Click += PlayPauseButton_Click;
 
-            SongsList.ClickRowElement += (s, e) => MessageBox.Show("1");
+            SongList.ClickRowElement += (s, e) => MessageBox.Show("1");
             PlaylistList.ClickRowElement += (s, e) => MessageBox.Show("2");
         }
+
         private void WindowSizeChanged(object sender, SizeChangedEventArgs e) {
             if (WindowState == WindowState.Maximized) {
                 Uri uri = new Uri("/Images/Icons/restore.png", UriKind.Relative);
@@ -159,13 +160,8 @@ namespace NoiseBox_UI {
             public string Duration { get; set; }
         }
 
-        public List<Song> songsList = new List<Song>();
-        public bool TempCheckStatusPlayPauseButton = false;
-
         private void PlayPauseButton_Click(object sender, RoutedEventArgs e) {
-            songsList.Add(new Song() { Id = songsList.Count * 100, Name = "In The End " + songsList.Count, PathToFile = @"D:\Music\Linkin Park", Duration = "3:36" });
-
-            SongsList.List.Items.Add(songsList.Last());
+            SongList.SongsOC.Add(new Song() { Id = SongList.SongsOC.Count * 100, Name = "In The End " + SongList.SongsOC.Count, PathToFile = @"D:\Music\Linkin Park", Duration = "3:36" });
 
             if (BottomControlPanel.State == View.UserControls.BottomControlPanel.ButtonState.Paused) {
                 BottomControlPanel.State = View.UserControls.BottomControlPanel.ButtonState.Playing;

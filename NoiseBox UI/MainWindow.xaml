@@ -57,7 +57,7 @@
         <Border Grid.Row="1" Grid.Column="0" Background="Black" Opacity="0.4"/>
         <userControls:PlaylistList x:Name="PlaylistList" Grid.Row="1" Grid.Column="0"/>
 
-        <userControls:SongList x:Name="SongsList" Grid.Row="1" Grid.Column="1"/>
+        <userControls:SongList x:Name="SongList" Grid.Row="1" Grid.Column="1"/>
 
         <Border Grid.Row="1" Grid.Column="2" Background="Black" Opacity="0.4"/>
         <userControls:FunctionButtons x:Name="FunctionButtons" Grid.Row="1" Grid.Column="2"/>
