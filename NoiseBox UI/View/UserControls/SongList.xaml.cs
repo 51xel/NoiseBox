@@ -43,8 +43,9 @@ namespace NoiseBox_UI.View.UserControls {
         }
 
         private void RowElement_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
-            if (sender is ListViewItem) {
-                var draggedItem = sender as ListViewItem;
+            var draggedItem = sender as ListViewItem;
+
+            if (draggedItem != null) {
                 DragDrop.DoDragDrop(draggedItem, draggedItem.DataContext, DragDropEffects.Move);
             }
         }
@@ -53,18 +54,20 @@ namespace NoiseBox_UI.View.UserControls {
             var droppedData = e.Data.GetData(typeof(MainWindow.Song)) as MainWindow.Song;
             var target = ((ListViewItem)(sender)).DataContext as MainWindow.Song;
 
-            int removedIdx = List.Items.IndexOf(droppedData);
-            int targetIdx = List.Items.IndexOf(target);
+            if (droppedData != null && target != null) {
+                int removedIdx = List.Items.IndexOf(droppedData);
+                int targetIdx = List.Items.IndexOf(target);
 
-            if (removedIdx < targetIdx) {
-                SongsOC.Insert(targetIdx + 1, droppedData);
-                SongsOC.RemoveAt(removedIdx);
-            }
-            else {
-                int remIdx = removedIdx + 1;
-                if (List.Items.Count + 1 > remIdx) {
-                    SongsOC.Insert(targetIdx, droppedData);
-                    SongsOC.RemoveAt(remIdx);
+                if (removedIdx < targetIdx) {
+                    SongsOC.Insert(targetIdx + 1, droppedData);
+                    SongsOC.RemoveAt(removedIdx);
+                }
+                else {
+                    int remIdx = removedIdx + 1;
+                    if (List.Items.Count + 1 > remIdx) {
+                        SongsOC.Insert(targetIdx, droppedData);
+                        SongsOC.RemoveAt(remIdx);
+                    }
                 }
             }
         }
