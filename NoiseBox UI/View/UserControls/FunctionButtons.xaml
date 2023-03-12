@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="NoiseBox_UI.View.UserControls.FunctionButtons"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NoiseBox_UI.View.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="60">
+    <UserControl.Resources>
+        <Style TargetType="{x:Type ListView}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <ListView Name="List" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                  ScrollViewer.CanContentScroll="False">
+            <ListViewItem Padding="5">
+                <Button x:Name="SettingsButton" Width="50" Height="50" Background="#212128" BorderBrush="Transparent" Padding="15">
+                    <Image Source="/Images/Icons/settings.png" RenderOptions.BitmapScalingMode ="HighQuality"/>
+                </Button>
+            </ListViewItem>
+
+            <ListViewItem Padding="5">
+                <Button x:Name="DownloadButton" Width="50" Height="50" Background="#212128" BorderBrush="Transparent" Padding="15">
+                    <Image Source="/Images/Icons/download.png" RenderOptions.BitmapScalingMode ="HighQuality"/>
+                </Button>
+            </ListViewItem>
+        </ListView>
+    </Grid>
+</UserControl>
