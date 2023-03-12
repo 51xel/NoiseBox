@@ -30,6 +30,13 @@
                                 Height="Auto"
                                 Click="ClickRowElement">
                             <ContentPresenter/>
+
+                            <Button.ContextMenu>
+                                <ContextMenu Background="#212121" Foreground="#BDBDBD" FontFamily="/Fonts/#Montserrat" FontWeight="DemiBold">
+                                    <MenuItem Header="Remove playlist" Click="MenuItem_Click"/>
+                                    <MenuItem Header="Rename" Click="MenuItem_Click"/>
+                                </ContextMenu>
+                            </Button.ContextMenu>
                         </Button>
 
                         <ControlTemplate.Triggers>

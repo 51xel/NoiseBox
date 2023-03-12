@@ -37,5 +37,14 @@ namespace NoiseBox_UI.View.UserControls
                 MessageBox.Show(String.Join(" ", files) + $" dropped into {target} playlist");
             }
         }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e) {
+            MenuItem menuItem = sender as MenuItem;
+            if (menuItem != null) {
+                Button button = ((ContextMenu)menuItem.Parent).PlacementTarget as Button;
+
+                MessageBox.Show($"{menuItem.Header} on {(button.Content as ContentPresenter).Content}");
+            }
+        }
     }
 }

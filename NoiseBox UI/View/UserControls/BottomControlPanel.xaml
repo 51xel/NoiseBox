@@ -51,16 +51,29 @@
         <Border Background="#212121"/>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="150"/>
                 <ColumnDefinition/>
                 <ColumnDefinition Width="250"/>
             </Grid.ColumnDefinitions>
 
             <Button Grid.Column="0" Name="PlayPauseButton" Style="{StaticResource PlayPauseButton}"/>
 
-            <Slider Grid.Column="1" Name="SeekBar" VerticalAlignment="Center" Maximum="100"/>
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="65"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="65"/>
+                </Grid.ColumnDefinitions>
 
-            <Grid Grid.Column="2" Margin="75,0,0,0">
+                <Slider Name="SeekBar" Grid.Column="1" VerticalAlignment="Center" Maximum="100"/>
+                
+                <TextBlock Name="CurrentTime" Grid.Column="0" FontFamily="/Fonts/#Montserrat" FontSize="15" Foreground="#BDBDBD" FontWeight="DemiBold"
+                           VerticalAlignment="Center" HorizontalAlignment="Center" Padding="0,0,10,0">10:15</TextBlock>
+                <TextBlock Name="TotalTime" Grid.Column="2" FontFamily="/Fonts/#Montserrat" FontSize="15" Foreground="#BDBDBD" FontWeight="DemiBold"
+                           VerticalAlignment="Center" HorizontalAlignment="Center" Padding="10,0,0,0">23:35</TextBlock>
+            </Grid>
+
+            <Grid Grid.Column="2" Margin="50,0,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="70*"/>
                     <ColumnDefinition Width="30*"/>

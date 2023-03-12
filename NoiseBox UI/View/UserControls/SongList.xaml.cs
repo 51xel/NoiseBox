@@ -78,5 +78,14 @@ namespace NoiseBox_UI.View.UserControls {
                 SongsOC.Insert(targetIdx, new MainWindow.Song() { Id = 0, Name = "Dropped file", PathToFile = files[0], Duration = "00:00" });
             }
         }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e) {
+            MenuItem menuItem = sender as MenuItem;
+            if (menuItem != null) {
+                Button button = ((ContextMenu)menuItem.Parent).PlacementTarget as Button;
+
+                MessageBox.Show($"{menuItem.Header} on {((button.Content as GridViewRowPresenter).Content as MainWindow.Song).Name}");
+            }
+        }
     }
 }
