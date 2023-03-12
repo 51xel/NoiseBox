@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using NoiseBox;
 
 namespace NoiseBox_UI.View.UserControls {
 
@@ -25,8 +26,6 @@ namespace NoiseBox_UI.View.UserControls {
         }
 
         public RoutedEventHandler ClickRowElement;
-
-        public ObservableCollection<MainWindow.Song> SongsOC { get; } = new ObservableCollection<MainWindow.Song>();
 
         private void ListView_SizeChanged(object sender, SizeChangedEventArgs e) {
             var listView = sender as ListView;
@@ -48,22 +47,22 @@ namespace NoiseBox_UI.View.UserControls {
         }
 
         private void ListViewItem_Drop(object sender, DragEventArgs e) {
-            var droppedData = e.Data.GetData(typeof(MainWindow.Song)) as MainWindow.Song;
-            var target = ((ListViewItem)(sender)).DataContext as MainWindow.Song;
+            var droppedData = e.Data.GetData(typeof(Song)) as Song;
+            var target = ((ListViewItem)(sender)).DataContext as Song;
 
             if (droppedData != null && target != null) {
                 int removedIdx = List.Items.IndexOf(droppedData);
                 int targetIdx = List.Items.IndexOf(target);
 
                 if (removedIdx < targetIdx) {
-                    SongsOC.Insert(targetIdx + 1, droppedData);
-                    SongsOC.RemoveAt(removedIdx);
+                    List.Items.Insert(targetIdx + 1, droppedData);
+                    List.Items.RemoveAt(removedIdx);
                 }
                 else if (removedIdx > targetIdx) {
                     int remIdx = removedIdx + 1;
                     if (List.Items.Count + 1 > remIdx) {
-                        SongsOC.Insert(targetIdx, droppedData);
-                        SongsOC.RemoveAt(remIdx);
+                        List.Items.Insert(targetIdx, droppedData);
+                        List.Items.RemoveAt(remIdx);
                     }
                 }
                 else {
@@ -75,7 +74,7 @@ namespace NoiseBox_UI.View.UserControls {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
                 int targetIdx = List.Items.IndexOf(target);
 
-                SongsOC.Insert(targetIdx, new MainWindow.Song() { Id = 0, Name = "Dropped file", PathToFile = files[0], Duration = "00:00" });
+                List.Items.Insert(targetIdx, new Song() { Id = "0", Name = "Dropped file", Path = files[0], Duration = TimeSpan.FromSeconds(0) });
             }
         }
 
@@ -84,7 +83,7 @@ namespace NoiseBox_UI.View.UserControls {
             if (menuItem != null) {
                 Button button = ((ContextMenu)menuItem.Parent).PlacementTarget as Button;
 
-                MessageBox.Show($"{menuItem.Header} on {((button.Content as GridViewRowPresenter).Content as MainWindow.Song).Name}");
+                MessageBox.Show($"{menuItem.Header} on {((button.Content as GridViewRowPresenter).Content as Song).Name}");
             }
         }
     }

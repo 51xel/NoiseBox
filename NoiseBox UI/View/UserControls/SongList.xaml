@@ -89,8 +89,7 @@
         </Style>
     </UserControl.Resources>
     <Grid>
-        <ListView Name="List" SizeChanged="ListView_SizeChanged" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.CanContentScroll="False"
-                  ItemsSource="{Binding SongsOC}">
+        <ListView Name="List" SizeChanged="ListView_SizeChanged" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.CanContentScroll="False">
             <ListView.View>
                 <GridView AllowsColumnReorder="False">
                     <GridViewColumn Header="#" Width="0">
@@ -112,7 +111,7 @@
                     <GridViewColumn Header="Path To File">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Style="{DynamicResource GridViewCell}" Text="{Binding PathToFile}"/>
+                                <TextBlock Style="{DynamicResource GridViewCell}" Text="{Binding Path}"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

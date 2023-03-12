@@ -47,15 +47,8 @@ namespace NoiseBox_UI {
             }
         }
 
-        public class Song {
-            public int Id { get; set; }
-            public string Name { get; set; }
-            public string PathToFile { get; set; }
-            public string Duration { get; set; }
-        }
-
         private void PlayPauseButton_Click(object sender, RoutedEventArgs e) {
-            SongList.SongsOC.Add(new Song() { Id = SongList.SongsOC.Count * 100, Name = "In The End " + SongList.SongsOC.Count, PathToFile = @"D:\Music\Linkin Park", Duration = "3:36" });
+            SongList.List.Items.Add(new Song() { Id = "0", Name = "In The End " + SongList.List.Items.Count, Path = @"D:\Music\Linkin Park", Duration = TimeSpan.FromSeconds(123) });
 
             if (BottomControlPanel.State == View.UserControls.BottomControlPanel.ButtonState.Paused) {
                 BottomControlPanel.State = View.UserControls.BottomControlPanel.ButtonState.Playing;

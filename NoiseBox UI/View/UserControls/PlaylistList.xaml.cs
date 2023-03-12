@@ -27,7 +27,7 @@ namespace NoiseBox_UI.View.UserControls
         }
 
         private void ListViewItem_Drop(object sender, DragEventArgs e) {
-            var droppedData = e.Data.GetData(typeof(MainWindow.Song)) as MainWindow.Song;
+            var droppedData = e.Data.GetData(typeof(Song)) as Song;
             var target = ((ListViewItem)(sender)).DataContext;
 
             if (droppedData != null) {
