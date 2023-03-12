@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NoiseBox;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TagLib.Id3v2;
 
 namespace NoiseBox_UI.View.UserControls
 {
@@ -43,7 +45,11 @@ namespace NoiseBox_UI.View.UserControls
             if (menuItem != null) {
                 Button button = ((ContextMenu)menuItem.Parent).PlacementTarget as Button;
 
-                MessageBox.Show($"{menuItem.Header} on {(button.Content as ContentPresenter).Content}");
+                if (Equals(menuItem.Header, "Remove playlist")) {
+                    string pName = (button.Content as ContentPresenter).Content.ToString();
+                    List.Items.Remove(pName);
+                    MusicLibrary.RemovePlaylist(pName);
+                }
             }
         }
     }

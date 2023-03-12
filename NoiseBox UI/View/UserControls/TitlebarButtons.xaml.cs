@@ -27,5 +27,20 @@ namespace NoiseBox_UI.View.UserControls {
         private void ButtonMouseLeave(object sender, MouseEventArgs e) {
             ((sender as Button).Content as Image).Opacity = 0.6;
         }
+
+        private void MinimizeButton_Click(object sender, RoutedEventArgs e) {
+            MainWindow win = (MainWindow)Window.GetWindow(this);
+            win.WindowState = WindowState.Minimized;
+        }
+
+        private void MaximizeButton_Click(object sender, RoutedEventArgs e) {
+            MainWindow win = (MainWindow)Window.GetWindow(this);
+            win.WindowState = win.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+        }
+
+        private void CloseButton_Click(object sender, RoutedEventArgs e) {
+            MainWindow win = (MainWindow)Window.GetWindow(this);
+            win.Close();
+        }
     }
 }

@@ -9,7 +9,7 @@
     <Grid>
         <Grid>
             <Border Background="Black" Opacity="0.2"/>
-            <TextBlock Name="CurrentPlaylistName" Text="Playlist #1" FontFamily="/Fonts/#Montserrat" FontSize="40" Foreground="#BDBDBD" VerticalAlignment="Center" Margin="20,0,0,0"/>
+            <TextBlock Name="CurrentPlaylistName" Text="Playlist not selected" FontFamily="/Fonts/#Montserrat" FontSize="40" Foreground="#BDBDBD" VerticalAlignment="Center" Margin="20,0,0,0"/>
         </Grid>
     </Grid>
 </UserControl>

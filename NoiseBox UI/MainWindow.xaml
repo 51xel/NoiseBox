@@ -51,7 +51,7 @@
         <Border Grid.Row="0" Grid.Column="0" Background="Black" BorderBrush="White" BorderThickness="0 0 0 2" Opacity="0.4"/>
         <userControls:NewPlaylistButton Grid.Row="0" Grid.Column="0"/>
 
-        <userControls:PlaylistText x:Name="PlaylistTextName" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"/>
+        <userControls:PlaylistText x:Name="PlaylistText" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"/>
 
         <!--Row 1-->
         <Border Grid.Row="1" Grid.Column="0" Background="Black" Opacity="0.4"/>

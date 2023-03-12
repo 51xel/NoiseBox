@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NoiseBox;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,7 +33,14 @@ namespace NoiseBox_UI.View.UserControls
             if (e.Key == Key.Enter) {
                 if (!string.IsNullOrEmpty(PopupTextBox.Text)) {
                     MainWindow win = (MainWindow)Window.GetWindow(this);
-                    win.PlaylistList.List.Items.Add(PopupTextBox.Text.Trim());
+
+                    string popupTextBoxText = PopupTextBox.Text.Trim();
+
+                    if (!win.PlaylistList.List.Items.Contains(popupTextBoxText)) {
+                        win.PlaylistList.List.Items.Add(popupTextBoxText);
+                        MusicLibrary.AddPlaylist(new Playlist { Name = popupTextBoxText });
+                    }
+                    
                     PopupTextBox.Text = "";
                     EnterNamePopup.IsOpen = false;
                 }
