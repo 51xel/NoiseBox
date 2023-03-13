@@ -63,7 +63,7 @@ namespace NoiseBox {
 
             _log.Print("[INFO][MusicLibrary] Data saved to json", LogInfoType.INFO);
         }
-        public static void AddSong(Song song) {
+        public static bool AddSong(Song song) {
             if (File.Exists(song.Path) && Path.GetExtension(song.Path).Equals(".mp3", StringComparison.OrdinalIgnoreCase)) {
                 // Generate a unique ID for the song
                 song.Id = Guid.NewGuid().ToString();
@@ -84,7 +84,11 @@ namespace NoiseBox {
                 _log.Print($"[INFO][MusicLibrary] New song with id {song.Id} added", LogInfoType.INFO);
 
                 SaveToJson();
+
+                return true;
             }
+
+            return false;
         }
 
         public static void RemoveSong(string songId) {
@@ -148,7 +152,6 @@ namespace NoiseBox {
                         playlist.SongIds.RemoveAt(position);
                     }
                 }
-                
 
                 _log.Print($"[INFO][MusicLibrary] Song with id {songId} removed from playlist \'{playlistName}\'", LogInfoType.INFO);
 

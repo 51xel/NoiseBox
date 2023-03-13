@@ -82,10 +82,10 @@ namespace NoiseBox_UI.View.UserControls {
 
                 var songToAdd = new Song() {Path = files[0]};
 
-                MusicLibrary.AddSong(songToAdd);
-                MusicLibrary.AddSongToPlaylist(songToAdd.Id, ((MainWindow)Window.GetWindow(this)).SelectedPlaylist.Name, targetIdx);
-
-                List.Items.Insert(targetIdx, songToAdd);
+                if (MusicLibrary.AddSong(songToAdd)) {
+                    MusicLibrary.AddSongToPlaylist(songToAdd.Id, ((MainWindow)Window.GetWindow(this)).SelectedPlaylist.Name, targetIdx);
+                    List.Items.Insert(targetIdx, songToAdd);
+                }
             }
         }
 
