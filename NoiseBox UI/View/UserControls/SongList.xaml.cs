@@ -57,12 +57,18 @@ namespace NoiseBox_UI.View.UserControls {
                 if (removedIdx < targetIdx) {
                     List.Items.Insert(targetIdx + 1, droppedData);
                     List.Items.RemoveAt(removedIdx);
+
+                    MusicLibrary.AddSongToPlaylist(droppedData.Id, ((MainWindow)Window.GetWindow(this)).SelectedPlaylist.Name, targetIdx + 1);
+                    MusicLibrary.RemoveSongFromPlaylist(droppedData.Id, ((MainWindow)Window.GetWindow(this)).SelectedPlaylist.Name);
                 }
                 else if (removedIdx > targetIdx) {
                     int remIdx = removedIdx + 1;
                     if (List.Items.Count + 1 > remIdx) {
                         List.Items.Insert(targetIdx, droppedData);
                         List.Items.RemoveAt(remIdx);
+
+                        MusicLibrary.AddSongToPlaylist(droppedData.Id, ((MainWindow)Window.GetWindow(this)).SelectedPlaylist.Name, targetIdx);
+                        MusicLibrary.RemoveSongFromPlaylist(droppedData.Id, ((MainWindow)Window.GetWindow(this)).SelectedPlaylist.Name, remIdx);
                     }
                 }
                 else {
@@ -74,7 +80,12 @@ namespace NoiseBox_UI.View.UserControls {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
                 int targetIdx = List.Items.IndexOf(target);
 
-                List.Items.Insert(targetIdx, new Song() { Id = "0", Name = "Dropped file", Path = files[0], Duration = TimeSpan.FromSeconds(0) });
+                var songToAdd = new Song() {Path = files[0]};
+
+                MusicLibrary.AddSong(songToAdd);
+                MusicLibrary.AddSongToPlaylist(songToAdd.Id, ((MainWindow)Window.GetWindow(this)).SelectedPlaylist.Name, targetIdx);
+
+                List.Items.Insert(targetIdx, songToAdd);
             }
         }
 

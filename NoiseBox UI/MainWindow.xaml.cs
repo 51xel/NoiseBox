@@ -20,6 +20,7 @@ using NoiseBox_UI.View.UserControls;
 
 namespace NoiseBox_UI {
     public partial class MainWindow : Window {
+        public Playlist? SelectedPlaylist = MusicLibrary.GetPlaylists().FirstOrDefault();
 
         public MainWindow() {
             InitializeComponent();
@@ -27,11 +28,24 @@ namespace NoiseBox_UI {
             WinMax.DoSourceInitialized(this);
 
             DisplayPlaylists();
+            DisplaySonglistFromSelectedPlaylist();
 
             BottomControlPanel.PlayPauseButton.Click += PlayPauseButton_Click;
 
             SongList.ClickRowElement += (s, e) => MessageBox.Show(((s as ListViewItem).Content as Song).Name.ToString());
-            PlaylistList.ClickRowElement += (s, e) => MessageBox.Show(((s as Button).Content as ContentPresenter).Content.ToString());
+
+            PlaylistList.ClickRowElement += (s, e) => {
+                var playlistNameFromButton = (((s as Button).Content) as ContentPresenter).Content as String;
+
+                foreach (var playlist in MusicLibrary.GetPlaylists()) {
+                    if (playlist.Name == playlistNameFromButton) {
+                        SelectedPlaylist = playlist;
+                        DisplaySonglistFromSelectedPlaylist();
+
+                        break;
+                    }
+                }
+            };
         }
 
         private void WindowSizeChanged(object sender, SizeChangedEventArgs e) {
@@ -48,6 +62,7 @@ namespace NoiseBox_UI {
         }
 
         private void PlayPauseButton_Click(object sender, RoutedEventArgs e) {
+
             SongList.List.Items.Add(new Song() { Id = "0", Name = "In The End " + SongList.List.Items.Count, Path = @"D:\Music\Linkin Park", Duration = TimeSpan.FromSeconds(123) });
 
             if (BottomControlPanel.State == View.UserControls.BottomControlPanel.ButtonState.Paused) {
@@ -59,10 +74,21 @@ namespace NoiseBox_UI {
         }
 
         private void DisplayPlaylists() {
-            IEnumerable<Playlist> playlists = MusicLibrary.GetPlaylists();
+            var playlists = MusicLibrary.GetPlaylists();
 
             foreach (var p in playlists) {
                 PlaylistList.List.Items.Add(p.Name);
+            }
+        }
+
+        private void DisplaySonglistFromSelectedPlaylist() {
+            if (SelectedPlaylist != null) {
+                var songs = MusicLibrary.GetSongsFromPlaylist(SelectedPlaylist.Name);
+                SongList.List.Items.Clear();
+
+                foreach (var song in songs) {
+                    SongList.List.Items.Add(song);
+                }
             }
         }
     }

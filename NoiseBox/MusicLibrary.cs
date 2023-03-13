@@ -69,7 +69,14 @@ namespace NoiseBox {
                 song.Id = Guid.NewGuid().ToString();
 
                 var tagFile = TagLib.File.Create(song.Path);
-                song.Name = tagFile.Tag.Title;
+
+                if (tagFile.Tag.Title == null) {
+                    song.Name = Path.GetFileNameWithoutExtension(song.Path);
+                }
+                else {
+                    song.Name = tagFile.Tag.Title;
+                }
+                
                 song.Duration = tagFile.Properties.Duration;
 
                 _songs.Add(song);
@@ -110,26 +117,38 @@ namespace NoiseBox {
             SaveToJson();
         }
 
-        public static void AddSongToPlaylist(string songId, string playlistName) {
+        public static void AddSongToPlaylist(string songId, string playlistName, int position=-1) {
             var playlist = _playlists.Find(p => p.Name == playlistName);
 
             if (playlist != null) {
-                // Check if the song is already in the playlist
-                if (!playlist.SongIds.Contains(songId)) {
+                if (position == -1) {
                     playlist.SongIds.Add(songId);
-
-                    _log.Print($"[INFO][MusicLibrary] Song with id {songId} added to playlist \'{playlistName}\'", LogInfoType.INFO);
-
-                    SaveToJson();
                 }
+                else {
+                    if (position >= 0 && position <= playlist.SongIds.Count) {
+                        playlist.SongIds.Insert(position, songId);
+                    }
+                }
+
+                _log.Print($"[INFO][MusicLibrary] Song with id {songId} added to playlist \'{playlistName}\'", LogInfoType.INFO);
+
+                SaveToJson();
             }
         }
 
-        public static void RemoveSongFromPlaylist(string songId, string playlistName) {
+        public static void RemoveSongFromPlaylist(string songId, string playlistName, int position = -1) {
             var playlist = _playlists.Find(p => p.Name == playlistName);
 
             if (playlist != null) {
-                playlist.SongIds.Remove(songId);
+                if (position == -1) {
+                    playlist.SongIds.Remove(songId);
+                }
+                else {
+                    if (position >= 0 && position <= playlist.SongIds.Count) {
+                        playlist.SongIds.RemoveAt(position);
+                    }
+                }
+                
 
                 _log.Print($"[INFO][MusicLibrary] Song with id {songId} removed from playlist \'{playlistName}\'", LogInfoType.INFO);
 
