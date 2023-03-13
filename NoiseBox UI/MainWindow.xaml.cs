@@ -28,7 +28,7 @@ namespace NoiseBox_UI {
             WinMax.DoSourceInitialized(this);
 
             DisplayPlaylists();
-            DisplaySonglistFromSelectedPlaylist();
+            DisplaySelectedPlaylist();
 
             BottomControlPanel.PlayPauseButton.Click += PlayPauseButton_Click;
 
@@ -75,14 +75,14 @@ namespace NoiseBox_UI {
                 if (playlist.Name == name) {
                     SelectedPlaylist = playlist;
 
-                    DisplaySonglistFromSelectedPlaylist();
+                    DisplaySelectedPlaylist();
 
                     break;
                 }
             }
         }
 
-        private void DisplaySonglistFromSelectedPlaylist() {
+        private void DisplaySelectedPlaylist() {
             if (SelectedPlaylist != null) {
                 PlaylistText.CurrentPlaylistName.Text = SelectedPlaylist.Name;
 

@@ -82,7 +82,7 @@ namespace NoiseBox_UI.View.UserControls {
         private void ListView_Drop(object sender, DragEventArgs e) {
             Playlist selectedPlaylist = ((MainWindow)Window.GetWindow(this)).SelectedPlaylist;
 
-            if (e.Data.GetDataPresent(DataFormats.FileDrop) && selectedPlaylist != null && List.Items.Count == 0) {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop) && selectedPlaylist != null) {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
 
                 var songToAdd = new Song() { Path = files[0] };
@@ -99,7 +99,14 @@ namespace NoiseBox_UI.View.UserControls {
             if (menuItem != null) {
                 Button button = ((ContextMenu)menuItem.Parent).PlacementTarget as Button;
 
-                MessageBox.Show($"{menuItem.Header} on {((button.Content as GridViewRowPresenter).Content as Song).Name}");
+                var win = ((MainWindow)Window.GetWindow(this));
+
+                if (Equals(menuItem.Header, "Remove from playlist")) {
+                    MusicLibrary.RemoveSongFromPlaylist(((menuItem.DataContext) as NoiseBox.Song).Id, win.SelectedPlaylist.Name);
+                    MusicLibrary.RemoveSong(((menuItem.DataContext) as NoiseBox.Song).Id);
+
+                    List.Items.Remove((menuItem.DataContext) as NoiseBox.Song);
+                }
             }
         }
     }

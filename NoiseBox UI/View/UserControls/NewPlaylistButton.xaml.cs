@@ -38,9 +38,14 @@ namespace NoiseBox_UI.View.UserControls
 
                     if (!win.PlaylistList.List.Items.Contains(popupTextBoxText)) {
                         win.PlaylistList.List.Items.Add(popupTextBoxText);
-                        MusicLibrary.AddPlaylist(new Playlist { Name = popupTextBoxText });
+
+                        var playlistToAdd = new Playlist { Name = popupTextBoxText };
+
+                        MusicLibrary.AddPlaylist(playlistToAdd);
+
+                        win.SelectPlaylistByName(popupTextBoxText);
                     }
-                    
+
                     PopupTextBox.Text = "";
                     EnterNamePopup.IsOpen = false;
                 }
