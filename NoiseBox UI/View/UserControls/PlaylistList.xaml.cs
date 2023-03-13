@@ -30,13 +30,26 @@ namespace NoiseBox_UI.View.UserControls
             var droppedData = e.Data.GetData(typeof(Song)) as Song;
             var target = ((ListViewItem)(sender)).DataContext;
 
-            if (droppedData != null) {
-                MessageBox.Show(droppedData.Name + " to " + target);
-            }
-
             if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                MessageBox.Show(String.Join(" ", files) + $" dropped into {target} playlist");
+
+                var songToAdd = new Song() { Path = files[0] };
+
+                var win = ((MainWindow)Window.GetWindow(this));
+
+                if (MusicLibrary.AddSong(songToAdd)) {
+                    MusicLibrary.AddSongToPlaylist(songToAdd.Id, target.ToString());
+
+                    if (win.SelectedPlaylist == null) {
+                        win.SelectPlaylistByName(target.ToString());
+                    }
+                    else if (win.SelectedPlaylist.Name == target.ToString()) {
+                        win.SongList.List.Items.Add(songToAdd);
+                    }
+                    else {
+                        win.SelectPlaylistByName(target.ToString());
+                    }
+                }
             }
         }
 
@@ -45,13 +58,16 @@ namespace NoiseBox_UI.View.UserControls
             if (menuItem != null) {
                 Button button = ((ContextMenu)menuItem.Parent).PlacementTarget as Button;
 
+                var win = ((MainWindow)Window.GetWindow(this));
+
                 if (Equals(menuItem.Header, "Remove playlist")) {
                     string pName = (button.Content as ContentPresenter).Content.ToString();
                     List.Items.Remove(pName);
                     MusicLibrary.RemovePlaylist(pName);
 
-                    ((MainWindow)Window.GetWindow(this)).PlaylistText.CurrentPlaylistName.Text = "Playlist not selected";
-                    ((MainWindow)Window.GetWindow(this)).SongList.List.Items.Clear();
+                    win.PlaylistText.CurrentPlaylistName.Text = "Playlist not selected";
+                    win.SongList.List.Items.Clear();
+                    win.SelectedPlaylist = null;
                 }
             }
         }

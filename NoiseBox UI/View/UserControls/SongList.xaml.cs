@@ -79,6 +79,21 @@ namespace NoiseBox_UI.View.UserControls {
             }
         }
 
+        private void ListView_Drop(object sender, DragEventArgs e) {
+            Playlist selectedPlaylist = ((MainWindow)Window.GetWindow(this)).SelectedPlaylist;
+
+            if (e.Data.GetDataPresent(DataFormats.FileDrop) && selectedPlaylist != null && List.Items.Count == 0) {
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+
+                var songToAdd = new Song() { Path = files[0] };
+
+                if (MusicLibrary.AddSong(songToAdd)) {
+                    MusicLibrary.AddSongToPlaylist(songToAdd.Id, selectedPlaylist.Name);
+                    List.Items.Add(songToAdd);
+                }
+            }
+        }
+
         private void MenuItem_Click(object sender, RoutedEventArgs e) {
             MenuItem menuItem = sender as MenuItem;
             if (menuItem != null) {
@@ -86,6 +101,20 @@ namespace NoiseBox_UI.View.UserControls {
 
                 MessageBox.Show($"{menuItem.Header} on {((button.Content as GridViewRowPresenter).Content as Song).Name}");
             }
+        }
+    }
+
+    public class DurationConverter : IValueConverter {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) {
+            var ts = (TimeSpan)value;
+
+            var output = string.Format("{0}:{1}", (int)ts.TotalMinutes, ts.Seconds.ToString("D2"));
+
+            return output;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) {
+            return Binding.DoNothing;
         }
     }
 }

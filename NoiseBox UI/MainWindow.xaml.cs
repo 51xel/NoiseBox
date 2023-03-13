@@ -30,28 +30,11 @@ namespace NoiseBox_UI {
             DisplayPlaylists();
             DisplaySonglistFromSelectedPlaylist();
 
-            if (SelectedPlaylist != null) {
-                PlaylistText.CurrentPlaylistName.Text = SelectedPlaylist.Name;
-            }
-
             BottomControlPanel.PlayPauseButton.Click += PlayPauseButton_Click;
 
-            SongList.ClickRowElement += (s, e) => MessageBox.Show(((s as ListViewItem).Content as Song).Name.ToString());
+            SongList.ClickRowElement += (s, e) => MessageBox.Show(((s as ListViewItem).Content as Song).Duration.ToString());
 
-            PlaylistList.ClickRowElement += (s, e) => {
-                var playlistNameFromButton = (((s as Button).Content) as ContentPresenter).Content as String;
-
-                foreach (var playlist in MusicLibrary.GetPlaylists()) {
-                    if (playlist.Name == playlistNameFromButton) {
-                        SelectedPlaylist = playlist;
-
-                        PlaylistText.CurrentPlaylistName.Text = playlist.Name;
-                        DisplaySonglistFromSelectedPlaylist();
-
-                        break;
-                    }
-                }
-            };
+            PlaylistList.ClickRowElement += (s, e) => { SelectPlaylistByName((((s as Button).Content) as ContentPresenter).Content as String); };
         }
 
         private void WindowSizeChanged(object sender, SizeChangedEventArgs e) {
@@ -87,8 +70,22 @@ namespace NoiseBox_UI {
             }
         }
 
+        public void SelectPlaylistByName(string name) {
+            foreach (var playlist in MusicLibrary.GetPlaylists()) {
+                if (playlist.Name == name) {
+                    SelectedPlaylist = playlist;
+
+                    DisplaySonglistFromSelectedPlaylist();
+
+                    break;
+                }
+            }
+        }
+
         private void DisplaySonglistFromSelectedPlaylist() {
             if (SelectedPlaylist != null) {
+                PlaylistText.CurrentPlaylistName.Text = SelectedPlaylist.Name;
+
                 var songs = MusicLibrary.GetSongsFromPlaylist(SelectedPlaylist.Name);
                 SongList.List.Items.Clear();
 
