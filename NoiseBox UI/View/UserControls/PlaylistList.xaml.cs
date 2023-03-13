@@ -49,6 +49,9 @@ namespace NoiseBox_UI.View.UserControls
                     string pName = (button.Content as ContentPresenter).Content.ToString();
                     List.Items.Remove(pName);
                     MusicLibrary.RemovePlaylist(pName);
+
+                    ((MainWindow)Window.GetWindow(this)).PlaylistText.CurrentPlaylistName.Text = "Playlist not selected";
+                    ((MainWindow)Window.GetWindow(this)).SongList.List.Items.Clear();
                 }
             }
         }

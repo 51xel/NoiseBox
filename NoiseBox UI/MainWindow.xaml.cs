@@ -30,6 +30,10 @@ namespace NoiseBox_UI {
             DisplayPlaylists();
             DisplaySonglistFromSelectedPlaylist();
 
+            if (SelectedPlaylist != null) {
+                PlaylistText.CurrentPlaylistName.Text = SelectedPlaylist.Name;
+            }
+
             BottomControlPanel.PlayPauseButton.Click += PlayPauseButton_Click;
 
             SongList.ClickRowElement += (s, e) => MessageBox.Show(((s as ListViewItem).Content as Song).Name.ToString());
@@ -40,6 +44,8 @@ namespace NoiseBox_UI {
                 foreach (var playlist in MusicLibrary.GetPlaylists()) {
                     if (playlist.Name == playlistNameFromButton) {
                         SelectedPlaylist = playlist;
+
+                        PlaylistText.CurrentPlaylistName.Text = playlist.Name;
                         DisplaySonglistFromSelectedPlaylist();
 
                         break;
