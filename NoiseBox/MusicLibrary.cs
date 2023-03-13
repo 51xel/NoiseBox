@@ -125,33 +125,28 @@ namespace NoiseBox {
             var playlist = _playlists.Find(p => p.Name == playlistName);
 
             if (playlist != null) {
-                if (position == -1) {
-                    playlist.SongIds.Add(songId);
-                }
-                else {
-                    if (position >= 0 && position <= playlist.SongIds.Count) {
-                        playlist.SongIds.Insert(position, songId);
+                if (!playlist.SongIds.Contains(songId)) {
+                    if (position == -1) {
+                        playlist.SongIds.Add(songId);
                     }
+                    else {
+                        if (position >= 0 && position <= playlist.SongIds.Count) {
+                            playlist.SongIds.Insert(position, songId);
+                        }
+                    }
+
+                    _log.Print($"[INFO][MusicLibrary] Song with id {songId} added to playlist \'{playlistName}\'", LogInfoType.INFO);
+
+                    SaveToJson();
                 }
-
-                _log.Print($"[INFO][MusicLibrary] Song with id {songId} added to playlist \'{playlistName}\'", LogInfoType.INFO);
-
-                SaveToJson();
             }
         }
 
-        public static void RemoveSongFromPlaylist(string songId, string playlistName, int position = -1) {
+        public static void RemoveSongFromPlaylist(string songId, string playlistName) {
             var playlist = _playlists.Find(p => p.Name == playlistName);
 
             if (playlist != null) {
-                if (position == -1) {
-                    playlist.SongIds.Remove(songId);
-                }
-                else {
-                    if (position >= 0 && position <= playlist.SongIds.Count) {
-                        playlist.SongIds.RemoveAt(position);
-                    }
-                }
+                playlist.SongIds.Remove(songId);
 
                 _log.Print($"[INFO][MusicLibrary] Song with id {songId} removed from playlist \'{playlistName}\'", LogInfoType.INFO);
 

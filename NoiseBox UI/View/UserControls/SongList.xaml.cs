@@ -54,22 +54,12 @@ namespace NoiseBox_UI.View.UserControls {
                 int removedIdx = List.Items.IndexOf(droppedData);
                 int targetIdx = List.Items.IndexOf(target);
 
-                if (removedIdx < targetIdx) {
-                    List.Items.Insert(targetIdx + 1, droppedData);
+                if (removedIdx != targetIdx) {
                     List.Items.RemoveAt(removedIdx);
+                    List.Items.Insert(targetIdx, droppedData);
 
-                    MusicLibrary.AddSongToPlaylist(droppedData.Id, ((MainWindow)Window.GetWindow(this)).SelectedPlaylist.Name, targetIdx + 1);
                     MusicLibrary.RemoveSongFromPlaylist(droppedData.Id, ((MainWindow)Window.GetWindow(this)).SelectedPlaylist.Name);
-                }
-                else if (removedIdx > targetIdx) {
-                    int remIdx = removedIdx + 1;
-                    if (List.Items.Count + 1 > remIdx) {
-                        List.Items.Insert(targetIdx, droppedData);
-                        List.Items.RemoveAt(remIdx);
-
-                        MusicLibrary.AddSongToPlaylist(droppedData.Id, ((MainWindow)Window.GetWindow(this)).SelectedPlaylist.Name, targetIdx);
-                        MusicLibrary.RemoveSongFromPlaylist(droppedData.Id, ((MainWindow)Window.GetWindow(this)).SelectedPlaylist.Name, remIdx);
-                    }
+                    MusicLibrary.AddSongToPlaylist(droppedData.Id, ((MainWindow)Window.GetWindow(this)).SelectedPlaylist.Name, targetIdx);
                 }
                 else {
                     ClickRowElement?.Invoke(sender, null);
