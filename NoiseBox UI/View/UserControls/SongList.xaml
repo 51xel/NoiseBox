@@ -28,13 +28,14 @@
                                 FontFamily="/Fonts/#Montserrat"
                                 FontSize="18"
                                 Foreground="#BDBDBD"
-                                FontWeight="Normal">
+                                FontWeight="Normal"
+                                Click="ClickRowElement">
                             <GridViewRowPresenter/>
 
                             <Button.ContextMenu>
                                 <ContextMenu Background="#212121" Foreground="#BDBDBD" FontFamily="/Fonts/#Montserrat" FontWeight="DemiBold">
                                     <MenuItem Header="Remove from playlist" Click="MenuItem_Click"/>
-                                    <MenuItem Header="Rename" Click="MenuItem_Click"/>
+                                    <MenuItem Header="Rename" Click="MenuItem_Click" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />
                                 </ContextMenu>
                             </Button.ContextMenu>
                         </Button>
@@ -54,6 +55,8 @@
             <Setter Property="AllowDrop" Value="True"/>
             <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ListViewItem_PreviewMouseLeftButtonDown"/>
             <EventSetter Event="Drop" Handler="ListViewItem_Drop"/>
+
+            <EventSetter Event="PreviewMouseMove" Handler="ListViewItem_PreviewMouseMove"/>
         </Style>
 
         <Style TargetType="{x:Type GridViewColumnHeader}">
@@ -90,6 +93,18 @@
             </Style.Triggers>
         </Style>
 
+        <Style x:Key="GridViewCellTextBox" TargetType="{x:Type TextBox}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="#BDBDBD"/>
+
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=Text}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
         <local:DurationConverter x:Key="durationConverter" />
     </UserControl.Resources>
     <Grid>
@@ -107,7 +122,7 @@
                     <GridViewColumn Header="Name">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Style="{DynamicResource GridViewCell}" Text="{Binding Name}"/>
+                                <TextBox Style="{DynamicResource GridViewCellTextBox}" Text="{Binding Name, Mode=OneWay}" IsReadOnly="True" Cursor="Hand" Focusable="False"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -115,7 +130,7 @@
                     <GridViewColumn Header="Path To File">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Style="{DynamicResource GridViewCell}" Text="{Binding Path}"/>
+                                <TextBlock Style="{DynamicResource GridViewCell}" Text="{Binding Path}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

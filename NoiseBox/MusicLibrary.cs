@@ -15,12 +15,28 @@ namespace NoiseBox {
         public string Name { get; set; }
         public string Path { get; set; }
         public TimeSpan Duration { get; set; }
+
+        public Song Clone() {
+            return new Song {
+                Id = this.Id,
+                Name = this.Name,
+                Path = this.Path,
+                Duration = this.Duration
+            };
+        }
     }
     public class Playlist {
         public string Name { get; set; }
         public List<string> SongIds { get; set; }
         public Playlist() {
             SongIds = new List<string>();
+        }
+
+        public Playlist Clone() {
+            return new Playlist {
+                Name = this.Name,
+                SongIds = this.SongIds.ToList()
+            };
         }
     }
     public class MusicLibrary {
@@ -79,7 +95,7 @@ namespace NoiseBox {
                 
                 song.Duration = tagFile.Properties.Duration;
 
-                _songs.Add(song);
+                _songs.Add(song.Clone());
 
                 _log.Print($"[INFO][MusicLibrary] New song with id {song.Id} added", LogInfoType.INFO);
 
@@ -105,7 +121,7 @@ namespace NoiseBox {
 
         public static void AddPlaylist(Playlist playlist) {
             if (_playlists.Find(p => p.Name == playlist.Name) == null) {
-                _playlists.Add(playlist);
+                _playlists.Add(playlist.Clone());
 
                 _log.Print($"[INFO][MusicLibrary] New playlist \'{playlist.Name}\' added", LogInfoType.INFO);
 
@@ -169,22 +185,48 @@ namespace NoiseBox {
         }
 
         public static IEnumerable<Song> GetSongs() {
-            return _songs;
+            var newPlayList = new List<Song>();
+
+            foreach (var songToAdd in _songs) {
+                newPlayList.Add(songToAdd.Clone());
+            }
+
+            return newPlayList;
         }
+
         public static IEnumerable<Playlist> GetPlaylists() {
+            var newPlayLists = new List<Playlist>();
+
+            foreach (var playListToAdd in _playlists) {
+                newPlayLists.Add(playListToAdd.Clone());
+            }
+
             return _playlists;
         }
-        public static List<Song> GetSongsFromPlaylist(string playlistName) {
+
+        public static IEnumerable<Song> GetSongsFromPlaylist(string playlistName) {
             var playlist = _playlists.Find(p => p.Name == playlistName);
             var songsFromPlaylist = new List<Song>();
 
             if (playlist != null) {
                 foreach (var songId in playlist.SongIds) {
-                    songsFromPlaylist.Add(_songs.Find(p => p.Id == songId));
+                    songsFromPlaylist.Add(_songs.Find(p => p.Id == songId).Clone());
                 }
             }
 
             return songsFromPlaylist;
+        }
+
+        public static bool RenameSong(string songId, string newName) {
+            if (songId != null && !String.IsNullOrWhiteSpace(songId) && newName != null && !String.IsNullOrWhiteSpace(newName)) {
+                var song = _songs.Find(s => s.Id == songId);
+                song.Name = newName;
+                SaveToJson();
+
+                return true;
+            }
+
+            return false;
         }
     }
 }

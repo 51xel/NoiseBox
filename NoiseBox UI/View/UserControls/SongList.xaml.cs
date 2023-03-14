@@ -26,6 +26,9 @@ namespace NoiseBox_UI.View.UserControls {
         }
 
         public RoutedEventHandler ClickRowElement;
+        private bool _isDragging = false;
+        private Point _startPoint;
+        private string _oldTextTextBox;
 
         private void ListView_SizeChanged(object sender, SizeChangedEventArgs e) {
             var listView = sender as ListView;
@@ -38,12 +41,30 @@ namespace NoiseBox_UI.View.UserControls {
             gridView.Columns[2].Width = workingWidth * 0.6;
         }
 
-        private void ListViewItem_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
-            var draggedItem = sender as ListViewItem;
+        private void StartDrag(object sender, MouseEventArgs e) {
+            _isDragging = true;
 
+            var draggedItem = sender as ListViewItem;
             if (draggedItem != null) {
                 DragDrop.DoDragDrop(draggedItem, draggedItem.DataContext, DragDropEffects.Move);
             }
+
+            _isDragging = false;
+        }
+
+        private void ListViewItem_PreviewMouseMove(object sender, MouseEventArgs e) {
+            if (e.LeftButton == MouseButtonState.Pressed && !_isDragging) {
+                Point position = e.GetPosition(null);
+
+                if (Math.Abs(position.X - _startPoint.X) > SystemParameters.MinimumHorizontalDragDistance ||
+                        Math.Abs(position.Y - _startPoint.Y) > SystemParameters.MinimumVerticalDragDistance) {
+                    StartDrag(sender, e);
+                }
+            }
+        }
+
+        private void ListViewItem_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+            _startPoint = e.GetPosition(null);
         }
 
         private void ListViewItem_Drop(object sender, DragEventArgs e) {
@@ -60,9 +81,6 @@ namespace NoiseBox_UI.View.UserControls {
 
                     MusicLibrary.RemoveSongFromPlaylist(droppedData.Id, ((MainWindow)Window.GetWindow(this)).SelectedPlaylist.Name);
                     MusicLibrary.AddSongToPlaylist(droppedData.Id, ((MainWindow)Window.GetWindow(this)).SelectedPlaylist.Name, targetIdx);
-                }
-                else {
-                    ClickRowElement?.Invoke(sender, null);
                 }
             }
 
@@ -97,15 +115,79 @@ namespace NoiseBox_UI.View.UserControls {
         private void MenuItem_Click(object sender, RoutedEventArgs e) {
             MenuItem menuItem = sender as MenuItem;
             if (menuItem != null) {
-                Button button = ((ContextMenu)menuItem.Parent).PlacementTarget as Button;
-
                 var win = ((MainWindow)Window.GetWindow(this));
 
                 if (Equals(menuItem.Header, "Remove from playlist")) {
-                    MusicLibrary.RemoveSongFromPlaylist(((menuItem.DataContext) as NoiseBox.Song).Id, win.SelectedPlaylist.Name);
-                    MusicLibrary.RemoveSong(((menuItem.DataContext) as NoiseBox.Song).Id);
+                    MusicLibrary.RemoveSongFromPlaylist(((menuItem.DataContext) as Song).Id, win.SelectedPlaylist.Name);
+                    MusicLibrary.RemoveSong(((menuItem.DataContext) as Song).Id);
 
-                    List.Items.Remove((menuItem.DataContext) as NoiseBox.Song);
+                    List.Items.Remove((menuItem.DataContext) as Song);
+                }else if (Equals(menuItem.Header, "Rename")) {
+                    foreach (var textBox in FindVisualChildren<TextBox>(this)) {
+                        if (textBox.Text == ((menuItem.DataContext) as Song).Name) {
+                            textBox.IsReadOnly = false;
+                            textBox.Cursor = Cursors.IBeam;
+                            textBox.SelectAll();
+
+                            textBox.Focusable = true;
+                            textBox.Focus();
+
+                            textBox.Background = (Brush)((new BrushConverter()).ConvertFrom("#dbdbdb"));
+                            textBox.Foreground = (Brush)((new BrushConverter()).ConvertFrom("#8f8f8f"));
+
+                            textBox.KeyDown += TextBox_KeyDown;
+                            textBox.LostFocus += TextBox_LostFocus;
+
+                            _oldTextTextBox = textBox.Text;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void SetTextBoxToDefaultAndSaveText(object sender) {
+            var textBox = sender as TextBox;
+
+            textBox.IsReadOnly = true;
+            textBox.Cursor = Cursors.Hand;
+
+            textBox.Focusable = false;
+
+            textBox.Background = Brushes.Transparent;
+            textBox.Foreground = (Brush)((new BrushConverter()).ConvertFrom("#BDBDBD"));
+
+            textBox.KeyDown -= TextBox_KeyDown;
+            textBox.MouseDown -= TextBox_LostFocus;
+
+            if(!MusicLibrary.RenameSong(((textBox.DataContext) as Song).Id, textBox.Text)) {
+                textBox.Text = _oldTextTextBox;
+            }
+            else {
+                ((textBox.DataContext) as Song).Name = textBox.Text;
+            }
+        }
+
+         private void TextBox_KeyDown(object sender, KeyEventArgs e){
+            if (e.Key == Key.Enter) {
+                SetTextBoxToDefaultAndSaveText(sender);
+            }
+        }
+
+        private void TextBox_LostFocus(object sender, RoutedEventArgs e) {
+            SetTextBoxToDefaultAndSaveText(sender);
+        }
+
+        private IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject {
+            if (depObj != null) {
+                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++) {
+                    DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
+
+                    if (child != null && child is T)
+                        yield return (T)child;
+
+                    foreach (T childOfChild in FindVisualChildren<T>(child))
+                        yield return childOfChild;
                 }
             }
         }

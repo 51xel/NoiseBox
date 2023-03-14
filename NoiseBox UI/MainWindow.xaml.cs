@@ -32,7 +32,7 @@ namespace NoiseBox_UI {
 
             BottomControlPanel.PlayPauseButton.Click += PlayPauseButton_Click;
 
-            SongList.ClickRowElement += (s, e) => MessageBox.Show(((s as ListViewItem).Content as Song).Duration.ToString());
+            SongList.ClickRowElement += (s, e) => MessageBox.Show((((s as Button).Content as GridViewRowPresenter).Content as Song).Duration.ToString());
 
             PlaylistList.ClickRowElement += (s, e) => { SelectPlaylistByName((((s as Button).Content) as ContentPresenter).Content as String); };
         }
