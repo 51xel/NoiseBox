@@ -31,10 +31,10 @@ namespace NoiseBox_UI.View.UserControls
 
         private void PopupTextBox_KeyDown(object sender, KeyEventArgs e) {
             if (e.Key == Key.Enter) {
-                if (!string.IsNullOrEmpty(PopupTextBox.Text)) {
-                    MainWindow win = (MainWindow)Window.GetWindow(this);
+                string popupTextBoxText = PopupTextBox.Text.Trim();
 
-                    string popupTextBoxText = PopupTextBox.Text.Trim();
+                if (!string.IsNullOrEmpty(popupTextBoxText)) {
+                    MainWindow win = (MainWindow)Window.GetWindow(this); 
 
                     if (!win.PlaylistList.List.Items.Contains(popupTextBoxText)) {
                         win.PlaylistList.List.Items.Add(popupTextBoxText);

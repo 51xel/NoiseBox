@@ -184,24 +184,37 @@ namespace NoiseBox {
             }
         }
 
-        public static IEnumerable<Song> GetSongs() {
-            var newPlayList = new List<Song>();
+        public static bool RenameSong(string songId, string newName) {
+            var song = _songs.Find(s => s.Id == songId);
 
-            foreach (var songToAdd in _songs) {
-                newPlayList.Add(songToAdd.Clone());
+            if (song != null && !string.IsNullOrEmpty(newName)) {
+                song.Name = newName;
+                SaveToJson();
+
+                return true;
             }
 
-            return newPlayList;
+            return false;
+        }
+
+        public static IEnumerable<Song> GetSongs() {
+            var songs = new List<Song>();
+
+            foreach (var song in _songs) {
+                songs.Add(song.Clone());
+            }
+
+            return songs;
         }
 
         public static IEnumerable<Playlist> GetPlaylists() {
-            var newPlayLists = new List<Playlist>();
+            var playlists = new List<Playlist>();
 
-            foreach (var playListToAdd in _playlists) {
-                newPlayLists.Add(playListToAdd.Clone());
+            foreach (var playlist in _playlists) {
+                playlists.Add(playlist.Clone());
             }
 
-            return _playlists;
+            return playlists;
         }
 
         public static IEnumerable<Song> GetSongsFromPlaylist(string playlistName) {
@@ -215,18 +228,6 @@ namespace NoiseBox {
             }
 
             return songsFromPlaylist;
-        }
-
-        public static bool RenameSong(string songId, string newName) {
-            if (songId != null && !String.IsNullOrWhiteSpace(songId) && newName != null && !String.IsNullOrWhiteSpace(newName)) {
-                var song = _songs.Find(s => s.Id == songId);
-                song.Name = newName;
-                SaveToJson();
-
-                return true;
-            }
-
-            return false;
         }
     }
 }

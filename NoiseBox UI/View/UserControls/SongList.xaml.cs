@@ -28,7 +28,7 @@ namespace NoiseBox_UI.View.UserControls {
         public RoutedEventHandler ClickRowElement;
         private bool _isDragging = false;
         private Point _startPoint;
-        private string _oldTextTextBox;
+        private string _oldTextBoxText;
 
         private void ListView_SizeChanged(object sender, SizeChangedEventArgs e) {
             var listView = sender as ListView;
@@ -115,16 +115,17 @@ namespace NoiseBox_UI.View.UserControls {
         private void MenuItem_Click(object sender, RoutedEventArgs e) {
             MenuItem menuItem = sender as MenuItem;
             if (menuItem != null) {
-                var win = ((MainWindow)Window.GetWindow(this));
+                var win = (MainWindow)Window.GetWindow(this);
 
                 if (Equals(menuItem.Header, "Remove from playlist")) {
-                    MusicLibrary.RemoveSongFromPlaylist(((menuItem.DataContext) as Song).Id, win.SelectedPlaylist.Name);
-                    MusicLibrary.RemoveSong(((menuItem.DataContext) as Song).Id);
+                    MusicLibrary.RemoveSongFromPlaylist((menuItem.DataContext as Song).Id, win.SelectedPlaylist.Name);
+                    MusicLibrary.RemoveSong((menuItem.DataContext as Song).Id);
 
-                    List.Items.Remove((menuItem.DataContext) as Song);
-                }else if (Equals(menuItem.Header, "Rename")) {
+                    List.Items.Remove(menuItem.DataContext as Song);
+                }
+                else if (Equals(menuItem.Header, "Rename")) {
                     foreach (var textBox in FindVisualChildren<TextBox>(this)) {
-                        if (textBox.Text == ((menuItem.DataContext) as Song).Name) {
+                        if (textBox.Text == (menuItem.DataContext as Song).Name) {
                             textBox.IsReadOnly = false;
                             textBox.Cursor = Cursors.IBeam;
                             textBox.SelectAll();
@@ -132,13 +133,12 @@ namespace NoiseBox_UI.View.UserControls {
                             textBox.Focusable = true;
                             textBox.Focus();
 
-                            textBox.Background = (Brush)((new BrushConverter()).ConvertFrom("#dbdbdb"));
-                            textBox.Foreground = (Brush)((new BrushConverter()).ConvertFrom("#8f8f8f"));
+                            textBox.FontWeight = FontWeights.Bold;
 
-                            textBox.KeyDown += TextBox_KeyDown;
-                            textBox.LostFocus += TextBox_LostFocus;
+                            _oldTextBoxText = textBox.Text;
 
-                            _oldTextTextBox = textBox.Text;
+                            _isDragging = true; // prevents dragging while entering and allows text selection with mouse
+
                             break;
                         }
                     }
@@ -154,21 +154,27 @@ namespace NoiseBox_UI.View.UserControls {
 
             textBox.Focusable = false;
 
-            textBox.Background = Brushes.Transparent;
-            textBox.Foreground = (Brush)((new BrushConverter()).ConvertFrom("#BDBDBD"));
+            textBox.FontWeight = FontWeights.Normal;
 
-            textBox.KeyDown -= TextBox_KeyDown;
-            textBox.MouseDown -= TextBox_LostFocus;
+            var textBoxText = textBox.Text.Trim();
 
-            if(!MusicLibrary.RenameSong(((textBox.DataContext) as Song).Id, textBox.Text)) {
-                textBox.Text = _oldTextTextBox;
+            if (textBoxText != _oldTextBoxText) {
+                if (!MusicLibrary.RenameSong((textBox.DataContext as Song).Id, textBoxText)) {
+                    textBox.Text = _oldTextBoxText;
+                }
+                else {
+                    textBox.Text = textBoxText;
+                    (textBox.DataContext as Song).Name = textBoxText;
+                }
             }
             else {
-                ((textBox.DataContext) as Song).Name = textBox.Text;
+                textBox.Text = _oldTextBoxText;
             }
+
+            _isDragging = false;
         }
 
-         private void TextBox_KeyDown(object sender, KeyEventArgs e){
+        private void TextBox_KeyDown(object sender, KeyEventArgs e) {
             if (e.Key == Key.Enter) {
                 SetTextBoxToDefaultAndSaveText(sender);
             }

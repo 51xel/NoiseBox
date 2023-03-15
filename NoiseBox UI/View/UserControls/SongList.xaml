@@ -35,7 +35,7 @@
                             <Button.ContextMenu>
                                 <ContextMenu Background="#212121" Foreground="#BDBDBD" FontFamily="/Fonts/#Montserrat" FontWeight="DemiBold">
                                     <MenuItem Header="Remove from playlist" Click="MenuItem_Click"/>
-                                    <MenuItem Header="Rename" Click="MenuItem_Click" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />
+                                    <MenuItem Header="Rename" Click="MenuItem_Click"/>
                                 </ContextMenu>
                             </Button.ContextMenu>
                         </Button>
@@ -54,9 +54,8 @@
             </Setter>
             <Setter Property="AllowDrop" Value="True"/>
             <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ListViewItem_PreviewMouseLeftButtonDown"/>
-            <EventSetter Event="Drop" Handler="ListViewItem_Drop"/>
-
             <EventSetter Event="PreviewMouseMove" Handler="ListViewItem_PreviewMouseMove"/>
+            <EventSetter Event="Drop" Handler="ListViewItem_Drop"/>
         </Style>
 
         <Style TargetType="{x:Type GridViewColumnHeader}">
@@ -97,6 +96,7 @@
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Foreground" Value="#BDBDBD"/>
+            <Setter Property="CaretBrush" Value="#BDBDBD"/>
 
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
@@ -122,7 +122,8 @@
                     <GridViewColumn Header="Name">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBox Style="{DynamicResource GridViewCellTextBox}" Text="{Binding Name, Mode=OneWay}" IsReadOnly="True" Cursor="Hand" Focusable="False"/>
+                                <TextBox Style="{DynamicResource GridViewCellTextBox}" Text="{Binding Name, Mode=OneWay}" IsReadOnly="True" Cursor="Hand" Focusable="False"
+                                         KeyDown="TextBox_KeyDown" LostFocus="TextBox_LostFocus"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
