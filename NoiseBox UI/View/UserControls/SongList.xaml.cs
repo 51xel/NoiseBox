@@ -124,24 +124,23 @@ namespace NoiseBox_UI.View.UserControls {
                     List.Items.Remove(menuItem.DataContext as Song);
                 }
                 else if (Equals(menuItem.Header, "Rename")) {
-                    foreach (var textBox in FindVisualChildren<TextBox>(this)) {
-                        if (textBox.Text == (menuItem.DataContext as Song).Name) {
-                            textBox.IsReadOnly = false;
-                            textBox.Cursor = Cursors.IBeam;
-                            textBox.SelectAll();
+                    var button = ((ContextMenu)menuItem.Parent).PlacementTarget as Button;
+                    var buttonGVRP = button.Content as GridViewRowPresenter;
 
-                            textBox.Focusable = true;
-                            textBox.Focus();
+                    var textBox = FindVisualChildren<TextBox>(buttonGVRP).First(); // we only have 1 textbox in button
 
-                            textBox.FontWeight = FontWeights.Bold;
+                    textBox.IsReadOnly = false;
+                    textBox.Cursor = Cursors.IBeam;
+                    textBox.SelectAll();
 
-                            _oldTextBoxText = textBox.Text;
+                    textBox.Focusable = true;
+                    textBox.Focus();
 
-                            _isDragging = true; // prevents dragging while entering and allows text selection with mouse
+                    textBox.FontWeight = FontWeights.Bold;
 
-                            break;
-                        }
-                    }
+                    _oldTextBoxText = textBox.Text;
+
+                    _isDragging = true; // prevents dragging while entering and allows text selection with mouse
                 }
             }
         }
