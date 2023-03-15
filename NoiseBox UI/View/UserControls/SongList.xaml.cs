@@ -95,6 +95,12 @@ namespace NoiseBox_UI.View.UserControls {
                     List.Items.Insert(targetIdx, songToAdd);
                 }
             }
+
+            e.Handled = true; // prevents ListView_Drop from being raised
+        }
+
+        private void TextBox_PreviewDragOver(object sender, DragEventArgs e) {
+            e.Handled = true; // allows objects to be dropped on TextBox
         }
 
         private void ListView_Drop(object sender, DragEventArgs e) {

@@ -97,6 +97,7 @@
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Foreground" Value="#BDBDBD"/>
             <Setter Property="CaretBrush" Value="#BDBDBD"/>
+            <EventSetter Event="PreviewDragOver" Handler="TextBox_PreviewDragOver"/>
 
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
