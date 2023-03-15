@@ -56,6 +56,8 @@
             <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ListViewItem_PreviewMouseLeftButtonDown"/>
             <EventSetter Event="PreviewMouseMove" Handler="ListViewItem_PreviewMouseMove"/>
             <EventSetter Event="Drop" Handler="ListViewItem_Drop"/>
+            <EventSetter Event="PreviewDragEnter" Handler="ListViewItem_PreviewDragEnter"/>
+            <EventSetter Event="PreviewDragLeave" Handler="ListViewItem_PreviewDragLeave"/>
         </Style>
 
         <Style TargetType="{x:Type GridViewColumnHeader}">

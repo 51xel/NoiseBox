@@ -51,6 +51,25 @@ namespace NoiseBox_UI.View.UserControls
                     }
                 }
             }
+
+            var button = Helper.FindVisualChildren<Button>(sender as ListViewItem).First();
+
+            button.BorderBrush = new SolidColorBrush(Colors.Transparent);
+            button.BorderThickness = new Thickness(0);
+        }
+
+        private void ListViewItem_PreviewDragEnter(object sender, DragEventArgs e) {
+            var button = Helper.FindVisualChildren<Button>(sender as ListViewItem).First();
+
+            button.BorderBrush = new SolidColorBrush(Colors.White) { Opacity = 0.4 };
+            button.BorderThickness = new Thickness(2);
+        }
+
+        private void ListViewItem_PreviewDragLeave(object sender, DragEventArgs e) {
+            var button = Helper.FindVisualChildren<Button>(sender as ListViewItem).First();
+
+            button.BorderBrush = new SolidColorBrush(Colors.Transparent);
+            button.BorderThickness = new Thickness(0);
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e) {

@@ -54,6 +54,8 @@
             </Setter>
             <Setter Property="AllowDrop" Value="True"/>
             <EventSetter Event="Drop" Handler="ListViewItem_Drop"/>
+            <EventSetter Event="PreviewDragEnter" Handler="ListViewItem_PreviewDragEnter"/>
+            <EventSetter Event="PreviewDragLeave" Handler="ListViewItem_PreviewDragLeave"/>
         </Style>
     </UserControl.Resources>
 

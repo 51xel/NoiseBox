@@ -96,10 +96,50 @@ namespace NoiseBox_UI.View.UserControls {
                 }
             }
 
+            var button = Helper.FindVisualChildren<Button>(sender as ListViewItem).First();
+            button.BorderBrush = new SolidColorBrush(Colors.Transparent);
+            button.BorderThickness = new Thickness(0);
+
             e.Handled = true; // prevents ListView_Drop from being raised
         }
 
+        private void ListViewItem_PreviewDragEnter(object sender, DragEventArgs e) {
+            var button = Helper.FindVisualChildren<Button>(sender as ListViewItem).First();
+
+            var droppedData = e.Data.GetData(typeof(Song)) as Song;
+            var target = ((ListViewItem)(sender)).DataContext as Song;
+
+            if (droppedData != null && target != null) {
+                int removedIdx = List.Items.IndexOf(droppedData);
+                int targetIdx = List.Items.IndexOf(target);
+
+                if (removedIdx != targetIdx) {
+                    button.BorderBrush = new SolidColorBrush(Colors.White) { Opacity = 0.4 };
+
+                    if (removedIdx > targetIdx) {
+                        button.BorderThickness = new Thickness(0, 2, 0, 0);
+                    }
+                    else {
+                        button.BorderThickness = new Thickness(0, 0, 0, 2);
+                    }
+                }
+            }
+
+            if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
+                button.BorderBrush = new SolidColorBrush(Colors.White) { Opacity = 0.4 };
+                button.BorderThickness = new Thickness(0, 2, 0, 0);
+            }
+        }
+
+        private void ListViewItem_PreviewDragLeave(object sender, DragEventArgs e) {
+            var button = Helper.FindVisualChildren<Button>(sender as ListViewItem).First();
+
+            button.BorderBrush = new SolidColorBrush(Colors.Transparent);
+            button.BorderThickness = new Thickness(0);
+        }
+
         private void TextBox_PreviewDragOver(object sender, DragEventArgs e) {
+            e.Effects = DragDropEffects.Move;
             e.Handled = true; // allows objects to be dropped on TextBox
         }
 
@@ -133,7 +173,7 @@ namespace NoiseBox_UI.View.UserControls {
                     var button = ((ContextMenu)menuItem.Parent).PlacementTarget as Button;
                     var buttonGVRP = button.Content as GridViewRowPresenter;
 
-                    var textBox = FindVisualChildren<TextBox>(buttonGVRP).First(); // we only have 1 textbox in button
+                    var textBox = Helper.FindVisualChildren<TextBox>(buttonGVRP).First(); // we only have 1 textbox in button
 
                     textBox.IsReadOnly = false;
                     textBox.Cursor = Cursors.IBeam;
@@ -187,20 +227,6 @@ namespace NoiseBox_UI.View.UserControls {
 
         private void TextBox_LostFocus(object sender, RoutedEventArgs e) {
             SetTextBoxToDefaultAndSaveText(sender);
-        }
-
-        private IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject {
-            if (depObj != null) {
-                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++) {
-                    DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
-
-                    if (child != null && child is T)
-                        yield return (T)child;
-
-                    foreach (T childOfChild in FindVisualChildren<T>(child))
-                        yield return childOfChild;
-                }
-            }
         }
     }
 
