@@ -71,6 +71,8 @@ namespace NoiseBox_UI.View.UserControls {
             var droppedData = e.Data.GetData(typeof(Song)) as Song;
             var target = ((ListViewItem)(sender)).DataContext as Song;
 
+            var win = (MainWindow)Window.GetWindow(this);
+
             if (droppedData != null && target != null) {
                 int removedIdx = List.Items.IndexOf(droppedData);
                 int targetIdx = List.Items.IndexOf(target);
@@ -79,19 +81,18 @@ namespace NoiseBox_UI.View.UserControls {
                     List.Items.RemoveAt(removedIdx);
                     List.Items.Insert(targetIdx, droppedData);
 
-                    MusicLibrary.RemoveSongFromPlaylist(droppedData.Id, ((MainWindow)Window.GetWindow(this)).SelectedPlaylist.Name);
-                    MusicLibrary.AddSongToPlaylist(droppedData.Id, ((MainWindow)Window.GetWindow(this)).SelectedPlaylist.Name, targetIdx);
+                    MusicLibrary.RemoveSongFromPlaylist(droppedData.Id, win.SelectedPlaylist.Name);
+                    MusicLibrary.AddSongToPlaylist(droppedData.Id, win.SelectedPlaylist.Name, targetIdx);
                 }
             }
-
-            if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
+            else if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
                 int targetIdx = List.Items.IndexOf(target);
 
                 var songToAdd = new Song() {Path = files[0]};
 
                 if (MusicLibrary.AddSong(songToAdd)) {
-                    MusicLibrary.AddSongToPlaylist(songToAdd.Id, ((MainWindow)Window.GetWindow(this)).SelectedPlaylist.Name, targetIdx);
+                    MusicLibrary.AddSongToPlaylist(songToAdd.Id, win.SelectedPlaylist.Name, targetIdx);
                     List.Items.Insert(targetIdx, songToAdd);
                 }
             }
@@ -144,7 +145,8 @@ namespace NoiseBox_UI.View.UserControls {
         }
 
         private void ListView_Drop(object sender, DragEventArgs e) {
-            Playlist selectedPlaylist = ((MainWindow)Window.GetWindow(this)).SelectedPlaylist;
+            var win = (MainWindow)Window.GetWindow(this);
+            Playlist selectedPlaylist = win.SelectedPlaylist;
 
             if (e.Data.GetDataPresent(DataFormats.FileDrop) && selectedPlaylist != null) {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);

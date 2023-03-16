@@ -33,7 +33,7 @@ namespace NoiseBox_UI.View.UserControls
                 string popupTextBoxText = PopupTextBox.Text.Trim();
 
                 if (!string.IsNullOrEmpty(popupTextBoxText)) {
-                    MainWindow win = (MainWindow)Window.GetWindow(this); 
+                    var win = (MainWindow)Window.GetWindow(this); 
 
                     if (MusicLibrary.AddPlaylist(new Playlist { Name = popupTextBoxText })) {
                         win.PlaylistList.List.Items.Add(new Playlist { Name = popupTextBoxText });

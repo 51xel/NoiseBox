@@ -30,12 +30,21 @@ namespace NoiseBox_UI.View.UserControls
             var droppedData = e.Data.GetData(typeof(Song)) as Song;
             var target = (((ListViewItem)(sender)).DataContext as Playlist).Name;
 
-            if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
+            var win = (MainWindow)Window.GetWindow(this);
+
+            if (droppedData != null && target != null) {
+                if (target != win.SelectedPlaylist.Name) {
+                    MusicLibrary.AddSongToPlaylist(droppedData.Id, target.ToString());
+                    MusicLibrary.RemoveSongFromPlaylist(droppedData.Id, win.SelectedPlaylist.Name);
+
+                    int removedIdx = win.SongList.List.Items.IndexOf(droppedData);
+                    win.SongList.List.Items.RemoveAt(removedIdx);
+                }
+            }
+            else if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
 
                 var songToAdd = new Song() { Path = files[0] };
-
-                var win = ((MainWindow)Window.GetWindow(this));
 
                 if (MusicLibrary.AddSong(songToAdd)) {
                     MusicLibrary.AddSongToPlaylist(songToAdd.Id, target.ToString());

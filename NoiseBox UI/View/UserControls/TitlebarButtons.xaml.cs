@@ -29,17 +29,17 @@ namespace NoiseBox_UI.View.UserControls {
         }
 
         private void MinimizeButton_Click(object sender, RoutedEventArgs e) {
-            MainWindow win = (MainWindow)Window.GetWindow(this);
+            var win = (MainWindow)Window.GetWindow(this);
             win.WindowState = WindowState.Minimized;
         }
 
         private void MaximizeButton_Click(object sender, RoutedEventArgs e) {
-            MainWindow win = (MainWindow)Window.GetWindow(this);
+            var win = (MainWindow)Window.GetWindow(this);
             win.WindowState = win.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e) {
-            MainWindow win = (MainWindow)Window.GetWindow(this);
+            var win = (MainWindow)Window.GetWindow(this);
             win.Close();
         }
     }
