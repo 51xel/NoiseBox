@@ -119,14 +119,18 @@ namespace NoiseBox {
             SaveToJson();
         }
 
-        public static void AddPlaylist(Playlist playlist) {
+        public static bool AddPlaylist(Playlist playlist) {
             if (_playlists.Find(p => p.Name == playlist.Name) == null) {
                 _playlists.Add(playlist.Clone());
 
                 _log.Print($"[INFO][MusicLibrary] New playlist \'{playlist.Name}\' added", LogInfoType.INFO);
 
                 SaveToJson();
-            } 
+
+                return true;
+            }
+
+            return false;
         }
 
         public static void RemovePlaylist(string playlistName) {
@@ -189,6 +193,19 @@ namespace NoiseBox {
 
             if (song != null && !string.IsNullOrEmpty(newName)) {
                 song.Name = newName;
+                SaveToJson();
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool RenamePlaylist(string oldName, string newName) {
+            var playlist = _playlists.Find(s => s.Name == oldName);
+
+            if (playlist != null && !string.IsNullOrEmpty(newName) && _playlists.Find(s => s.Name == newName) == null) {
+                playlist.Name = newName;
                 SaveToJson();
 
                 return true;

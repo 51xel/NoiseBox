@@ -19,8 +19,7 @@ namespace NoiseBox_UI.View.UserControls
 {
     public partial class NewPlaylistButton : UserControl
     {
-        public NewPlaylistButton()
-        {
+        public NewPlaylistButton() {
             InitializeComponent();
         }
 
@@ -36,10 +35,8 @@ namespace NoiseBox_UI.View.UserControls
                 if (!string.IsNullOrEmpty(popupTextBoxText)) {
                     MainWindow win = (MainWindow)Window.GetWindow(this); 
 
-                    if (!win.PlaylistList.List.Items.Contains(popupTextBoxText)) {
-                        win.PlaylistList.List.Items.Add(popupTextBoxText);
-
-                        MusicLibrary.AddPlaylist(new Playlist { Name = popupTextBoxText });
+                    if (MusicLibrary.AddPlaylist(new Playlist { Name = popupTextBoxText })) {
+                        win.PlaylistList.List.Items.Add(new Playlist { Name = popupTextBoxText });
 
                         win.SelectPlaylistByName(popupTextBoxText);
                     }

@@ -34,7 +34,7 @@ namespace NoiseBox_UI {
 
             SongList.ClickRowElement += (s, e) => MessageBox.Show((((s as Button).Content as GridViewRowPresenter).Content as Song).Duration.ToString());
 
-            PlaylistList.ClickRowElement += (s, e) => { SelectPlaylistByName((((s as Button).Content) as ContentPresenter).Content as String); };
+            PlaylistList.ClickRowElement += (s, e) => { SelectPlaylistByName((((s as Button).Content as ContentPresenter).Content as Playlist).Name.ToString()); };
         }
 
         private void WindowSizeChanged(object sender, SizeChangedEventArgs e) {
@@ -52,21 +52,21 @@ namespace NoiseBox_UI {
 
         private void PlayPauseButton_Click(object sender, RoutedEventArgs e) {
 
-            SongList.List.Items.Add(new Song() { Id = "0", Name = "In The End " + SongList.List.Items.Count, Path = @"D:\Music\Linkin Park", Duration = TimeSpan.FromSeconds(123) });
+            //SongList.List.Items.Add(new Song() { Id = "0", Name = "In The End " + SongList.List.Items.Count, Path = @"D:\Music\Linkin Park", Duration = TimeSpan.FromSeconds(123) });
 
-            if (BottomControlPanel.State == View.UserControls.BottomControlPanel.ButtonState.Paused) {
-                BottomControlPanel.State = View.UserControls.BottomControlPanel.ButtonState.Playing;
-            }
-            else {
-                BottomControlPanel.State = View.UserControls.BottomControlPanel.ButtonState.Paused;
-            }
+            //if (BottomControlPanel.State == View.UserControls.BottomControlPanel.ButtonState.Paused) {
+            //    BottomControlPanel.State = View.UserControls.BottomControlPanel.ButtonState.Playing;
+            //}
+            //else {
+            //    BottomControlPanel.State = View.UserControls.BottomControlPanel.ButtonState.Paused;
+            //}
         }
 
         private void DisplayPlaylists() {
             var playlists = MusicLibrary.GetPlaylists();
 
             foreach (var p in playlists) {
-                PlaylistList.List.Items.Add(p.Name);
+                PlaylistList.List.Items.Add(p);
             }
         }
 
@@ -92,6 +92,13 @@ namespace NoiseBox_UI {
                 foreach (var song in songs) {
                     SongList.List.Items.Add(song);
                 }
+            }
+        }
+
+        public void RenameSelectedPlaylist(string newName) {
+            if (SelectedPlaylist != null) {
+                SelectedPlaylist.Name = newName;
+                PlaylistText.CurrentPlaylistName.Text = newName;
             }
         }
     }
