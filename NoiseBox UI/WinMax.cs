@@ -19,7 +19,7 @@ using NoiseBox.Log;
 namespace NoiseBox_UI {
     internal class WinMax {
 
-        public static void DoSourceInitialized(MainWindow win) {
+        public static void DoSourceInitialized(Window win) {
             win.SourceInitialized += (s, e) => {
                 IntPtr handle = (new WindowInteropHelper(win)).Handle;
                 HwndSource.FromHwnd(handle).AddHook(new HwndSourceHook(WindowProc));

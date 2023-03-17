@@ -18,5 +18,12 @@ namespace NoiseBox_UI.View.UserControls {
         public FunctionButtons() {
             InitializeComponent();
         }
+
+        private void DownloadButton_Click(object sender, RoutedEventArgs e) {
+            DownloadsWindow win = new DownloadsWindow();
+            win.Owner = Window.GetWindow(this);
+            win.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            win.Show();
+        }
     }
 }
