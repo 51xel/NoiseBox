@@ -58,12 +58,12 @@ namespace NoiseBox {
                 _songs = ((JArray)data["songs"]).ToObject<List<Song>>();
                 _playlists = ((JArray)data["playlists"]).ToObject<List<Playlist>>();
 
-                _log.Print("[INFO][MusicLibrary] Data loaded from json", LogInfoType.INFO);
+                _log.Print("Data loaded from json", LogInfoType.INFO);
             }
             else {
                 File.Create(_jsonFilePath).Close();
 
-                _log.Print("[INFO][MusicLibrary] Empty json file created", LogInfoType.INFO);
+                _log.Print("Empty json file created", LogInfoType.INFO);
             }
         }
         private static void SaveToJson() {
@@ -77,7 +77,7 @@ namespace NoiseBox {
             string json = JsonConvert.SerializeObject(data, Formatting.Indented, settings);
             File.WriteAllText(_jsonFilePath, json);
 
-            _log.Print("[INFO][MusicLibrary] Data saved to json", LogInfoType.INFO);
+            _log.Print("Data saved to json", LogInfoType.INFO);
         }
         public static bool AddSong(Song song) {
             if (File.Exists(song.Path) && Path.GetExtension(song.Path).Equals(".mp3", StringComparison.OrdinalIgnoreCase)) {
@@ -97,7 +97,7 @@ namespace NoiseBox {
 
                 _songs.Add(song.Clone());
 
-                _log.Print($"[INFO][MusicLibrary] New song with id {song.Id} added", LogInfoType.INFO);
+                _log.Print($"New song with id {song.Id} added", LogInfoType.INFO);
 
                 SaveToJson();
 
@@ -114,7 +114,7 @@ namespace NoiseBox {
                 playlist.SongIds.Remove(songId);
             }
 
-            _log.Print($"[INFO][MusicLibrary] Song with id {songId} removed", LogInfoType.INFO);
+            _log.Print($"Song with id {songId} removed", LogInfoType.INFO);
 
             SaveToJson();
         }
@@ -123,7 +123,7 @@ namespace NoiseBox {
             if (_playlists.Find(p => p.Name == playlist.Name) == null) {
                 _playlists.Add(playlist.Clone());
 
-                _log.Print($"[INFO][MusicLibrary] New playlist \'{playlist.Name}\' added", LogInfoType.INFO);
+                _log.Print($"New playlist \'{playlist.Name}\' added", LogInfoType.INFO);
 
                 SaveToJson();
 
@@ -136,7 +136,7 @@ namespace NoiseBox {
         public static void RemovePlaylist(string playlistName) {
             _playlists.RemoveAll(p => p.Name == playlistName);
 
-            _log.Print($"[INFO][MusicLibrary] Playlist \'{playlistName}\' removed", LogInfoType.INFO);
+            _log.Print($"Playlist \'{playlistName}\' removed", LogInfoType.INFO);
 
             SaveToJson();
         }
@@ -155,7 +155,7 @@ namespace NoiseBox {
                         }
                     }
 
-                    _log.Print($"[INFO][MusicLibrary] Song with id {songId} added to playlist \'{playlistName}\'", LogInfoType.INFO);
+                    _log.Print($"Song with id {songId} added to playlist \'{playlistName}\'", LogInfoType.INFO);
 
                     SaveToJson();
                 }
@@ -168,7 +168,7 @@ namespace NoiseBox {
             if (playlist != null) {
                 playlist.SongIds.Remove(songId);
 
-                _log.Print($"[INFO][MusicLibrary] Song with id {songId} removed from playlist \'{playlistName}\'", LogInfoType.INFO);
+                _log.Print($"Song with id {songId} removed from playlist \'{playlistName}\'", LogInfoType.INFO);
 
                 SaveToJson();
             }
@@ -182,7 +182,7 @@ namespace NoiseBox {
                 from.SongIds.Remove(songId);
                 to.SongIds.Add(songId);
 
-                _log.Print($"[INFO][MusicLibrary] Song with id {songId} moved from \'{fromPlaylist}\' to \'{toPlaylist}\'", LogInfoType.INFO);
+                _log.Print($"Song with id {songId} moved from \'{fromPlaylist}\' to \'{toPlaylist}\'", LogInfoType.INFO);
 
                 SaveToJson();
             }
@@ -192,6 +192,8 @@ namespace NoiseBox {
             var song = _songs.Find(s => s.Id == songId);
 
             if (song != null && !string.IsNullOrEmpty(newName)) {
+                _log.Print($"Song with id {songId} has been renamed", LogInfoType.INFO);
+
                 song.Name = newName;
                 SaveToJson();
 
@@ -205,6 +207,8 @@ namespace NoiseBox {
             var playlist = _playlists.Find(s => s.Name == oldName);
 
             if (playlist != null && !string.IsNullOrEmpty(newName) && _playlists.Find(s => s.Name == newName) == null) {
+                _log.Print($"Playlist with name {oldName} has been renamed to {newName}", LogInfoType.INFO);
+
                 playlist.Name = newName;
                 SaveToJson();
 

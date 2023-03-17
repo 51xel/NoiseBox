@@ -1,4 +1,4 @@
-using System.Text;
+using System.Runtime.CompilerServices;
 
 namespace NoiseBox {
     namespace Log {
@@ -29,11 +29,11 @@ namespace NoiseBox {
         }
 
         public interface ILog {
-            void Print(string message, LogInfoType logType);
+            void Print(string message, LogInfoType logType, [CallerMemberName] string callerName = "");
         }
 
         public class LogIntoConsole : ILog {
-            public void Print(string message, LogInfoType logType) {
+            public void Print(string message, LogInfoType logType, [CallerMemberName] string callerName = "") {
                 Console.WriteLine(message);
             }
         }
@@ -54,15 +54,15 @@ namespace NoiseBox {
                     }
                     File.Create(_pathToFile).Close();
 
-                    WriteMessageIntoFile("===Created " + DateTime.Now + "\n");
+                    WriteMessageIntoFile("===Created [" + DateTime.Now + "]\n");
                 }
                 else {
                     WriteMessageIntoFile("===New Starting [" + DateTime.Now + "]\n");
                 }
             }
 
-            public void Print(string message, LogInfoType logType) {
-                WriteMessageIntoFile($"[{DateTime.Now}]" + message);
+            public void Print(string message, LogInfoType logType, [CallerMemberName] string callerName = "") {
+                WriteMessageIntoFile($"[{DateTime.Now}][{logType.ToString()}][{callerName}] " + message);
             }
 
             private void WriteMessageIntoFile(string message) {
