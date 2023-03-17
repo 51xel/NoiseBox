@@ -7,21 +7,55 @@
         xmlns:userControls="clr-namespace:NoiseBox_UI.View.UserControls"
         mc:Ignorable="d"
         WindowStyle="None"
-        Title="Downloads" Height="500" Width="500"
-        MinHeight="500" MinWidth="500"
+        Title="Downloads" Height="250" Width="500"
+        MinHeight="250" MinWidth="500"
         AllowsTransparency="True"
         
         SizeChanged="WindowSizeChanged">
-    
+
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="25"/>
     </WindowChrome.WindowChrome>
-    
+
     <Grid>
         <Grid.Background>
             <SolidColorBrush Color="#212128"/>
         </Grid.Background>
 
         <userControls:TitlebarButtons x:Name="TitlebarButtons" Panel.ZIndex="1"/>
+
+        <Grid Margin="20,45,20,20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <TextBox x:Name="LinkTextBox" FontFamily="/Fonts/#Montserrat" Foreground="#BDBDBD" FontSize="18"
+                         KeyDown="LinkTextBox_KeyDown"/>
+
+                <TextBlock IsHitTestVisible="False" Text="Paste a link to youtube video here"
+                           FontFamily="/Fonts/#Montserrat" Foreground="#BDBDBD" FontSize="18"
+                           VerticalAlignment="Center" Opacity="0.6">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Text, ElementName=LinkTextBox}" Value="">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </Grid>
+
+            <TextBlock Name="yt_dlp_Output" Grid.Row="1" Margin="0,20,0,20" FontFamily="/Fonts/#Montserrat" Foreground="#BDBDBD" FontSize="18"
+                       FontWeight="DemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+            <Button Grid.Row="2" Click="Button_Click" Content="Download" FontFamily="/Fonts/#Montserrat" Margin="10"
+                    VerticalAlignment="Bottom"/>
+        </Grid>
     </Grid>
 </Window>

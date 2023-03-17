@@ -19,11 +19,24 @@ namespace NoiseBox_UI.View.UserControls {
             InitializeComponent();
         }
 
+        private bool _isDownloadsWindowOpen = false;
+        private DownloadsWindow _downloadsWin;
+
         private void DownloadButton_Click(object sender, RoutedEventArgs e) {
-            DownloadsWindow win = new DownloadsWindow();
-            win.Owner = Window.GetWindow(this);
-            win.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            win.Show();
+            if (_isDownloadsWindowOpen) {
+                if (_downloadsWin.WindowState == WindowState.Minimized) {
+                    _downloadsWin.WindowState = WindowState.Normal;
+                }
+                return;
+            }
+
+            _downloadsWin = new DownloadsWindow();
+            _downloadsWin.Owner = Window.GetWindow(this);
+            _downloadsWin.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            _downloadsWin.Closed += (_, _) => { _isDownloadsWindowOpen = false; };
+            _isDownloadsWindowOpen = true;
+
+            _downloadsWin.Show();
         }
     }
 }
