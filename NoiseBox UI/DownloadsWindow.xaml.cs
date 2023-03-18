@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -100,7 +101,10 @@ namespace NoiseBox_UI {
                                 }
                             }
 
-                            DownloadingProgress.Value = Convert.ToDouble(match.Groups[1].ToString());
+                            NumberFormatInfo nfi = new NumberFormatInfo();
+                            nfi.NumberDecimalSeparator = ".";
+
+                            DownloadingProgress.Value = double.Parse(match.Groups[1].ToString(), nfi);
                             (Owner as MainWindow).FunctionButtons.DownloadingProgress.Value = DownloadingProgress.Value;
                         }
 
