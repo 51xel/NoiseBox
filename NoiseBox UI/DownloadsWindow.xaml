@@ -51,11 +51,21 @@
                 </TextBlock>
             </Grid>
 
-            <TextBlock Name="yt_dlp_Output" Grid.Row="1" Margin="0,20,0,20" FontFamily="/Fonts/#Montserrat" Foreground="#BDBDBD" FontSize="18"
+            <TextBlock Name="yt_dlp_Output" Grid.Row="1" FontFamily="/Fonts/#Montserrat" Foreground="#BDBDBD" FontSize="18"
                        FontWeight="DemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-            <Button Grid.Row="2" Click="Button_Click" Content="Download" FontFamily="/Fonts/#Montserrat" Margin="10"
-                    VerticalAlignment="Bottom"/>
+            <StackPanel Grid.Row="2" Orientation="Vertical">
+                <ProgressBar Name="DownloadingProgress" Value="0" Maximum="100" Visibility="Collapsed"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="60*"/>
+                        <ColumnDefinition Width="0" Name="CancelColumn"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" Click="Download_Click" Content="Download" FontFamily="/Fonts/#Montserrat" Margin="10"/>
+                    <Button Grid.Column="1" Click="Cancel_Click"  Content="Cancel" FontFamily="/Fonts/#Montserrat" Margin="10"
+                            Background="IndianRed" BorderBrush="IndianRed"/>
+                </Grid>
+            </StackPanel>
         </Grid>
     </Grid>
 </Window>

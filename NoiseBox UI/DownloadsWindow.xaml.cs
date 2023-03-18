@@ -14,6 +14,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using static System.Net.WebRequestMethods;
 
 namespace NoiseBox_UI {
     public partial class DownloadsWindow : Window {
@@ -35,15 +36,18 @@ namespace NoiseBox_UI {
             }
         }
 
-        private async void Button_Click(object sender, RoutedEventArgs e) {
-            yt_dlp_Output.Text = "";
+        Process process;
 
+        private async void Download_Click(object sender, RoutedEventArgs e) {
+            yt_dlp_Output.Text = "Starting to download...";
+            
             LinkTextBox.Text = LinkTextBox.Text.Trim();
 
             if (!Uri.IsWellFormedUriString(LinkTextBox.Text, UriKind.Absolute) &&
                 !Uri.IsWellFormedUriString("http://" + LinkTextBox.Text, UriKind.Absolute) &&
                 !Uri.IsWellFormedUriString("https://" + LinkTextBox.Text, UriKind.Absolute)) {
-          
+
+                yt_dlp_Output.Text = "";
                 yt_dlp_Output.Inlines.Add(new Run("[Invalid url]") { Foreground = Brushes.IndianRed });
                 return;
             }
@@ -57,19 +61,31 @@ namespace NoiseBox_UI {
                 RedirectStandardError = true,
                 UseShellExecute = false,
                 CreateNoWindow = true,
-                Arguments = $" --ffmpeg-location \"{Path.Combine(BinariesDirPath, @"ffmpeg\bin")}\"  -x --audio-format mp3 -o %(title)s.%(ext)s " + LinkTextBox.Text
+                Arguments = $" --ffmpeg-location \"{Path.Combine(BinariesDirPath, @"ffmpeg\bin")}\" -x --audio-format mp3 -o %(title)s.%(ext)s \"{LinkTextBox.Text}\""
             };
 
-            using var process = new Process { StartInfo = psi };
+            process = new Process { StartInfo = psi };
 
             var isDownloading = false;
 
             process.OutputDataReceived += (_, e) => {
                 if (!string.IsNullOrEmpty(e.Data)) {
                     yt_dlp_Output.Dispatcher.Invoke(() => {
-                        if (!isDownloading) {
-                            isDownloading = true;
-                            yt_dlp_Output.Inlines.Add(new Run("Downloading...") { Foreground = Brushes.CornflowerBlue });
+                        var match = Regex.Match(e.Data, @"\[download\]\s*(\d+\.?\d*)%\s*of[\s~]*(\d+\.?\d*\wiB)");
+
+                        if (match.Groups[1].Success) {
+                            if (!isDownloading) {
+                                isDownloading = true;
+                                yt_dlp_Output.Text = $"Downloading... ({match.Groups[2].ToString()})";
+                                DownloadingProgress.Visibility = Visibility.Visible;
+                            }
+
+                            DownloadingProgress.Value = Convert.ToDouble(match.Groups[1].ToString());
+                        }
+
+                        if (e.Data.StartsWith("[ExtractAudio]")) {
+                            yt_dlp_Output.Text = $"Extracting audio...";
+                            DownloadingProgress.Visibility = Visibility.Collapsed;
                         }
                     });
                 }
@@ -87,22 +103,38 @@ namespace NoiseBox_UI {
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
 
+            CancelColumn.Width = new GridLength(40, GridUnitType.Star);
+
             await process.WaitForExitAsync();
+
+            process.Dispose();
 
             yt_dlp_Output.Text = "";
 
             if (!hadErrors) {
-                yt_dlp_Output.Inlines.Add(new Run("[Download finished]") { Foreground = Brushes.LawnGreen });
+                yt_dlp_Output.Inlines.Add(new Run("[Downloading finished]") { Foreground = Brushes.LawnGreen });
             }
             else {
                 yt_dlp_Output.Inlines.Add(new Run("[Error while downloading]") { Foreground = Brushes.IndianRed });
             }
+
+            CancelColumn.Width = new GridLength(0, GridUnitType.Star);
         }
 
         private void LinkTextBox_KeyDown(object sender, KeyEventArgs e) {
             if (e.Key == Key.Enter) {
-                Button_Click(null, null);
+                Download_Click(null, null);
             }
+        }
+
+        private void Cancel_Click(object sender, RoutedEventArgs e) {
+            process.Close();
+            process.Dispose();
+
+            yt_dlp_Output.Text = "";
+            yt_dlp_Output.Inlines.Add(new Run("[Canceled]") { Foreground = Brushes.IndianRed });
+            DownloadingProgress.Visibility = Visibility.Collapsed;
+            CancelColumn.Width = new GridLength(0, GridUnitType.Star);
         }
     }
 }
