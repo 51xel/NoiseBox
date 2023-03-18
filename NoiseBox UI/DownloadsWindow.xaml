@@ -34,25 +34,35 @@
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0">
-                <TextBox x:Name="LinkTextBox" FontFamily="/Fonts/#Montserrat" Foreground="#BDBDBD" FontSize="18"
-                         KeyDown="LinkTextBox_KeyDown"/>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="120"/>
+                </Grid.ColumnDefinitions>
 
-                <TextBlock IsHitTestVisible="False" Text="Paste a link to youtube video here"
-                           FontFamily="/Fonts/#Montserrat" Foreground="#BDBDBD" FontSize="18"
-                           VerticalAlignment="Center" Opacity="0.6">
-                    <TextBlock.Style>
-                        <Style TargetType="{x:Type TextBlock}">
-                            <Setter Property="Visibility" Value="Collapsed"/>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Text, ElementName=LinkTextBox}" Value="">
-                                    <Setter Property="Visibility" Value="Visible"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
+                <Grid Grid.Column="0">
+                    <TextBox x:Name="LinkTextBox" FontFamily="/Fonts/#Montserrat" Foreground="#BDBDBD" FontSize="18"
+                             KeyDown="LinkTextBox_KeyDown"/>
+
+                    <TextBlock IsHitTestVisible="False" Text="Paste a link to youtube video here"
+                               FontFamily="/Fonts/#Montserrat" Foreground="#BDBDBD" FontSize="18"
+                               VerticalAlignment="Center" Opacity="0.6">
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Text, ElementName=LinkTextBox}" Value="">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Grid>
+
+                <Button Grid.Column="1" Content="Save to" FontFamily="/Fonts/#Montserrat" Margin="10,0,0,0" Background="Transparent" Click="SaveTo_Click"
+                        ToolTip="{Binding SelectedDirectory}"/>
             </Grid>
-
+            
             <TextBlock Name="yt_dlp_Output" Grid.Row="1" FontFamily="/Fonts/#Montserrat" Foreground="#BDBDBD" FontSize="18"
                        FontWeight="DemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
@@ -63,9 +73,11 @@
                         <ColumnDefinition Name="DownloadColumn"/>
                         <ColumnDefinition Width="0" Name="CancelColumn"/>
                     </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" Click="Download_Click" Content="Download" FontFamily="/Fonts/#Montserrat" Margin="10"/>
+                    
+                    <Button Grid.Column="0" Click="Download_Click" Content="Download" FontFamily="/Fonts/#Montserrat" Margin="10"
+                            Background="Transparent"/>
                     <Button Grid.Column="1" Click="Cancel_Click"  Content="Cancel" FontFamily="/Fonts/#Montserrat" Margin="10"
-                            Background="Transparent" BorderBrush="IndianRed" Foreground="IndianRed"/>
+                            Background="Transparent" BorderBrush="IndianRed"/>
                 </Grid>
             </StackPanel>
         </Grid>
