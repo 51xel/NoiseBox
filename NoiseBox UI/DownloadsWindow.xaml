@@ -11,7 +11,9 @@
         MinHeight="250" MinWidth="500"
         AllowsTransparency="True"
         
-        SizeChanged="WindowSizeChanged">
+        SizeChanged="WindowSizeChanged"
+        StateChanged="Window_StateChanged"
+        Closed="Window_Closed">
 
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="25"/>
@@ -58,7 +60,7 @@
                 <ProgressBar Name="DownloadingProgress" Value="0" Maximum="100" Visibility="Collapsed"/>
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="60*"/>
+                        <ColumnDefinition Name="DownloadColumn"/>
                         <ColumnDefinition Width="0" Name="CancelColumn"/>
                     </Grid.ColumnDefinitions>
                     <Button Grid.Column="0" Click="Download_Click" Content="Download" FontFamily="/Fonts/#Montserrat" Margin="10"/>

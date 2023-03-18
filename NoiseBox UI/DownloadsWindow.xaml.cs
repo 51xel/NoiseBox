@@ -36,6 +36,21 @@ namespace NoiseBox_UI {
             }
         }
 
+        private void Window_StateChanged(object sender, EventArgs e) {
+            if (WindowState == WindowState.Normal || WindowState == WindowState.Maximized) {
+                (Owner as MainWindow).FunctionButtons.DownloadingProgress.Visibility = Visibility.Collapsed;
+            }
+            else if (WindowState == WindowState.Minimized) {
+                if (DownloadingProgress.Visibility == Visibility.Visible) {
+                    (Owner as MainWindow).FunctionButtons.DownloadingProgress.Visibility = Visibility.Visible;
+                }
+            }
+        }
+
+        private void Window_Closed(object sender, EventArgs e) {
+            Cancel_Click(null, null);
+        }
+
         Process process;
 
         private async void Download_Click(object sender, RoutedEventArgs e) {
@@ -77,15 +92,23 @@ namespace NoiseBox_UI {
                             if (!isDownloading) {
                                 isDownloading = true;
                                 yt_dlp_Output.Text = $"Downloading... ({match.Groups[2].ToString()})";
+
                                 DownloadingProgress.Visibility = Visibility.Visible;
+
+                                if (WindowState == WindowState.Minimized) {
+                                    (Owner as MainWindow).FunctionButtons.DownloadingProgress.Visibility = Visibility.Visible;
+                                }
                             }
 
                             DownloadingProgress.Value = Convert.ToDouble(match.Groups[1].ToString());
+                            (Owner as MainWindow).FunctionButtons.DownloadingProgress.Value = DownloadingProgress.Value;
                         }
 
                         if (e.Data.StartsWith("[ExtractAudio]")) {
                             yt_dlp_Output.Text = $"Extracting audio...";
+
                             DownloadingProgress.Visibility = Visibility.Collapsed;
+                            (Owner as MainWindow).FunctionButtons.DownloadingProgress.Visibility = Visibility.Collapsed;
                         }
                     });
                 }
@@ -103,7 +126,8 @@ namespace NoiseBox_UI {
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
 
-            CancelColumn.Width = new GridLength(40, GridUnitType.Star);
+            DownloadColumn.Width = new GridLength(0, GridUnitType.Star);
+            CancelColumn.Width = new GridLength(100, GridUnitType.Star);
 
             await process.WaitForExitAsync();
 
@@ -118,6 +142,7 @@ namespace NoiseBox_UI {
                 yt_dlp_Output.Inlines.Add(new Run("[Error while downloading]") { Foreground = Brushes.IndianRed });
             }
 
+            DownloadColumn.Width = new GridLength(100, GridUnitType.Star);
             CancelColumn.Width = new GridLength(0, GridUnitType.Star);
         }
 
@@ -133,7 +158,11 @@ namespace NoiseBox_UI {
 
             yt_dlp_Output.Text = "";
             yt_dlp_Output.Inlines.Add(new Run("[Canceled]") { Foreground = Brushes.IndianRed });
+
             DownloadingProgress.Visibility = Visibility.Collapsed;
+            (Owner as MainWindow).FunctionButtons.DownloadingProgress.Visibility = Visibility.Collapsed;
+
+            DownloadColumn.Width = new GridLength(100, GridUnitType.Star);
             CancelColumn.Width = new GridLength(0, GridUnitType.Star);
         }
     }
