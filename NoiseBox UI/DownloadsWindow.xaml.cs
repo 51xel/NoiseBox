@@ -109,6 +109,8 @@ namespace NoiseBox_UI {
 
                             DownloadingProgress.Visibility = Visibility.Collapsed;
                             (Owner as MainWindow).FunctionButtons.DownloadingProgress.Visibility = Visibility.Collapsed;
+
+                            CancelColumn.Width = new GridLength(0, GridUnitType.Star);
                         }
                     });
                 }

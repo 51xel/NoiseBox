@@ -65,7 +65,7 @@
                     </Grid.ColumnDefinitions>
                     <Button Grid.Column="0" Click="Download_Click" Content="Download" FontFamily="/Fonts/#Montserrat" Margin="10"/>
                     <Button Grid.Column="1" Click="Cancel_Click"  Content="Cancel" FontFamily="/Fonts/#Montserrat" Margin="10"
-                            Background="IndianRed" BorderBrush="IndianRed"/>
+                            Background="Transparent" BorderBrush="IndianRed" Foreground="IndianRed"/>
                 </Grid>
             </StackPanel>
         </Grid>
