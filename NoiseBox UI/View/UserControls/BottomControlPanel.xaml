@@ -65,8 +65,17 @@
                     <ColumnDefinition Width="65"/>
                 </Grid.ColumnDefinitions>
 
-                <Slider Name="SeekBar" Grid.Column="1" VerticalAlignment="Center" Maximum="100"/>
-                
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Name="CurrentSongName" Grid.Row="0" FontFamily="/Fonts/#Montserrat" FontSize="18" Foreground="#BDBDBD" FontWeight="DemiBold"
+                               VerticalAlignment="Bottom" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" Text="Song not selected"/>
+                    <Slider Name="SeekBar" Grid.Row="1" VerticalAlignment="Center" Maximum="100" Margin="0,0,0,10"/>
+                </Grid>
+
                 <TextBlock Name="CurrentTime" Grid.Column="0" FontFamily="/Fonts/#Montserrat" FontSize="15" Foreground="#BDBDBD" FontWeight="DemiBold"
                            VerticalAlignment="Center" HorizontalAlignment="Center" Padding="0,0,10,0">10:15</TextBlock>
                 <TextBlock Name="TotalTime" Grid.Column="2" FontFamily="/Fonts/#Montserrat" FontSize="15" Foreground="#BDBDBD" FontWeight="DemiBold"
