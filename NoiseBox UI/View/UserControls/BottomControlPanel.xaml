@@ -65,7 +65,7 @@
                     <ColumnDefinition Width="65"/>
                 </Grid.ColumnDefinitions>
 
-                <Slider Name="SeekBar" Grid.Column="1" VerticalAlignment="Center" Maximum="100"/>
+                <Slider Name="SeekBar" Grid.Column="1" VerticalAlignment="Center" Maximum="100" Thumb.DragStarted="SeekBar_DragStarted" Thumb.DragCompleted="SeekBar_DragCompleted"/>
                 
                 <TextBlock Name="CurrentTime" Grid.Column="0" FontFamily="/Fonts/#Montserrat" FontSize="15" Foreground="#BDBDBD" FontWeight="DemiBold"
                            VerticalAlignment="Center" HorizontalAlignment="Center" Padding="0,0,10,0">10:15</TextBlock>

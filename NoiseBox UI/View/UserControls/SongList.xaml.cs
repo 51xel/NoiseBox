@@ -26,6 +26,7 @@ namespace NoiseBox_UI.View.UserControls {
         }
 
         public RoutedEventHandler ClickRowElement;
+
         private bool _isDragging = false;
         private Point _startPoint;
         private string _oldTextBoxText;

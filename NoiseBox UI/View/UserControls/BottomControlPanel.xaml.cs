@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -30,6 +31,15 @@ namespace NoiseBox_UI.View.UserControls {
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
+
+        private void SeekBar_DragStarted(object sender, DragStartedEventArgs e) {
+            ((MainWindow)Window.GetWindow(this)).UserIsDraggingSlider = true;
+        }
+
+        private void SeekBar_DragCompleted(object sender, DragCompletedEventArgs e) {
+            ((MainWindow)Window.GetWindow(this)).UserIsDraggingSlider = false;
+        }
+
         private string _pathToImage;
         private ButtonState _buttonState;
 

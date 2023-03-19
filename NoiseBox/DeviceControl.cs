@@ -2,8 +2,8 @@
 
 namespace NoiseBox {
     public class DeviceControll {
-        public static int GetDeviceOutId(string nameDevice) {
-            if (nameDevice == null || String.IsNullOrWhiteSpace(nameDevice)) {
+        public static int GetOutputDeviceId(string nameDevice) {
+            if (String.IsNullOrWhiteSpace(nameDevice)) {
                 throw new ArgumentNullException("Name device can`t be null");
             }
 
@@ -16,8 +16,8 @@ namespace NoiseBox {
             return 0;
         }
 
-        public static int GetDeviceInId(string nameDevice) {
-            if (nameDevice == null || String.IsNullOrWhiteSpace(nameDevice)) {
+        public static int GetInputDeviceId(string nameDevice) {
+            if (String.IsNullOrWhiteSpace(nameDevice)) {
                 throw new ArgumentNullException("Name device can`t be null");
             }
 
@@ -30,7 +30,7 @@ namespace NoiseBox {
             return 0;
         }
 
-        public static List<string> GetListDevicesOut() {
+        public static List<string> GetOutputDevicesList() {
             var list = new List<string>();
 
             for (int n = -1; n < WaveOut.DeviceCount; n++) {
@@ -40,7 +40,7 @@ namespace NoiseBox {
             return list;
         }
 
-        public static List<string> GetListDevicesIn() {
+        public static List<string> GetInputDevicesList() {
             var list = new List<string>();
 
             for (int n = -1; n < WaveIn.DeviceCount; n++) {
@@ -50,11 +50,11 @@ namespace NoiseBox {
             return list;
         }
 
-        public static string GetDeviceOutNameById(int id) {
+        public static string GetOutputDeviceNameById(int id) {
             return WaveOut.GetCapabilities(id).ProductName;
         }
 
-        public static string GetDeviceInNameById(int id) {
+        public static string GetInputDeviceNameById(int id) {
             return WaveIn.GetCapabilities(id).ProductName;
         }
     }

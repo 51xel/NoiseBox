@@ -15,7 +15,7 @@
         MinWidth="800"
         AllowsTransparency="True"
         
-        SizeChanged="WindowSizeChanged">
+        StateChanged="Window_StateChanged">
 
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="25"/>

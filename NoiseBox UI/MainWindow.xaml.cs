@@ -17,9 +17,17 @@ using System.Windows.Shapes;
 using NoiseBox.Log;
 using NoiseBox;
 using NoiseBox_UI.View.UserControls;
+using System.Windows.Threading;
+using System.IO;
+using System.Threading;
 
 namespace NoiseBox_UI {
     public partial class MainWindow : Window {
+        public AudioStreamControl AudioStreamControl;
+        DispatcherTimer SeekBarTimer = new DispatcherTimer();
+
+        public bool UserIsDraggingSlider = false;
+
         public Playlist? SelectedPlaylist = MusicLibrary.GetPlaylists().FirstOrDefault();
 
         public MainWindow() {
@@ -27,17 +35,55 @@ namespace NoiseBox_UI {
             DataContext = this;
             WinMax.DoSourceInitialized(this);
 
+            AudioStreamControl = new AudioStreamControl(DeviceControll.GetOutputDeviceNameById(0));
+
             DisplayPlaylists();
             DisplaySelectedPlaylist();
 
             BottomControlPanel.PlayPauseButton.Click += PlayPauseButton_Click;
+            BottomControlPanel.SeekBar.MouseMove += SeekBar_OnMouseMove;
 
-            SongList.ClickRowElement += (s, e) => MessageBox.Show((((s as Button).Content as GridViewRowPresenter).Content as Song).Duration.ToString());
+
+            SongList.ClickRowElement += (s, e) => {
+                var path = (((s as Button).Content as GridViewRowPresenter).Content as Song).Path;
+
+                if (!File.Exists(path)) {
+                    MessageBox.Show("File does not exist", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                else {
+                    if (path != AudioStreamControl.MainMusic.PathToMusic) {
+                        AudioStreamControl.MainMusic.PathToMusic = path;
+                    }
+                    AudioStreamControl.MainMusic.Stop();
+                    AudioStreamControl.MainMusic.Play();
+                    SeekBarTimer.Start();
+
+                    BottomControlPanel.State = BottomControlPanel.ButtonState.Playing;
+                }
+            };
 
             PlaylistList.ClickRowElement += (s, e) => { SelectPlaylistByName((((s as Button).Content as ContentPresenter).Content as Playlist).Name.ToString()); };
+
+            SeekBarTimer.Interval = TimeSpan.FromMilliseconds(10);
+            SeekBarTimer.Tick += timer_Tick;
         }
 
-        private void WindowSizeChanged(object sender, SizeChangedEventArgs e) {
+        private void SeekBar_OnMouseMove(object sender, MouseEventArgs e) {
+            if (e.LeftButton == MouseButtonState.Pressed) {
+                UserIsDraggingSlider = true;
+
+            }else if (e.LeftButton == MouseButtonState.Released && UserIsDraggingSlider) {
+                var posInSeekBar = (BottomControlPanel.SeekBar.Value * AudioStreamControl.MainMusic.CurrentTrackLength) / 100;
+                if (AudioStreamControl.MainMusic.PathToMusic != null && AudioStreamControl.MainMusic.CurrentTrackPosition != posInSeekBar) {
+                    AudioStreamControl.MainMusic.CurrentTrackPosition = posInSeekBar;
+                }
+
+                UserIsDraggingSlider = false;
+
+            }
+        }
+
+        private void Window_StateChanged(object sender, EventArgs e) {
             if (WindowState == WindowState.Maximized) {
                 Uri uri = new Uri("/Images/Icons/restore.png", UriKind.Relative);
                 ImageSource imgSource = new BitmapImage(uri);
@@ -50,16 +96,29 @@ namespace NoiseBox_UI {
             }
         }
 
+        private void timer_Tick(object sender, EventArgs e) {
+            if (!UserIsDraggingSlider) {
+                BottomControlPanel.SeekBar.Value = (AudioStreamControl.MainMusic.CurrentTrackPosition * 100) / AudioStreamControl.MainMusic.CurrentTrackLength;
+            }
+        }
+
         private void PlayPauseButton_Click(object sender, RoutedEventArgs e) {
+            if (AudioStreamControl.MainMusic.PathToMusic != null) {
+                if (BottomControlPanel.State == BottomControlPanel.ButtonState.Paused) {
+                    BottomControlPanel.State = BottomControlPanel.ButtonState.Playing;
 
-            //SongList.List.Items.Add(new Song() { Id = "0", Name = "In The End " + SongList.List.Items.Count, Path = @"D:\Music\Linkin Park", Duration = TimeSpan.FromSeconds(123) });
 
-            //if (BottomControlPanel.State == View.UserControls.BottomControlPanel.ButtonState.Paused) {
-            //    BottomControlPanel.State = View.UserControls.BottomControlPanel.ButtonState.Playing;
-            //}
-            //else {
-            //    BottomControlPanel.State = View.UserControls.BottomControlPanel.ButtonState.Paused;
-            //}
+                    AudioStreamControl.MainMusic.MusicVolume = 0.5f;
+                    AudioStreamControl.MainMusic.Play();
+                    SeekBarTimer.Start();
+                }
+                else {
+                    BottomControlPanel.State = BottomControlPanel.ButtonState.Paused;
+
+                    AudioStreamControl.MainMusic.Pause();
+                    SeekBarTimer.Stop();
+                }
+            }
         }
 
         private void DisplayPlaylists() {

@@ -6,7 +6,7 @@ namespace NoiseBox {
         protected WaveOutEvent _outputDevice;
         protected ILog _log = LogSettings.SelectedLog;
 
-        public float DeviceOutVolume {
+        public float OutputDeviceVolume {
             get {
                 return _outputDevice.Volume;
             }
@@ -28,33 +28,38 @@ namespace NoiseBox {
         }
 
         public AudioStream(string deviceName) {
-            SelectDeviceOut(deviceName);
+            SelectOutputDevice(deviceName);
         }
 
-        public void SelectDeviceOut(string deviceName) {
-            if (deviceName == null || String.IsNullOrWhiteSpace(deviceName)) {
+        public void SelectOutputDevice(string deviceName) {
+            if (String.IsNullOrWhiteSpace(deviceName)) {
                 _log.Print("Name device can`t be null", LogInfoType.ERROR);
+
+                throw new ArgumentNullException("Name device can`t be null");
             }
+            else {
+                _outputDevice = new WaveOutEvent() {
+                    DeviceNumber = DeviceControll.GetOutputDeviceId(deviceName)
+                };
 
-            _outputDevice = new WaveOutEvent() { 
-                DeviceNumber = DeviceControll.GetDeviceOutId(deviceName)
-            };
-
-            _log.Print("Device has been selected", LogInfoType.INFO);
+                _log.Print("Device has been selected", LogInfoType.INFO);
+            }
         }
 
         public virtual void Play() { 
-            _log.Print("Playing to " + DeviceControll.GetDeviceOutNameById(_outputDevice.DeviceNumber), LogInfoType.INFO);
+            _log.Print("Playing to " + DeviceControll.GetOutputDeviceNameById(_outputDevice.DeviceNumber), LogInfoType.INFO);
+
+            _outputDevice.Play();
         }
 
         public virtual void Stop() {
-            _log.Print("Stopped " + DeviceControll.GetDeviceOutNameById(_outputDevice.DeviceNumber), LogInfoType.INFO);
+            _log.Print("Stopped " + DeviceControll.GetOutputDeviceNameById(_outputDevice.DeviceNumber), LogInfoType.INFO);
 
             _outputDevice.Stop();
         }
 
         public virtual void Pause() {
-            _log.Print("Paused " + DeviceControll.GetDeviceOutNameById(_outputDevice.DeviceNumber), LogInfoType.INFO);
+            _log.Print("Paused " + DeviceControll.GetOutputDeviceNameById(_outputDevice.DeviceNumber), LogInfoType.INFO);
 
             _outputDevice.Pause();
         }
@@ -77,7 +82,7 @@ namespace NoiseBox {
             }
         }
 
-        public int GetDeviceId() {
+        public int GetOutputDeviceId() {
             return _outputDevice.DeviceNumber;
         }
     }
@@ -88,40 +93,56 @@ namespace NoiseBox {
 
         public float MusicVolume {
             get {
-                return _audioFile.Volume;
-            }
-            set {
-                if (value < 0f || value > 1f) {
-                    _log.Print("Volume < 0.0 or > 1.0", LogInfoType.ERROR);
-
-                    if (value < 0) {
-                        _audioFile.Volume = 0f;
-                    }
-                    else {
-                        _audioFile.Volume = 1f;
-                    }
+                if (_audioFile != null) {
+                    return _audioFile.Volume;
                 }
                 else {
-                    _audioFile.Volume = value;
+                    return 0;
+                }
+            }
+            set {
+                if (_audioFile != null) {
+                    if (value < 0f || value > 1f) {
+                        _log.Print("Volume < 0.0 or > 1.0", LogInfoType.ERROR);
+
+                        if (value < 0) {
+                            _audioFile.Volume = 0f;
+                        }
+                        else {
+                            _audioFile.Volume = 1f;
+                        }
+                    }
+                    else {
+                        _audioFile.Volume = value;
+                    }
                 }
             }
         }
 
-        public MusicStream(string pathToMusic, string deviceName = "CABLE Input (VB-Audio Virtual C") : base(deviceName) {
-            PathToMusic = pathToMusic;
-
-            _audioFile = new AudioFileReader(_pathToMusic);
-        }
+        public MusicStream(string deviceName = "CABLE Input (VB-Audio Virtual C") : base(deviceName) {}
 
         public override void Play() {
-            base.Play();
+            if (_pathToMusic != null) {
+                if (!IsPlaying && !IsPaused) {
+                    _audioFile = new AudioFileReader(_pathToMusic);
+                    _outputDevice.Init(_audioFile);
+                }
 
-            if(!IsPlaying && !IsPaused){
-                _audioFile = new AudioFileReader(_pathToMusic);
-                _outputDevice.Init(_audioFile);
+                base.Play();
             }
+        }
 
-            _outputDevice.Play();
+        public override void Stop() {
+            base.Stop();
+
+            Dispose();
+        }
+
+        private void Dispose() {
+            if (_audioFile != null) {
+                _audioFile.Dispose();
+                _audioFile = null;
+            }
         }
 
         public string PathToMusic {
@@ -129,11 +150,10 @@ namespace NoiseBox {
                 return _pathToMusic;
             }
             set {
-                if (value == null || String.IsNullOrWhiteSpace(value)) {
-                    _log.Print("Path to music can`t be null", LogInfoType.ERROR);
-                }
-                else if (!File.Exists(value)) {
+                if (!File.Exists(value)) {
                     _log.Print("File does not exist", LogInfoType.WARNING);
+
+                    throw new FileNotFoundException("File does not exist");
                 }
                 else {
                     _pathToMusic = value;
@@ -184,7 +204,7 @@ namespace NoiseBox {
         private WaveInProvider _waveIn;
         private VolumeWaveProvider16 _waveInVolume;
 
-        public float DeviceInVolume {
+        public float InputDeviceVolume {
             get {
                 return _waveInVolume.Volume;
             }
@@ -206,26 +226,27 @@ namespace NoiseBox {
         }
 
         public MicrophoneStream(string deviceIn, string deviceOut = "CABLE Input (VB-Audio Virtual C") : base(deviceOut) {
-            SelectDeviceIn(deviceIn);
+            SelectInputDevice(deviceIn);
         }
 
-        public void SelectDeviceIn(string deviceName) {
-            if (deviceName == null || String.IsNullOrWhiteSpace(deviceName)) {
-                _log.Print("Name device can`t be null", LogInfoType.ERROR);
+        public void SelectInputDevice(string deviceName) {
+            if (String.IsNullOrWhiteSpace(deviceName)) {
+                _log.Print("Name of input device can`t be null", LogInfoType.ERROR);
+
+                throw new ArgumentNullException("Name device can`t be null");
             }
+            else {
+                _waveSource = new WaveInEvent() {
+                    DeviceNumber = DeviceControll.GetInputDeviceId(deviceName)
+                };
 
-            _waveSource = new WaveInEvent() {
-                DeviceNumber = DeviceControll.GetDeviceInId(deviceName)
-            };
+                _waveSource.WaveFormat = new WaveFormat(44100, WaveIn.GetCapabilities(DeviceControll.GetInputDeviceId(deviceName)).Channels);
 
-            _waveSource.WaveFormat = new WaveFormat(44100, WaveIn.GetCapabilities(DeviceControll.GetDeviceInId(deviceName)).Channels);
-
-            _log.Print("Device has been selected", LogInfoType.INFO);
+                _log.Print("Input device has been selected", LogInfoType.INFO);
+            }
         }
 
         public override void Play() {
-            base.Play();
-
             if (!IsPlaying && !IsPaused) {
                 _waveIn = new WaveInProvider(_waveSource);
                 _waveInVolume = new VolumeWaveProvider16(_waveIn);
@@ -234,7 +255,7 @@ namespace NoiseBox {
             }
 
             _waveSource.StartRecording();
-            _outputDevice.Play();
+            base.Play();
         }
 
         public override void Stop() {
