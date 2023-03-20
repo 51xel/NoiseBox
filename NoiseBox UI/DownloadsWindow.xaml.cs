@@ -45,7 +45,7 @@ namespace NoiseBox_UI {
             DataContext = this;
         }
 
-        private void WindowSizeChanged(object sender, SizeChangedEventArgs e) {
+        private void Window_StateChanged(object sender, EventArgs e) {
             if (WindowState == WindowState.Maximized) {
                 Uri uri = new Uri("/Images/Icons/restore.png", UriKind.Relative);
                 ImageSource imgSource = new BitmapImage(uri);
@@ -56,9 +56,8 @@ namespace NoiseBox_UI {
                 ImageSource imgSource = new BitmapImage(uri);
                 TitlebarButtons.MaximizeButtonImage.Source = imgSource;
             }
-        }
 
-        private void Window_StateChanged(object sender, EventArgs e) {
+
             if (WindowState == WindowState.Normal || WindowState == WindowState.Maximized) {
                 (Owner as MainWindow).FunctionButtons.DownloadingProgress.Visibility = Visibility.Collapsed;
             }
