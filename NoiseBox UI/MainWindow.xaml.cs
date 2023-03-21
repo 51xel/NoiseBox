@@ -150,5 +150,9 @@ namespace NoiseBox_UI {
                 PlaylistText.CurrentPlaylistName.Text = newName;
             }
         }
+
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e) {
+            Helper.FindVisualChildren<Grid>(this).FirstOrDefault().Focus();
+        }
     }
 }

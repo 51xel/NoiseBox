@@ -12,13 +12,15 @@
         AllowsTransparency="True"
         
         StateChanged="Window_StateChanged"
-        Closed="Window_Closed">
+        Closed="Window_Closed"
+        
+        MouseDown="Window_MouseDown">
 
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="25"/>
     </WindowChrome.WindowChrome>
 
-    <Grid>
+    <Grid Focusable="True">
         <Grid.Background>
             <SolidColorBrush Color="#212128"/>
         </Grid.Background>

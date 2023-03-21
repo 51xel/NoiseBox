@@ -86,14 +86,6 @@
             </Setter>
         </Style>
 
-        <Style x:Key="GridViewCell" TargetType="{x:Type TextBlock}">
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=Text}"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
         <Style x:Key="GridViewCellTextBox" TargetType="{x:Type TextBox}">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -101,11 +93,7 @@
             <Setter Property="CaretBrush" Value="#BDBDBD"/>
             <EventSetter Event="PreviewDragOver" Handler="TextBox_PreviewDragOver"/>
 
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=Text}"/>
-                </Trigger>
-            </Style.Triggers>
+            <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=Text}"/>
         </Style>
 
         <local:DurationConverter x:Key="durationConverter" />
@@ -117,7 +105,7 @@
                     <GridViewColumn Header="#" Width="0">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Style="{DynamicResource GridViewCell}" Text="{Binding Id}"/>
+                                <TextBlock Text="{Binding Id}"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -134,7 +122,7 @@
                     <GridViewColumn Header="Path To File">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Style="{DynamicResource GridViewCell}" Text="{Binding Path}" />
+                                <TextBlock ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Text}" Text="{Binding Path}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -142,7 +130,7 @@
                     <GridViewColumn Header="🕓" Width="90">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Style="{DynamicResource GridViewCell}" Text="{Binding Duration, Converter={StaticResource durationConverter}}"/>
+                                <TextBlock Text="{Binding Duration, Converter={StaticResource durationConverter}}"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

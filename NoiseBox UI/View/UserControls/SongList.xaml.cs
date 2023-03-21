@@ -203,6 +203,8 @@ namespace NoiseBox_UI.View.UserControls {
             textBox.IsReadOnly = true;
             textBox.Cursor = Cursors.Hand;
 
+            textBox.SelectionLength = 0;
+
             textBox.Focusable = false;
 
             textBox.FontWeight = FontWeights.Normal;

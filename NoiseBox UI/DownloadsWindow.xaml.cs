@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using WinForms = System.Windows.Forms;
 using NoiseBox;
+using System.Windows.Controls;
 
 namespace NoiseBox_UI {
     public partial class DownloadsWindow : Window, INotifyPropertyChanged {
@@ -235,6 +236,10 @@ namespace NoiseBox_UI {
 
         protected void OnPropertyChanged([CallerMemberName] string name = null) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e) {
+            Helper.FindVisualChildren<Grid>(this).FirstOrDefault().Focus();
         }
     }
 }

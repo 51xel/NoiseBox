@@ -46,7 +46,6 @@
                                         <SolidColorBrush Opacity="0.1" Color="White"/>
                                     </Setter.Value>
                                 </Setter>
-                                <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=Content.Name}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -56,6 +55,7 @@
             <EventSetter Event="Drop" Handler="ListViewItem_Drop"/>
             <EventSetter Event="PreviewDragEnter" Handler="ListViewItem_PreviewDragEnter"/>
             <EventSetter Event="PreviewDragLeave" Handler="ListViewItem_PreviewDragLeave"/>
+            <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=Content.Name}"/>
         </Style>
 
         <Style x:Key="ListViewTextBox" TargetType="{x:Type TextBox}">
@@ -65,11 +65,7 @@
             <Setter Property="CaretBrush" Value="#BDBDBD"/>
             <EventSetter Event="PreviewDragOver" Handler="TextBox_PreviewDragOver"/>
 
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=Text}"/>
-                </Trigger>
-            </Style.Triggers>
+            <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=Text}"/>
         </Style>
     </UserControl.Resources>
 

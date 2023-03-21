@@ -15,7 +15,9 @@
         MinWidth="800"
         AllowsTransparency="True"
         
-        StateChanged="Window_StateChanged">
+        StateChanged="Window_StateChanged"
+        
+        MouseDown="Window_MouseDown">
 
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="25"/>
@@ -24,8 +26,8 @@
     <Window.Resources>
 
     </Window.Resources>
-    
-    <Grid>
+
+    <Grid Focusable="True">
         <Grid.Background>
             <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
                 <GradientStop Color="#FF0A192F"/>
