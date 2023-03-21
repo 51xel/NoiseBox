@@ -54,10 +54,10 @@ namespace NoiseBox {
                     }
                     File.Create(_pathToFile).Close();
 
-                    WriteMessageIntoFile("===Created [" + DateTime.Now + "]\n");
+                    WriteMessageIntoFile("===Log file created [" + DateTime.Now + "]\n");
                 }
                 else {
-                    WriteMessageIntoFile("===New Starting [" + DateTime.Now + "]\n");
+                    WriteMessageIntoFile("\n===App Starting [" + DateTime.Now + "]\n");
                 }
             }
 

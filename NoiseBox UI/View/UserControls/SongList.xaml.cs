@@ -28,7 +28,7 @@ namespace NoiseBox_UI.View.UserControls {
         public RoutedEventHandler ClickRowElement;
 
         private bool _isDragging = false;
-        private Point _startPoint;
+        private Point? _startPoint;
         private string _oldTextBoxText;
 
         private void ListView_SizeChanged(object sender, SizeChangedEventArgs e) {
@@ -57,9 +57,12 @@ namespace NoiseBox_UI.View.UserControls {
             if (e.LeftButton == MouseButtonState.Pressed && !_isDragging) {
                 Point position = e.GetPosition(null);
 
-                if (Math.Abs(position.X - _startPoint.X) > SystemParameters.MinimumHorizontalDragDistance ||
-                        Math.Abs(position.Y - _startPoint.Y) > SystemParameters.MinimumVerticalDragDistance) {
-                    StartDrag(sender, e);
+                if (_startPoint != null) {
+                    if (Math.Abs(position.X - ((Point)_startPoint).X) > SystemParameters.MinimumHorizontalDragDistance ||
+                            Math.Abs(position.Y - ((Point)_startPoint).Y) > SystemParameters.MinimumVerticalDragDistance) {
+                        _startPoint = null;
+                        StartDrag(sender, e);
+                    }
                 }
             }
         }

@@ -132,6 +132,20 @@ namespace NoiseBox {
             }
         }
 
+        public void StopAndPlayFromPosition(double startingPosition) {
+            float oldVol = MusicVolume;
+
+            Stop();
+
+            _audioFile = new AudioFileReader(_pathToMusic);
+            _audioFile.CurrentTime = TimeSpan.FromSeconds(startingPosition);
+            _outputDevice.Init(_audioFile);
+
+            MusicVolume = oldVol;
+
+            base.Play();
+        }
+
         public override void Stop() {
             base.Stop();
 
@@ -160,10 +174,11 @@ namespace NoiseBox {
                 }
             }
         }
+
         public double CurrentTrackLength {
             get {
                 if (_audioFile != null) {
-                    return _audioFile.Length / _audioFile.WaveFormat.AverageBytesPerSecond;
+                    return _audioFile.TotalTime.TotalSeconds;
                 }
                 else {
                     return 0;
@@ -174,7 +189,7 @@ namespace NoiseBox {
         public double CurrentTrackPosition {
             get {
                 if (_audioFile != null) {
-                    return _audioFile.Position / _audioFile.WaveFormat.AverageBytesPerSecond;
+                    return _audioFile.CurrentTime.TotalSeconds;
                 }
                 else {
                     return 0;
@@ -182,18 +197,11 @@ namespace NoiseBox {
             }
             set {
                 if (_audioFile != null) {
-                    long newPos = (long)(_audioFile.WaveFormat.AverageBytesPerSecond * value); // value in seconds
-
-                    if ((newPos % _audioFile.WaveFormat.BlockAlign) != 0) {
-                        newPos -= newPos % _audioFile.WaveFormat.BlockAlign;
-                    }
-
-                    newPos = Math.Max(0, Math.Min(_audioFile.Length, newPos));
-
-                    _audioFile.Position = newPos;
+                    _audioFile.CurrentTime = TimeSpan.FromSeconds(value);
                 }
             }
         }
+
         public void Seek(double offset) {
             CurrentTrackPosition += offset;
         }

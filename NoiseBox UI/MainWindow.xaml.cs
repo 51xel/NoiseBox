@@ -26,8 +26,6 @@ namespace NoiseBox_UI {
         public AudioStreamControl AudioStreamControl;
         DispatcherTimer SeekBarTimer = new DispatcherTimer();
 
-        public bool UserIsDraggingSlider = false;
-
         public Playlist? SelectedPlaylist = MusicLibrary.GetPlaylists().FirstOrDefault();
 
         public MainWindow() {
@@ -41,7 +39,7 @@ namespace NoiseBox_UI {
             DisplaySelectedPlaylist();
 
             BottomControlPanel.PlayPauseButton.Click += PlayPauseButton_Click;
-            BottomControlPanel.SeekBar.MouseMove += SeekBar_OnMouseMove;
+            BottomControlPanel.SeekBar.PreviewMouseLeftButtonUp += SeekBar_PreviewMouseLeftButtonUp;
 
 
             SongList.ClickRowElement += (s, e) => {
@@ -51,12 +49,12 @@ namespace NoiseBox_UI {
                     MessageBox.Show("File does not exist", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 else {
-                    if (path != AudioStreamControl.MainMusic.PathToMusic) {
-                        AudioStreamControl.MainMusic.PathToMusic = path;
-                    }
-                    AudioStreamControl.MainMusic.Stop();
-                    AudioStreamControl.MainMusic.Play();
+                    AudioStreamControl.MainMusic.PathToMusic = path;
+
+                    AudioStreamControl.MainMusic.StopAndPlayFromPosition(0);
                     SeekBarTimer.Start();
+
+                    AudioStreamControl.MainMusic.MusicVolume = 0.1f; 
 
                     BottomControlPanel.State = BottomControlPanel.ButtonState.Playing;
                 }
@@ -64,22 +62,15 @@ namespace NoiseBox_UI {
 
             PlaylistList.ClickRowElement += (s, e) => { SelectPlaylistByName((((s as Button).Content as ContentPresenter).Content as Playlist).Name.ToString()); };
 
-            SeekBarTimer.Interval = TimeSpan.FromMilliseconds(10);
+            SeekBarTimer.Interval = TimeSpan.FromMilliseconds(50);
             SeekBarTimer.Tick += timer_Tick;
         }
 
-        private void SeekBar_OnMouseMove(object sender, MouseEventArgs e) {
-            if (e.LeftButton == MouseButtonState.Pressed) {
-                UserIsDraggingSlider = true;
+        private void SeekBar_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
+            var posInSeekBar = (BottomControlPanel.SeekBar.Value * AudioStreamControl.MainMusic.CurrentTrackLength) / 100;
 
-            }else if (e.LeftButton == MouseButtonState.Released && UserIsDraggingSlider) {
-                var posInSeekBar = (BottomControlPanel.SeekBar.Value * AudioStreamControl.MainMusic.CurrentTrackLength) / 100;
-                if (AudioStreamControl.MainMusic.PathToMusic != null && AudioStreamControl.MainMusic.CurrentTrackPosition != posInSeekBar) {
-                    AudioStreamControl.MainMusic.CurrentTrackPosition = posInSeekBar;
-                }
-
-                UserIsDraggingSlider = false;
-
+            if (AudioStreamControl.MainMusic.PathToMusic != null && AudioStreamControl.MainMusic.CurrentTrackPosition != posInSeekBar && !AudioStreamControl.MainMusic.IsPaused) {
+                AudioStreamControl.MainMusic.StopAndPlayFromPosition(posInSeekBar);
             }
         }
 
@@ -97,7 +88,7 @@ namespace NoiseBox_UI {
         }
 
         private void timer_Tick(object sender, EventArgs e) {
-            if (!UserIsDraggingSlider) {
+            if (!(BottomControlPanel.SeekBar.IsMouseOver && Mouse.LeftButton == MouseButtonState.Pressed)) {
                 BottomControlPanel.SeekBar.Value = (AudioStreamControl.MainMusic.CurrentTrackPosition * 100) / AudioStreamControl.MainMusic.CurrentTrackLength;
             }
         }
@@ -107,9 +98,8 @@ namespace NoiseBox_UI {
                 if (BottomControlPanel.State == BottomControlPanel.ButtonState.Paused) {
                     BottomControlPanel.State = BottomControlPanel.ButtonState.Playing;
 
+                    AudioStreamControl.MainMusic.StopAndPlayFromPosition((BottomControlPanel.SeekBar.Value * AudioStreamControl.MainMusic.CurrentTrackLength) / 100);
 
-                    AudioStreamControl.MainMusic.MusicVolume = 0.5f;
-                    AudioStreamControl.MainMusic.Play();
                     SeekBarTimer.Start();
                 }
                 else {
