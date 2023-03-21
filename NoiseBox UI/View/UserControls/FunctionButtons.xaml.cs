@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using NoiseBox;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.IO;
 
 namespace NoiseBox_UI.View.UserControls {
     public partial class FunctionButtons : UserControl {
@@ -37,6 +39,52 @@ namespace NoiseBox_UI.View.UserControls {
             _isDownloadsWindowOpen = true;
 
             _downloadsWin.Show();
+        }
+
+        private async void ConvertButton_Click(object sender, RoutedEventArgs e) {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+
+            if (openFileDialog.ShowDialog() == true) {
+                var fileName = openFileDialog.FileNames[0];
+
+                if (!Path.GetExtension(fileName).Equals(".mp3", StringComparison.OrdinalIgnoreCase)) {
+                    ConvertingProgress.Visibility = Visibility.Visible;
+
+                    await MusicLibrary.ConvertToMp3(fileName);
+
+                    fileName = Path.ChangeExtension(fileName, ".mp3");
+
+                    if (File.Exists(fileName)) {
+                        Song song = new Song { Path = fileName };
+
+                        if (MusicLibrary.AddSong(song)) {
+                            var win = (MainWindow)Window.GetWindow(this);
+
+                            Playlist selectedPlaylist = win.SelectedPlaylist;
+
+                            if (selectedPlaylist == null) {
+                                selectedPlaylist = MusicLibrary.GetPlaylists().FirstOrDefault();
+
+                                if (selectedPlaylist != null) {
+                                    win.SelectPlaylistByName(selectedPlaylist.Name);
+
+                                    MusicLibrary.AddSongToPlaylist(song.Id, selectedPlaylist.Name);
+                                    win.SongList.List.Items.Add(song);
+                                }
+                            }
+                            else {
+                                MusicLibrary.AddSongToPlaylist(song.Id, selectedPlaylist.Name);
+                                win.SongList.List.Items.Add(song);
+                            }
+                        }
+                    }
+                    else {
+                        MessageBox.Show("Error while converting");
+                    }
+
+                    ConvertingProgress.Visibility = Visibility.Collapsed;
+                }
+            }
         }
     }
 }

@@ -32,6 +32,17 @@
                     </Grid>
                 </Button>
             </ListViewItem>
+
+            <ListViewItem Padding="5">
+                <Button x:Name="ConvertButton" Width="50" Height="50" Background="#212128" BorderBrush="Transparent" Padding="15"
+                        Click="ConvertButton_Click">
+                    <Grid>
+                        <ProgressBar Name="ConvertingProgress" Style="{StaticResource MaterialDesignCircularProgressBar}"
+                                     Width="40" Height="40" Margin="-15" Visibility="Collapsed" IsIndeterminate="True"/>
+                        <!--<Image Source="/Images/Icons/download.png" RenderOptions.BitmapScalingMode ="HighQuality"/>-->
+                    </Grid>
+                </Button>
+            </ListViewItem>
         </ListView>
     </Grid>
 </UserControl>

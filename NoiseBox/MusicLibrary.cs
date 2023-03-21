@@ -107,6 +107,27 @@ namespace NoiseBox {
             return false;
         }
 
+        public static async Task ConvertToMp3(string path) {
+            var directory = System.AppContext.BaseDirectory.Split(Path.DirectorySeparatorChar);
+            var slice = new ArraySegment<string>(directory, 0, directory.Length - 4);
+            var BinariesDirPath = Path.Combine(Path.Combine(slice.ToArray()), "Binaries");
+            var ffmpegLocation = Path.Combine(BinariesDirPath, @"ffmpeg\bin");
+
+            var psi = new ProcessStartInfo(Path.Combine(ffmpegLocation, "ffmpeg.exe")) {
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                Arguments = $" -i \"{path}\" -vn -ac 2 \"{Path.ChangeExtension(path, ".mp3")}\""
+            };
+
+            var process = new Process { StartInfo = psi };
+
+            process.Start();
+
+            await process.WaitForExitAsync();
+
+            process.Dispose();
+        }
+
         public static void RemoveSong(string songId) {
             _songs.RemoveAll(s => s.Id == songId);
 
