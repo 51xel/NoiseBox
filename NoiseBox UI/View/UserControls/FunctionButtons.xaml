@@ -23,8 +23,13 @@
             </ListViewItem>
 
             <ListViewItem Padding="5">
-                <Button x:Name="DownloadButton" Width="50" Height="50" Background="#212128" BorderBrush="Transparent" Padding="15">
-                    <Image Source="/Images/Icons/download.png" RenderOptions.BitmapScalingMode ="HighQuality"/>
+                <Button x:Name="DownloadButton" Width="50" Height="50" Background="#212128" BorderBrush="Transparent" Padding="15"
+                        Click="DownloadButton_Click">
+                    <Grid>
+                        <ProgressBar Name="DownloadingProgress" Style="{StaticResource MaterialDesignCircularProgressBar}"
+                                     Width="40" Height="40" Value="0" Maximum="100" Margin="-15" Visibility="Collapsed"/>
+                        <Image Source="/Images/Icons/download.png" RenderOptions.BitmapScalingMode ="HighQuality"/>
+                    </Grid>
                 </Button>
             </ListViewItem>
         </ListView>
