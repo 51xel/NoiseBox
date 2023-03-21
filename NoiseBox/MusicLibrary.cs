@@ -107,13 +107,8 @@ namespace NoiseBox {
             return false;
         }
 
-        public static async Task ConvertToMp3(string path) {
-            var directory = System.AppContext.BaseDirectory.Split(Path.DirectorySeparatorChar);
-            var slice = new ArraySegment<string>(directory, 0, directory.Length - 4);
-            var BinariesDirPath = Path.Combine(Path.Combine(slice.ToArray()), "Binaries");
-            var ffmpegLocation = Path.Combine(BinariesDirPath, @"ffmpeg\bin");
-
-            var psi = new ProcessStartInfo(Path.Combine(ffmpegLocation, "ffmpeg.exe")) {
+        public static async Task ConvertToMp3(string path, string ffmpegDir) {
+            var psi = new ProcessStartInfo(Path.Combine(ffmpegDir, "ffmpeg.exe")) {
                 UseShellExecute = false,
                 CreateNoWindow = true,
                 Arguments = $" -i \"{path}\" -vn -ac 2 \"{Path.ChangeExtension(path, ".mp3")}\""

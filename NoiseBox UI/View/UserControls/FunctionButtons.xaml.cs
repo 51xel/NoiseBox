@@ -46,11 +46,16 @@ namespace NoiseBox_UI.View.UserControls {
             openFileDialog.Filter = "All Supported Formats (*.wav;*.aiff;*.flac;*.ogg;*.aac;*.wma;*.m4a;*.ac3;*.amr;*.mp2;*.avi;*.mpeg;*.wmv;*.mp4;*.mov;*.flv;*.mkv;*.3gp;*.asf;*.gxf;*.m2ts;*.ts;*.mxf;*.ogv)|*.wav;*.aiff;*.flac;*.ogg;*.aac;*.wma;*.m4a;*.ac3;*.amr;*.mp2;*.avi;*.mpeg;*.wmv;*.mp4;*.mov;*.flv;*.mkv;*.3gp;*.asf;*.gxf;*.m2ts;*.ts;*.mxf;*.ogv";
 
             if (openFileDialog.ShowDialog() == true) {
-                var fileName = openFileDialog.FileNames[0];
-
                 ConvertingProgress.Visibility = Visibility.Visible;
 
-                await MusicLibrary.ConvertToMp3(fileName);
+                var fileName = openFileDialog.FileNames[0];
+
+                var directory = System.AppContext.BaseDirectory.Split(Path.DirectorySeparatorChar);
+                var slice = new ArraySegment<string>(directory, 0, directory.Length - 4);
+                var BinariesDirPath = Path.Combine(Path.Combine(slice.ToArray()), "Binaries");
+                var ffmpegLocation = Path.Combine(BinariesDirPath, @"ffmpeg\bin");
+
+                await MusicLibrary.ConvertToMp3(fileName, ffmpegLocation);
 
                 fileName = Path.ChangeExtension(fileName, ".mp3");
 
