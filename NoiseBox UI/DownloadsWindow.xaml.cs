@@ -1,23 +1,16 @@
-﻿using Microsoft.VisualBasic;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using static System.Net.WebRequestMethods;
 using WinForms = System.Windows.Forms;
 using NoiseBox;
 
@@ -91,18 +84,20 @@ namespace NoiseBox_UI {
             var BinariesDirPath = Path.Combine(Path.Combine(slice.ToArray()), "Binaries");
             var ffmpegLocation = Path.Combine(BinariesDirPath, @"ffmpeg\bin");
 
+            string downloadedFileDir = SelectedDirectory;
+            string downloadedFileID = Guid.NewGuid().ToString();
+
             var psi = new ProcessStartInfo(Path.Combine(BinariesDirPath, "yt-dlp.exe")) {
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
                 CreateNoWindow = true,
-                Arguments = $" --ffmpeg-location \"{ffmpegLocation}\" -x --audio-format mp3 -o \"{SelectedDirectory}\\%(title)s.%(ext)s\" \"{LinkTextBox.Text}\""
+                Arguments = $" --ffmpeg-location \"{ffmpegLocation}\" -x --audio-format mp3 -o \"{downloadedFileDir}\\[{downloadedFileID}]%(title)s.%(ext)s\" \"{LinkTextBox.Text}\""
             };
 
             process = new Process { StartInfo = psi };
 
             var isDownloading = false;
-            string downloadedFilePath = "";
 
             process.OutputDataReceived += (_, e) => {
                 if (!string.IsNullOrEmpty(e.Data)) {
@@ -130,12 +125,6 @@ namespace NoiseBox_UI {
 
                         if (e.Data.StartsWith("[ExtractAudio]")) {
                             yt_dlp_Output.Text = $"Extracting audio...";
-                            
-                            match = Regex.Match(e.Data, @"[A-Z]:.*\.mp3");
-
-                            if (match.Success) {
-                                downloadedFilePath = match.ToString();
-                            }
 
                             DownloadingProgress.Visibility = Visibility.Collapsed;
                             (Owner as MainWindow).FunctionButtons.DownloadingProgress.Visibility = Visibility.Collapsed;
@@ -170,7 +159,7 @@ namespace NoiseBox_UI {
             if (!hadErrors) {
                 yt_dlp_Output.Inlines.Add(new Run("[Downloading finished]") { Foreground = Brushes.LawnGreen });
 
-                AddSongToSelectedPlaylist(downloadedFilePath);
+                AddSongToSelectedPlaylist(downloadedFileDir, downloadedFileID);
             }
             else {
                 yt_dlp_Output.Inlines.Add(new Run("[Error while downloading]") { Foreground = Brushes.IndianRed });
@@ -212,7 +201,16 @@ namespace NoiseBox_UI {
             }
         }
 
-        private void AddSongToSelectedPlaylist(string downloadedFilePath) {
+        private void AddSongToSelectedPlaylist(string downloadedFileDir, string downloadedFileID) {
+            string downloadedFilePathOld = (new DirectoryInfo(downloadedFileDir)).GetFiles($"[{downloadedFileID}]*")[0].FullName;
+            string downloadedFilePath = Regex.Replace(downloadedFilePathOld, @$"\[{downloadedFileID}\]", "");
+
+            if (File.Exists(downloadedFilePath)) {
+                File.Delete(downloadedFilePath);
+            }
+            
+            File.Move(downloadedFilePathOld, downloadedFilePath);
+
             Song song = new Song { Path = downloadedFilePath };
 
             if (MusicLibrary.AddSong(song)) {
