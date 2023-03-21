@@ -43,47 +43,46 @@ namespace NoiseBox_UI.View.UserControls {
 
         private async void ConvertButton_Click(object sender, RoutedEventArgs e) {
             OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "All Supported Formats (*.wav;*.aiff;*.flac;*.ogg;*.aac;*.wma;*.m4a;*.ac3;*.amr;*.mp2;*.avi;*.mpeg;*.wmv;*.mp4;*.mov;*.flv;*.mkv;*.3gp;*.asf;*.gxf;*.m2ts;*.ts;*.mxf;*.ogv)|*.wav;*.aiff;*.flac;*.ogg;*.aac;*.wma;*.m4a;*.ac3;*.amr;*.mp2;*.avi;*.mpeg;*.wmv;*.mp4;*.mov;*.flv;*.mkv;*.3gp;*.asf;*.gxf;*.m2ts;*.ts;*.mxf;*.ogv";
 
             if (openFileDialog.ShowDialog() == true) {
                 var fileName = openFileDialog.FileNames[0];
 
-                if (!Path.GetExtension(fileName).Equals(".mp3", StringComparison.OrdinalIgnoreCase)) {
-                    ConvertingProgress.Visibility = Visibility.Visible;
+                ConvertingProgress.Visibility = Visibility.Visible;
 
-                    await MusicLibrary.ConvertToMp3(fileName);
+                await MusicLibrary.ConvertToMp3(fileName);
 
-                    fileName = Path.ChangeExtension(fileName, ".mp3");
+                fileName = Path.ChangeExtension(fileName, ".mp3");
 
-                    if (File.Exists(fileName)) {
-                        Song song = new Song { Path = fileName };
+                if (File.Exists(fileName)) {
+                    Song song = new Song { Path = fileName };
 
-                        if (MusicLibrary.AddSong(song)) {
-                            var win = (MainWindow)Window.GetWindow(this);
+                    if (MusicLibrary.AddSong(song)) {
+                        var win = (MainWindow)Window.GetWindow(this);
 
-                            Playlist selectedPlaylist = win.SelectedPlaylist;
+                        Playlist selectedPlaylist = win.SelectedPlaylist;
 
-                            if (selectedPlaylist == null) {
-                                selectedPlaylist = MusicLibrary.GetPlaylists().FirstOrDefault();
+                        if (selectedPlaylist == null) {
+                            selectedPlaylist = MusicLibrary.GetPlaylists().FirstOrDefault();
 
-                                if (selectedPlaylist != null) {
-                                    win.SelectPlaylistByName(selectedPlaylist.Name);
+                            if (selectedPlaylist != null) {
+                                win.SelectPlaylistByName(selectedPlaylist.Name);
 
-                                    MusicLibrary.AddSongToPlaylist(song.Id, selectedPlaylist.Name);
-                                    win.SongList.List.Items.Add(song);
-                                }
-                            }
-                            else {
                                 MusicLibrary.AddSongToPlaylist(song.Id, selectedPlaylist.Name);
                                 win.SongList.List.Items.Add(song);
                             }
                         }
+                        else {
+                            MusicLibrary.AddSongToPlaylist(song.Id, selectedPlaylist.Name);
+                            win.SongList.List.Items.Add(song);
+                        }
                     }
-                    else {
-                        MessageBox.Show("Error while converting");
-                    }
-
-                    ConvertingProgress.Visibility = Visibility.Collapsed;
                 }
+                else {
+                    MessageBox.Show("Error while converting");
+                }
+
+                ConvertingProgress.Visibility = Visibility.Collapsed;
             }
         }
     }
