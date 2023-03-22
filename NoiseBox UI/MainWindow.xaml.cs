@@ -27,6 +27,7 @@ namespace NoiseBox_UI {
         DispatcherTimer SeekBarTimer = new DispatcherTimer();
 
         public Playlist? SelectedPlaylist = MusicLibrary.GetPlaylists().FirstOrDefault();
+        public Song? SelectedSong = null;
 
         public MainWindow() {
             InitializeComponent();
@@ -40,25 +41,9 @@ namespace NoiseBox_UI {
 
             BottomControlPanel.PlayPauseButton.Click += PlayPauseButton_Click;
             BottomControlPanel.SeekBar.PreviewMouseLeftButtonUp += SeekBar_PreviewMouseLeftButtonUp;
+            BottomControlPanel.SeekBar.ValueChanged += SeekBar_ValueChanged;
 
-
-            SongList.ClickRowElement += (s, e) => {
-                var path = (((s as Button).Content as GridViewRowPresenter).Content as Song).Path;
-
-                if (!File.Exists(path)) {
-                    MessageBox.Show("File does not exist", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-                else {
-                    AudioStreamControl.MainMusic.PathToMusic = path;
-
-                    AudioStreamControl.MainMusic.StopAndPlayFromPosition(0);
-                    SeekBarTimer.Start();
-
-                    AudioStreamControl.MainMusic.MusicVolume = 0.1f; 
-
-                    BottomControlPanel.State = BottomControlPanel.ButtonState.Playing;
-                }
-            };
+            SongList.ClickRowElement += Song_Click;
 
             PlaylistList.ClickRowElement += (s, e) => { SelectPlaylistByName((((s as Button).Content as ContentPresenter).Content as Playlist).Name.ToString()); };
 
@@ -66,11 +51,43 @@ namespace NoiseBox_UI {
             SeekBarTimer.Tick += timer_Tick;
         }
 
+        private void Song_Click(object sender, RoutedEventArgs e) {
+            SelectedSong = ((sender as Button).Content as GridViewRowPresenter).Content as Song;
+
+            if (!File.Exists(SelectedSong.Path)) {
+                MessageBox.Show("File does not exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                SelectedSong = null;
+            }
+            else {
+                AudioStreamControl.MainMusic.PathToMusic = SelectedSong.Path;
+
+                AudioStreamControl.MainMusic.StopAndPlayFromPosition(0);
+                SeekBarTimer.Start();
+
+                AudioStreamControl.MainMusic.MusicVolume = 0.1f;
+
+                BottomControlPanel.State = BottomControlPanel.ButtonState.Playing;
+
+                BottomControlPanel.CurrentSongName.Text = SelectedSong.Name;
+                var ts = SelectedSong.Duration;
+                BottomControlPanel.TotalTime.Text = string.Format("{0}:{1}", (int)ts.TotalMinutes, ts.Seconds.ToString("D2"));
+                BottomControlPanel.CurrentTime.Text = "0:00";
+            }
+        }
+
         private void SeekBar_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
             var posInSeekBar = (BottomControlPanel.SeekBar.Value * AudioStreamControl.MainMusic.CurrentTrackLength) / 100;
 
             if (AudioStreamControl.MainMusic.PathToMusic != null && AudioStreamControl.MainMusic.CurrentTrackPosition != posInSeekBar && !AudioStreamControl.MainMusic.IsPaused) {
                 AudioStreamControl.MainMusic.StopAndPlayFromPosition(posInSeekBar);
+            }
+        }
+
+        private void SeekBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+            if (SelectedSong != null) {
+                var posInSeekBar = (BottomControlPanel.SeekBar.Value * AudioStreamControl.MainMusic.CurrentTrackLength) / 100;
+                var ts = TimeSpan.FromSeconds(posInSeekBar); 
+                BottomControlPanel.CurrentTime.Text = string.Format("{0}:{1}", (int)ts.TotalMinutes, ts.Seconds.ToString("D2"));
             }
         }
 

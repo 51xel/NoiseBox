@@ -77,9 +77,9 @@
                 </Grid>
 
                 <TextBlock Name="CurrentTime" Grid.Column="0" FontFamily="/Fonts/#Montserrat" FontSize="15" Foreground="#BDBDBD" FontWeight="DemiBold"
-                           VerticalAlignment="Center" HorizontalAlignment="Center" Padding="0,0,10,0">10:15</TextBlock>
+                           VerticalAlignment="Center" HorizontalAlignment="Center" Padding="0,0,10,0">0:00</TextBlock>
                 <TextBlock Name="TotalTime" Grid.Column="2" FontFamily="/Fonts/#Montserrat" FontSize="15" Foreground="#BDBDBD" FontWeight="DemiBold"
-                           VerticalAlignment="Center" HorizontalAlignment="Center" Padding="10,0,0,0">23:35</TextBlock>
+                           VerticalAlignment="Center" HorizontalAlignment="Center" Padding="10,0,0,0">0:00</TextBlock>
             </Grid>
 
             <Grid Grid.Column="2" Margin="50,0,0,0">
