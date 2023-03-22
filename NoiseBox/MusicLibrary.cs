@@ -108,10 +108,16 @@ namespace NoiseBox {
         }
 
         public static async Task ConvertToMp3(string path, string ffmpegDir) {
+            string newPath = Path.ChangeExtension(path, ".mp3");
+
+            if (File.Exists(newPath)) {
+                File.Delete(newPath);
+            }
+
             var psi = new ProcessStartInfo(Path.Combine(ffmpegDir, "ffmpeg.exe")) {
                 UseShellExecute = false,
                 CreateNoWindow = true,
-                Arguments = $" -i \"{path}\" -vn -ac 2 \"{Path.ChangeExtension(path, ".mp3")}\""
+                Arguments = $" -i \"{path}\" -vn -ac 2 \"{newPath}\""
             };
 
             var process = new Process { StartInfo = psi };

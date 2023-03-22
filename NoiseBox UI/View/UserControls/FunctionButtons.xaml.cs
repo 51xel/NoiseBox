@@ -84,7 +84,7 @@ namespace NoiseBox_UI.View.UserControls {
                     }
                 }
                 else {
-                    MessageBox.Show("Error while converting");
+                    MessageBox.Show("Error while converting", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
 
                 ConvertingProgress.Visibility = Visibility.Collapsed;
