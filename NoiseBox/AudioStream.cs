@@ -6,6 +6,8 @@ namespace NoiseBox {
         protected WaveOutEvent _outputDevice;
         protected ILog _log = LogSettings.SelectedLog;
 
+        public event EventHandler<EventArgs> StoppedEvent;
+
         public float OutputDeviceVolume {
             get {
                 return _outputDevice.Volume;
@@ -42,8 +44,14 @@ namespace NoiseBox {
                     DeviceNumber = DeviceControll.GetOutputDeviceId(deviceName)
                 };
 
+                _outputDevice.PlaybackStopped += PlaybackStopped;
+
                 _log.Print("Device has been selected", LogInfoType.INFO);
             }
+        }
+
+        private void PlaybackStopped(object sender, EventArgs e) {
+            StoppedEvent(sender, e);
         }
 
         public virtual void Play() { 

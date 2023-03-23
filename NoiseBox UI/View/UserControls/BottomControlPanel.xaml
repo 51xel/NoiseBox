@@ -89,14 +89,13 @@
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition/>
-                    <RowDefinition/>
                 </Grid.RowDefinitions>
 
-                <Slider Grid.Row="0" Grid.Column="0" Name="Volume1Slider" Maximum="100" VerticalAlignment="Center" Margin="0,10,0,0"/>
-                <Slider Grid.Row="1" Grid.Column="0" Name="Volume2Slider" Maximum="100" VerticalAlignment="Center" Margin="0,0,0,10"/>
+                <!--<Slider Grid.Row="0" Grid.Column="0" Name="Volume1Slider" Maximum="100" VerticalAlignment="Center" Margin="0,10,0,0"/>-->
+                <Slider Grid.Row="1" Grid.Column="0" Name="MainVolumeSlider" Maximum="100" VerticalAlignment="Center"/>
 
-                <Image Grid.Row="0" Grid.Column="1" Source="/Images/Icons/mic.png" Width="17" Margin="-5,10,0,0" RenderOptions.BitmapScalingMode ="HighQuality"/>
-                <Image Grid.Row="1" Grid.Column="1" Source="/Images/Icons/speaker.png" Width="15" Margin="0,0,0,10" RenderOptions.BitmapScalingMode ="HighQuality"/>
+                <!--<Image Grid.Row="0" Grid.Column="1" Source="/Images/Icons/mic.png" Width="17" Margin="-5,10,0,0" RenderOptions.BitmapScalingMode ="HighQuality"/>-->
+                <Image Grid.Row="1" Grid.Column="1" Source="/Images/Icons/speaker.png" Width="15" RenderOptions.BitmapScalingMode ="HighQuality"/>
             </Grid>
         </Grid>
     </Grid>

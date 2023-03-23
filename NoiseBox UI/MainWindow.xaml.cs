@@ -35,6 +35,7 @@ namespace NoiseBox_UI {
             WinMax.DoSourceInitialized(this);
 
             AudioStreamControl = new AudioStreamControl(DeviceControll.GetOutputDeviceNameById(0));
+            AudioStreamControl.MainMusic.StoppedEvent += Music_StoppedEvent;
 
             DisplayPlaylists();
             DisplaySelectedPlaylist();
@@ -42,6 +43,8 @@ namespace NoiseBox_UI {
             BottomControlPanel.PlayPauseButton.Click += PlayPauseButton_Click;
             BottomControlPanel.SeekBar.PreviewMouseLeftButtonUp += SeekBar_PreviewMouseLeftButtonUp;
             BottomControlPanel.SeekBar.ValueChanged += SeekBar_ValueChanged;
+            BottomControlPanel.MainVolumeSlider.Value = 0.1 * 100;//TODO Load from config
+            BottomControlPanel.MainVolumeSlider.ValueChanged += MainVolumeSlider_ValueChanged;
 
             SongList.ClickRowElement += Song_Click;
 
@@ -49,6 +52,27 @@ namespace NoiseBox_UI {
 
             SeekBarTimer.Interval = TimeSpan.FromMilliseconds(50);
             SeekBarTimer.Tick += timer_Tick;
+        }
+
+        private void MainVolumeSlider_ValueChanged(object sender, EventArgs e) {
+            AudioStreamControl.MainMusic.MusicVolume = (float)BottomControlPanel.MainVolumeSlider.Value / 100;
+        }
+
+        private void Music_StoppedEvent(object sender, EventArgs e) {
+            if (AudioStreamControl.MainMusic.CurrentTrackLength == AudioStreamControl.MainMusic.CurrentTrackPosition) {
+                BottomControlPanel.State = BottomControlPanel.ButtonState.Paused;
+                SeekBarTimer.Stop();
+
+                var positionSelectedSong = SongList.List.Items.IndexOf(SelectedSong);
+
+                //TODO Change music logic 
+                if (positionSelectedSong + 1 == SongList.List.Items.Count) {
+                    SelectSong(SongList.List.Items[0] as Song);
+                }
+                else {
+                    SelectSong(SongList.List.Items[positionSelectedSong + 1] as Song);
+                }
+            }
         }
 
         private void Song_Click(object sender, RoutedEventArgs e) {
@@ -67,7 +91,7 @@ namespace NoiseBox_UI {
                 AudioStreamControl.MainMusic.StopAndPlayFromPosition(0);
                 SeekBarTimer.Start();
 
-                AudioStreamControl.MainMusic.MusicVolume = 0.1f;
+                AudioStreamControl.MainMusic.MusicVolume = (float)BottomControlPanel.MainVolumeSlider.Value / 100;
 
                 BottomControlPanel.State = BottomControlPanel.ButtonState.Playing;
 
@@ -83,6 +107,9 @@ namespace NoiseBox_UI {
 
             if (AudioStreamControl.MainMusic.PathToMusic != null && AudioStreamControl.MainMusic.CurrentTrackPosition != posInSeekBar && !AudioStreamControl.MainMusic.IsPaused) {
                 AudioStreamControl.MainMusic.StopAndPlayFromPosition(posInSeekBar);
+
+                BottomControlPanel.State = BottomControlPanel.ButtonState.Playing;
+                SeekBarTimer.Start();
             }
         }
 
@@ -91,19 +118,6 @@ namespace NoiseBox_UI {
                 var posInSeekBar = (BottomControlPanel.SeekBar.Value * AudioStreamControl.MainMusic.CurrentTrackLength) / 100;
                 var ts = TimeSpan.FromSeconds(posInSeekBar); 
                 BottomControlPanel.CurrentTime.Text = string.Format("{0}:{1}", (int)ts.TotalMinutes, ts.Seconds.ToString("D2"));
-            }
-        }
-
-        private void Window_StateChanged(object sender, EventArgs e) {
-            if (WindowState == WindowState.Maximized) {
-                Uri uri = new Uri("/Images/Icons/restore.png", UriKind.Relative);
-                ImageSource imgSource = new BitmapImage(uri);
-                TitlebarButtons.MaximizeButtonImage.Source = imgSource;
-            }
-            else if (WindowState == WindowState.Normal) {
-                Uri uri = new Uri("/Images/Icons/maximize.png", UriKind.Relative);
-                ImageSource imgSource = new BitmapImage(uri);
-                TitlebarButtons.MaximizeButtonImage.Source = imgSource;
             }
         }
 
@@ -180,6 +194,19 @@ namespace NoiseBox_UI {
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e) {
             Helper.FindVisualChildren<Grid>(this).FirstOrDefault().Focus();
+        }
+
+        private void Window_StateChanged(object sender, EventArgs e) {
+            if (WindowState == WindowState.Maximized) {
+                Uri uri = new Uri("/Images/Icons/restore.png", UriKind.Relative);
+                ImageSource imgSource = new BitmapImage(uri);
+                TitlebarButtons.MaximizeButtonImage.Source = imgSource;
+            }
+            else if (WindowState == WindowState.Normal) {
+                Uri uri = new Uri("/Images/Icons/maximize.png", UriKind.Relative);
+                ImageSource imgSource = new BitmapImage(uri);
+                TitlebarButtons.MaximizeButtonImage.Source = imgSource;
+            }
         }
     }
 }
