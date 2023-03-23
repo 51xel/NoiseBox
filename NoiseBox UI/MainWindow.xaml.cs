@@ -63,14 +63,12 @@ namespace NoiseBox_UI {
                 BottomControlPanel.State = BottomControlPanel.ButtonState.Paused;
                 SeekBarTimer.Stop();
 
-                var positionSelectedSong = SongList.List.Items.IndexOf(SelectedSong);
-
                 //TODO Change music logic 
-                if (positionSelectedSong + 1 == SongList.List.Items.Count) {
+                if (SongList.List.Items.IndexOf(SelectedSong) + 1 == SongList.List.Items.Count) {
                     SelectSong(SongList.List.Items[0] as Song);
                 }
                 else {
-                    SelectSong(SongList.List.Items[positionSelectedSong + 1] as Song);
+                    SelectSong(SongList.List.Items[SongList.List.Items.IndexOf(SelectedSong) + 1] as Song);
                 }
             }
         }

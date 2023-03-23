@@ -55,8 +55,11 @@ namespace NoiseBox {
                     File.Create(_pathToFile).Close();
 
                     WriteMessageIntoFile("===Log file created [" + DateTime.Now + "]\n");
+                    WriteMessageIntoFile("\n===App Starting [" + DateTime.Now + "]\n");
                 }
                 else {
+                    ClearLog();
+
                     WriteMessageIntoFile("\n===App Starting [" + DateTime.Now + "]\n");
                 }
             }
@@ -68,6 +71,14 @@ namespace NoiseBox {
             private void WriteMessageIntoFile(string message) {
                 using (StreamWriter writer = new StreamWriter(_pathToFile, true)) {
                     writer.WriteLine(message);
+                }
+            }
+
+            private void ClearLog() {
+                if (new FileInfo(_pathToFile).Length >= 100000) {
+                    using (StreamWriter writer = new StreamWriter(_pathToFile)) {
+                        writer.WriteLine("===Log file has been cleared [" + DateTime.Now + "]\n");
+                    }
                 }
             }
         }
