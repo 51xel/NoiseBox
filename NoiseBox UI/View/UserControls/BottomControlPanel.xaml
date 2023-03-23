@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NoiseBox_UI.View.UserControls"
              mc:Ignorable="d" 
-             d:DesignHeight="80" d:DesignWidth="800">
+             d:DesignHeight="80" d:DesignWidth="1000">
     <UserControl.Resources>
         <Style x:Key="PlayPauseButton" TargetType="{x:Type Button}">
             <Setter Property="Width" Value="50"/>
@@ -20,7 +20,7 @@
                     <ControlTemplate TargetType="{x:Type Button}">
                         <Grid>
                             <Border x:Name="border" CornerRadius="100" Background="#EBEBEB">
-                                <Image Source="{Binding PathToImage}" Height="20" Width="20" RenderOptions.BitmapScalingMode ="HighQuality"/>
+                                <Image Source="{Binding ButtonStateImagePath}" Height="20" Width="20" RenderOptions.BitmapScalingMode ="HighQuality"/>
                             </Border>
 
                             <Grid.RenderTransform>
@@ -46,17 +46,46 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <Style x:Key="NoStylingButton" TargetType="{x:Type Button}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="Transparent">
+                            <ContentPresenter/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
     <Grid>
         <Border Background="#212121"/>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="200"/>
                 <ColumnDefinition/>
+                <ColumnDefinition Width="90"/>
                 <ColumnDefinition Width="250"/>
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="0" Name="PlayPauseButton" Style="{StaticResource PlayPauseButton}"/>
+            <Grid Grid.Column="0" Margin="40,0,40,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="20"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0" Name="PrevButton" Style="{StaticResource NoStylingButton}">
+                    <Image Source="\Images\Icons\prev.png" RenderOptions.BitmapScalingMode="HighQuality" Opacity="0.7"/>
+                </Button>
+                
+                <Button Grid.Column="1" Name="PlayPauseButton" Style="{StaticResource PlayPauseButton}"/>
+                
+                <Button Grid.Column="2" Name="NextButton" Style="{StaticResource NoStylingButton}">
+                    <Image Source="\Images\Icons\next.png" RenderOptions.BitmapScalingMode="HighQuality" Opacity="0.7"/>
+                </Button>
+            </Grid>
 
             <Grid Grid.Column="1">
                 <Grid.ColumnDefinitions>
@@ -82,7 +111,11 @@
                            VerticalAlignment="Center" HorizontalAlignment="Center" Padding="10,0,0,0">0:00</TextBlock>
             </Grid>
 
-            <Grid Grid.Column="2" Margin="50,0,0,0">
+            <Button Grid.Column="2" Name="PlaybackModeButton" Style="{StaticResource NoStylingButton}" HorizontalAlignment="Left" Margin="10,0,0,0" Click="PlaybackModeButton_Click">
+                <Image Source="{Binding PlaybackModeImagePath}" Width="40" RenderOptions.BitmapScalingMode="HighQuality" Opacity="0.7"/>
+            </Button>
+
+            <Grid Grid.Column="3">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="70*"/>
                     <ColumnDefinition Width="30*"/>

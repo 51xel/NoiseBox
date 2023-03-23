@@ -41,6 +41,8 @@ namespace NoiseBox_UI {
             DisplaySelectedPlaylist();
 
             BottomControlPanel.PlayPauseButton.Click += PlayPauseButton_Click;
+            BottomControlPanel.PrevButton.Click += PrevButton_Click;
+            BottomControlPanel.NextButton.Click += NextButton_Click;
             BottomControlPanel.SeekBar.PreviewMouseLeftButtonUp += SeekBar_PreviewMouseLeftButtonUp;
             BottomControlPanel.SeekBar.ValueChanged += SeekBar_ValueChanged;
             BottomControlPanel.MainVolumeSlider.Value = 0.1 * 100;//TODO Load from config
@@ -63,12 +65,24 @@ namespace NoiseBox_UI {
                 BottomControlPanel.State = BottomControlPanel.ButtonState.Paused;
                 SeekBarTimer.Stop();
 
-                //TODO Change music logic 
-                if (SongList.List.Items.IndexOf(SelectedSong) + 1 == SongList.List.Items.Count) {
-                    SelectSong(SongList.List.Items[0] as Song);
-                }
-                else {
-                    SelectSong(SongList.List.Items[SongList.List.Items.IndexOf(SelectedSong) + 1] as Song);
+                var selectedSongIndex = SongList.List.Items.IndexOf(SelectedSong);
+
+                switch (BottomControlPanel.Mode) {
+                    case BottomControlPanel.PlaybackMode.Loop:
+                        if (selectedSongIndex == SongList.List.Items.Count - 1) {
+                            SelectSong(SongList.List.Items[0] as Song);
+                        }
+                        else {
+                            SelectSong(SongList.List.Items[selectedSongIndex + 1] as Song);
+                        }
+                        break;
+
+                    case BottomControlPanel.PlaybackMode.Loop1:
+                        SelectSong(SongList.List.Items[selectedSongIndex] as Song);
+                        break;
+
+                    case BottomControlPanel.PlaybackMode.NoLoop:
+                        break;
                 }
             }
         }
@@ -139,6 +153,56 @@ namespace NoiseBox_UI {
 
                     AudioStreamControl.MainMusic.Pause();
                     SeekBarTimer.Stop();
+                }
+            }
+        }
+
+        private void PrevButton_Click(object sender, RoutedEventArgs e) {
+            if (SelectedSong != null) {
+                var selectedSongIndex = SongList.List.Items.IndexOf(SelectedSong);
+
+                switch (BottomControlPanel.Mode) {
+                    case BottomControlPanel.PlaybackMode.Loop:
+                        if (selectedSongIndex == 0) {
+                            SelectSong(SongList.List.Items[SongList.List.Items.Count - 1] as Song);
+                        }
+                        else {
+                            SelectSong(SongList.List.Items[selectedSongIndex - 1] as Song);
+                        }
+                        break;
+
+                    case BottomControlPanel.PlaybackMode.Loop1:
+                        SelectSong(SongList.List.Items[selectedSongIndex] as Song);
+                        break;
+
+                    case BottomControlPanel.PlaybackMode.NoLoop:
+                        SelectSong(SongList.List.Items[selectedSongIndex] as Song);
+                        break;
+                }
+            }
+        }
+
+        private void NextButton_Click(object sender, RoutedEventArgs e) {
+            if (SelectedSong != null) {
+                var selectedSongIndex = SongList.List.Items.IndexOf(SelectedSong);
+
+                switch (BottomControlPanel.Mode) {
+                    case BottomControlPanel.PlaybackMode.Loop:
+                        if (selectedSongIndex == SongList.List.Items.Count - 1) {
+                            SelectSong(SongList.List.Items[0] as Song);
+                        }
+                        else {
+                            SelectSong(SongList.List.Items[selectedSongIndex + 1] as Song);
+                        }
+                        break;
+
+                    case BottomControlPanel.PlaybackMode.Loop1:
+                        SelectSong(SongList.List.Items[selectedSongIndex] as Song);
+                        break;
+
+                    case BottomControlPanel.PlaybackMode.NoLoop:
+                        SelectSong(SongList.List.Items[selectedSongIndex] as Song);
+                        break;
                 }
             }
         }

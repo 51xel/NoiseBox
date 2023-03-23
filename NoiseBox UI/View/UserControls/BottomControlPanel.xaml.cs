@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -23,22 +24,40 @@ namespace NoiseBox_UI.View.UserControls {
             InitializeComponent();
 
             State = ButtonState.Paused;
+            Mode = PlaybackMode.Loop;
         }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public enum ButtonState {
             Playing,
             Paused
         }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+        public enum PlaybackMode {
+            Loop,
+            Loop1,
+            NoLoop
+        }
 
-        private string _pathToImage;
+        private string _buttonStateImagePath;
+        private string _playbackModeImagePath;
         private ButtonState _buttonState;
+        private PlaybackMode _playbackMode;
 
-        public string PathToImage {
-            get { return _pathToImage; }
+        public string ButtonStateImagePath {
+            get { return _buttonStateImagePath; }
             set {
-                _pathToImage = value;
+                _buttonStateImagePath = value;
+
+                OnPropertyChanged();
+            }
+        }
+
+        public string PlaybackModeImagePath {
+            get { return _playbackModeImagePath; }
+            set {
+                _playbackModeImagePath = value;
 
                 OnPropertyChanged();
             }
@@ -51,14 +70,50 @@ namespace NoiseBox_UI.View.UserControls {
             set {
                 switch (value) {
                     case ButtonState.Paused:
-                        PathToImage = "/Images/Icons/play.png";
+                        ButtonStateImagePath = "/Images/Icons/play.png";
                         _buttonState = value;
                         break;
                     case ButtonState.Playing:
-                         PathToImage = "/Images/Icons/pause.png";
+                        ButtonStateImagePath = "/Images/Icons/pause.png";
                         _buttonState = value;
                         break;
                 }
+            }
+        }
+
+        public PlaybackMode Mode {
+            get {
+                return _playbackMode;
+            }
+            set {
+                switch (value) {
+                    case PlaybackMode.Loop:
+                        PlaybackModeImagePath = "/Images/Icons/Loop.png";
+                        _playbackMode = value;
+                        break;
+                    case PlaybackMode.Loop1:
+                        PlaybackModeImagePath = "/Images/Icons/Loop1.png";
+                        _playbackMode = value;
+                        break;
+                    case PlaybackMode.NoLoop:
+                        PlaybackModeImagePath = "/Images/Icons/NoLoop.png";
+                        _playbackMode = value;
+                        break;
+                }
+            }
+        }
+
+        private void PlaybackModeButton_Click(object sender, RoutedEventArgs e) {
+            switch (Mode) {
+                case PlaybackMode.Loop:
+                    Mode = PlaybackMode.Loop1;
+                    break;
+                case PlaybackMode.Loop1:
+                    Mode = PlaybackMode.NoLoop;
+                    break;
+                case PlaybackMode.NoLoop:
+                    Mode = PlaybackMode.Loop;
+                    break;
             }
         }
 
