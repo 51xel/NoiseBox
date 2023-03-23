@@ -218,6 +218,14 @@ namespace NoiseBox_UI.View.UserControls {
                 else {
                     textBox.Text = textBoxText;
                     (textBox.DataContext as Song).Name = textBoxText;
+
+                    var win = (MainWindow)Window.GetWindow(this);
+
+                    if (win.SelectedSong != null) {
+                        if (win.SelectedSong.Id == (textBox.DataContext as Song).Id) {
+                            win.RenameSelectedSong(textBoxText);
+                        }
+                    }
                 }
             }
             else {

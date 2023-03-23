@@ -52,13 +52,16 @@ namespace NoiseBox_UI {
         }
 
         private void Song_Click(object sender, RoutedEventArgs e) {
-            SelectedSong = ((sender as Button).Content as GridViewRowPresenter).Content as Song;
+            SelectSong(((sender as Button).Content as GridViewRowPresenter).Content as Song);
+        }
 
-            if (!File.Exists(SelectedSong.Path)) {
+        public void SelectSong(Song song) {
+            if (!File.Exists(song.Path)) {
                 MessageBox.Show("File does not exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                SelectedSong = null;
             }
             else {
+                SelectedSong = song;
+
                 AudioStreamControl.MainMusic.PathToMusic = SelectedSong.Path;
 
                 AudioStreamControl.MainMusic.StopAndPlayFromPosition(0);
@@ -165,6 +168,13 @@ namespace NoiseBox_UI {
             if (SelectedPlaylist != null) {
                 SelectedPlaylist.Name = newName;
                 PlaylistText.CurrentPlaylistName.Text = newName;
+            }
+        }
+
+        public void RenameSelectedSong(string newName) {
+            if (SelectedSong != null) {
+                SelectedSong.Name = newName;
+                BottomControlPanel.CurrentSongName.Text = newName;
             }
         }
 
