@@ -28,6 +28,7 @@ namespace NoiseBox_UI {
 
         public Playlist? SelectedPlaylist = MusicLibrary.GetPlaylists().FirstOrDefault();
         public Song? SelectedSong = null;
+        public Playlist? BackgroundPlaylist = null;
 
         public MainWindow() {
             InitializeComponent();
@@ -65,25 +66,7 @@ namespace NoiseBox_UI {
                 BottomControlPanel.State = BottomControlPanel.ButtonState.Paused;
                 SeekBarTimer.Stop();
 
-                var selectedSongIndex = SongList.List.Items.IndexOf(SelectedSong);
-
-                switch (BottomControlPanel.Mode) {
-                    case BottomControlPanel.PlaybackMode.Loop:
-                        if (selectedSongIndex == SongList.List.Items.Count - 1) {
-                            SelectSong(SongList.List.Items[0] as Song);
-                        }
-                        else {
-                            SelectSong(SongList.List.Items[selectedSongIndex + 1] as Song);
-                        }
-                        break;
-
-                    case BottomControlPanel.PlaybackMode.Loop1:
-                        SelectSong(SongList.List.Items[selectedSongIndex] as Song);
-                        break;
-
-                    case BottomControlPanel.PlaybackMode.NoLoop:
-                        break;
-                }
+                NextButton_Click(null, null);
             }
         }
 
@@ -157,34 +140,52 @@ namespace NoiseBox_UI {
             }
         }
 
-        private void PrevButton_Click(object sender, RoutedEventArgs e) {
-            if (SelectedSong != null) {
-                var selectedSongIndex = SongList.List.Items.IndexOf(SelectedSong);
-
-                switch (BottomControlPanel.Mode) {
-                    case BottomControlPanel.PlaybackMode.Loop:
-                        if (selectedSongIndex == 0) {
-                            SelectSong(SongList.List.Items[SongList.List.Items.Count - 1] as Song);
-                        }
-                        else {
-                            SelectSong(SongList.List.Items[selectedSongIndex - 1] as Song);
-                        }
-                        break;
-
-                    case BottomControlPanel.PlaybackMode.Loop1:
-                        SelectSong(SongList.List.Items[selectedSongIndex] as Song);
-                        break;
-
-                    case BottomControlPanel.PlaybackMode.NoLoop:
-                        SelectSong(SongList.List.Items[selectedSongIndex] as Song);
-                        break;
-                }
-            }
-        }
-
         private void NextButton_Click(object sender, RoutedEventArgs e) {
             if (SelectedSong != null) {
                 var selectedSongIndex = SongList.List.Items.IndexOf(SelectedSong);
+
+                if (selectedSongIndex == -1) { // changed displayed playlist
+                    switch (BottomControlPanel.Mode) {
+                        case BottomControlPanel.PlaybackMode.Loop:
+
+                            if (BackgroundPlaylist != null) {
+                                selectedSongIndex = BackgroundPlaylist.SongIds.IndexOf(SelectedSong.Id);
+                            }
+
+                            if (selectedSongIndex == -1) {
+                                foreach (var p in MusicLibrary.GetPlaylists()) {
+                                    var res = MusicLibrary.GetSongsFromPlaylist(p.Name).Find(s => s.Id == SelectedSong.Id);
+                                    if (res != null) {
+                                        BackgroundPlaylist = p;
+                                        selectedSongIndex = BackgroundPlaylist.SongIds.IndexOf(SelectedSong.Id);
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (selectedSongIndex != -1) {
+                                var backgroundSongs = MusicLibrary.GetSongsFromPlaylist(BackgroundPlaylist.Name);
+
+                                if (selectedSongIndex == backgroundSongs.Count - 1) {
+                                    SelectSong(backgroundSongs[0] as Song);
+                                }
+                                else {
+                                    SelectSong(backgroundSongs[selectedSongIndex + 1] as Song);
+                                }
+                            }
+
+                            break;
+
+                        case BottomControlPanel.PlaybackMode.Loop1:
+                            SelectSong(SelectedSong);
+                            break;
+
+                        case BottomControlPanel.PlaybackMode.NoLoop:
+                            break;
+                    }
+
+                    return;
+                }
 
                 switch (BottomControlPanel.Mode) {
                     case BottomControlPanel.PlaybackMode.Loop:
@@ -197,11 +198,79 @@ namespace NoiseBox_UI {
                         break;
 
                     case BottomControlPanel.PlaybackMode.Loop1:
-                        SelectSong(SongList.List.Items[selectedSongIndex] as Song);
+                        SelectSong(SelectedSong);
                         break;
 
                     case BottomControlPanel.PlaybackMode.NoLoop:
-                        SelectSong(SongList.List.Items[selectedSongIndex] as Song);
+                        break;
+                }
+            }
+        }
+
+        private void PrevButton_Click(object sender, RoutedEventArgs e) {
+            if (SelectedSong != null) {
+                var selectedSongIndex = SongList.List.Items.IndexOf(SelectedSong);
+
+                if (selectedSongIndex == -1) { // changed displayed playlist
+                    switch (BottomControlPanel.Mode) {
+                        case BottomControlPanel.PlaybackMode.Loop:
+
+                            if (BackgroundPlaylist != null) {
+                                selectedSongIndex = BackgroundPlaylist.SongIds.IndexOf(SelectedSong.Id);
+                            }
+
+                            if (selectedSongIndex == -1) {
+                                foreach (var p in MusicLibrary.GetPlaylists()) {
+                                    var res = MusicLibrary.GetSongsFromPlaylist(p.Name).Find(s => s.Id == SelectedSong.Id);
+                                    if (res != null) {
+                                        BackgroundPlaylist = p;
+                                        selectedSongIndex = BackgroundPlaylist.SongIds.IndexOf(SelectedSong.Id);
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (selectedSongIndex != -1) {
+                                var backgroundSongs = MusicLibrary.GetSongsFromPlaylist(BackgroundPlaylist.Name);
+
+                                if (selectedSongIndex == 0) {
+                                    SelectSong(backgroundSongs[SongList.List.Items.Count - 1] as Song);
+                                }
+                                else {
+                                    SelectSong(backgroundSongs[selectedSongIndex - 1] as Song);
+                                }
+                            }
+
+                            break;
+
+                        case BottomControlPanel.PlaybackMode.Loop1:
+                            SelectSong(SelectedSong);
+                            break;
+
+                        case BottomControlPanel.PlaybackMode.NoLoop:
+                            SelectSong(SelectedSong);
+                            break;
+                    }
+
+                    return;
+                }
+
+                switch (BottomControlPanel.Mode) {
+                    case BottomControlPanel.PlaybackMode.Loop:
+                        if (selectedSongIndex == 0) {
+                            SelectSong(SongList.List.Items[SongList.List.Items.Count - 1] as Song);
+                        }
+                        else {
+                            SelectSong(SongList.List.Items[selectedSongIndex - 1] as Song);
+                        }
+                        break;
+
+                    case BottomControlPanel.PlaybackMode.Loop1:
+                        SelectSong(SelectedSong);
+                        break;
+
+                    case BottomControlPanel.PlaybackMode.NoLoop:
+                        SelectSong(SelectedSong);
                         break;
                 }
             }

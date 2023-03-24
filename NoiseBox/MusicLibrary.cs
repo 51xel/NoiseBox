@@ -240,7 +240,7 @@ namespace NoiseBox {
             return false;
         }
 
-        public static IEnumerable<Song> GetSongs() {
+        public static List<Song> GetSongs() {
             var songs = new List<Song>();
 
             foreach (var song in _songs) {
@@ -250,7 +250,7 @@ namespace NoiseBox {
             return songs;
         }
 
-        public static IEnumerable<Playlist> GetPlaylists() {
+        public static List<Playlist> GetPlaylists() {
             var playlists = new List<Playlist>();
 
             foreach (var playlist in _playlists) {
@@ -260,7 +260,7 @@ namespace NoiseBox {
             return playlists;
         }
 
-        public static IEnumerable<Song> GetSongsFromPlaylist(string playlistName) {
+        public static List<Song> GetSongsFromPlaylist(string playlistName) {
             var playlist = _playlists.Find(p => p.Name == playlistName);
             var songsFromPlaylist = new List<Song>();
 
