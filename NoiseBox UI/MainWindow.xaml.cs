@@ -28,7 +28,6 @@ namespace NoiseBox_UI {
 
         public Playlist? SelectedPlaylist = MusicLibrary.GetPlaylists().FirstOrDefault();
         public Song? SelectedSong = null;
-        public Playlist? BackgroundPlaylist = null;
 
         public MainWindow() {
             InitializeComponent();
@@ -94,6 +93,15 @@ namespace NoiseBox_UI {
                 var ts = SelectedSong.Duration;
                 BottomControlPanel.TotalTime.Text = string.Format("{0}:{1}", (int)ts.TotalMinutes, ts.Seconds.ToString("D2"));
                 BottomControlPanel.CurrentTime.Text = "0:00";
+
+                foreach (var button in Helper.FindVisualChildren<Button>(SongList.List)) {
+                    if (((button.Content as GridViewRowPresenter).Content as Song).Id == SelectedSong.Id) {
+                        button.Background = new SolidColorBrush(Colors.White) { Opacity = .1 };
+                    }
+                    else {
+                        button.Background = new SolidColorBrush(Colors.Transparent);
+                    }
+                }
             }
         }
 
@@ -148,23 +156,19 @@ namespace NoiseBox_UI {
                     switch (BottomControlPanel.Mode) {
                         case BottomControlPanel.PlaybackMode.Loop:
 
-                            if (BackgroundPlaylist != null) {
-                                selectedSongIndex = MusicLibrary.GetSongsFromPlaylist(BackgroundPlaylist.Name).IndexOf(SelectedSong);
-                            }
+                            string backgroundPlaylistName = "";
 
-                            if (selectedSongIndex == -1) {
-                                foreach (var p in MusicLibrary.GetPlaylists()) {
-                                    var res = MusicLibrary.GetSongsFromPlaylist(p.Name).Find(s => s.Id == SelectedSong.Id);
-                                    if (res != null) {
-                                        BackgroundPlaylist = p;
-                                        selectedSongIndex = BackgroundPlaylist.SongIds.IndexOf(SelectedSong.Id);
-                                        break;
-                                    }
+                            foreach (var p in MusicLibrary.GetPlaylists()) {
+                                var res = MusicLibrary.GetSongsFromPlaylist(p.Name).Find(s => s.Id == SelectedSong.Id);
+                                if (res != null) {
+                                    backgroundPlaylistName = p.Name;
+                                    selectedSongIndex = p.SongIds.IndexOf(SelectedSong.Id);
+                                    break;
                                 }
                             }
 
                             if (selectedSongIndex != -1) {
-                                var backgroundSongs = MusicLibrary.GetSongsFromPlaylist(BackgroundPlaylist.Name);
+                                var backgroundSongs = MusicLibrary.GetSongsFromPlaylist(backgroundPlaylistName);
 
                                 if (selectedSongIndex == backgroundSongs.Count - 1) {
                                     SelectSong(backgroundSongs[0] as Song);
@@ -215,23 +219,19 @@ namespace NoiseBox_UI {
                     switch (BottomControlPanel.Mode) {
                         case BottomControlPanel.PlaybackMode.Loop:
 
-                            if (BackgroundPlaylist != null) {
-                                selectedSongIndex = MusicLibrary.GetSongsFromPlaylist(BackgroundPlaylist.Name).IndexOf(SelectedSong);
-                            }
+                            string backgroundPlaylistName = "";
 
-                            if (selectedSongIndex == -1) {
-                                foreach (var p in MusicLibrary.GetPlaylists()) {
-                                    var res = MusicLibrary.GetSongsFromPlaylist(p.Name).Find(s => s.Id == SelectedSong.Id);
-                                    if (res != null) {
-                                        BackgroundPlaylist = p;
-                                        selectedSongIndex = BackgroundPlaylist.SongIds.IndexOf(SelectedSong.Id);
-                                        break;
-                                    }
+                            foreach (var p in MusicLibrary.GetPlaylists()) {
+                                var res = MusicLibrary.GetSongsFromPlaylist(p.Name).Find(s => s.Id == SelectedSong.Id);
+                                if (res != null) {
+                                    backgroundPlaylistName = p.Name;
+                                    selectedSongIndex = p.SongIds.IndexOf(SelectedSong.Id);
+                                    break;
                                 }
                             }
 
                             if (selectedSongIndex != -1) {
-                                var backgroundSongs = MusicLibrary.GetSongsFromPlaylist(BackgroundPlaylist.Name);
+                                var backgroundSongs = MusicLibrary.GetSongsFromPlaylist(backgroundPlaylistName);
 
                                 if (selectedSongIndex == 0) {
                                     SelectSong(backgroundSongs[SongList.List.Items.Count - 1] as Song);
@@ -296,7 +296,7 @@ namespace NoiseBox_UI {
             }
         }
 
-        private void DisplaySelectedPlaylist() {
+        private async Task DisplaySelectedPlaylist() {
             if (SelectedPlaylist != null) {
                 PlaylistText.CurrentPlaylistName.Text = SelectedPlaylist.Name;
 
@@ -305,6 +305,16 @@ namespace NoiseBox_UI {
 
                 foreach (var song in songs) {
                     SongList.List.Items.Add(song);
+                }
+
+                await Task.Delay(100); // 😔
+                if (SelectedSong != null) {
+                    foreach (var button in Helper.FindVisualChildren<Button>(SongList.List)) {
+                        if (((button.Content as GridViewRowPresenter).Content as Song).Id == SelectedSong.Id) {
+                            button.Background = new SolidColorBrush(Colors.White) { Opacity = .1 };
+                            break;
+                        }
+                    }
                 }
             }
         }
