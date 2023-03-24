@@ -149,7 +149,7 @@ namespace NoiseBox_UI {
                         case BottomControlPanel.PlaybackMode.Loop:
 
                             if (BackgroundPlaylist != null) {
-                                selectedSongIndex = BackgroundPlaylist.SongIds.IndexOf(SelectedSong.Id);
+                                selectedSongIndex = MusicLibrary.GetSongsFromPlaylist(BackgroundPlaylist.Name).IndexOf(SelectedSong);
                             }
 
                             if (selectedSongIndex == -1) {
@@ -216,7 +216,7 @@ namespace NoiseBox_UI {
                         case BottomControlPanel.PlaybackMode.Loop:
 
                             if (BackgroundPlaylist != null) {
-                                selectedSongIndex = BackgroundPlaylist.SongIds.IndexOf(SelectedSong.Id);
+                                selectedSongIndex = MusicLibrary.GetSongsFromPlaylist(BackgroundPlaylist.Name).IndexOf(SelectedSong);
                             }
 
                             if (selectedSongIndex == -1) {
