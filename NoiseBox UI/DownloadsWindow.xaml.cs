@@ -51,7 +51,6 @@ namespace NoiseBox_UI {
                 TitlebarButtons.MaximizeButtonImage.Source = imgSource;
             }
 
-
             if (WindowState == WindowState.Normal || WindowState == WindowState.Maximized) {
                 (Owner as MainWindow).FunctionButtons.DownloadingProgress.Visibility = Visibility.Collapsed;
             }

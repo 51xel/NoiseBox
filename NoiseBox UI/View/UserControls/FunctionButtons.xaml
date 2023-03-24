@@ -43,6 +43,14 @@
                     </Grid>
                 </Button>
             </ListViewItem>
+
+            <ListViewItem Padding="5">
+                <Button x:Name="EqualizerButton" Width="50" Height="50" Background="#212128" BorderBrush="Transparent" Padding="10"
+                        Click="EqualizerButton_Click">
+                    <Grid>
+                    </Grid>
+                </Button>
+            </ListViewItem>
         </ListView>
     </Grid>
 </UserControl>

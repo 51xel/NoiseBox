@@ -1,5 +1,7 @@
-﻿using NAudio.Wave;
+﻿using NAudio.Extras;
+using NAudio.Wave;
 using NoiseBox.Log;
+using System.Numerics;
 
 namespace NoiseBox {
     public class AudioStream {
@@ -54,7 +56,7 @@ namespace NoiseBox {
             StoppedEvent(sender, e);
         }
 
-        public virtual void Play() { 
+        public virtual void Play() {
             _log.Print("Playing to " + DeviceControll.GetOutputDeviceNameById(_outputDevice.DeviceNumber), LogInfoType.INFO);
 
             _outputDevice.Play();
@@ -99,6 +101,9 @@ namespace NoiseBox {
         private AudioFileReader _audioFile;
         private string _pathToMusic;
 
+        private Equalizer _equalizer;
+        private EqualizerBand[] _bands;
+
         public float MusicVolume {
             get {
                 if (_audioFile != null) {
@@ -127,13 +132,19 @@ namespace NoiseBox {
             }
         }
 
-        public MusicStream(string deviceName = "CABLE Input (VB-Audio Virtual C") : base(deviceName) {}
+        public MusicStream(string deviceName = "CABLE Input (VB-Audio Virtual C") : base(deviceName) { }
 
         public override void Play() {
             if (_pathToMusic != null) {
                 if (!IsPlaying && !IsPaused) {
                     _audioFile = new AudioFileReader(_pathToMusic);
-                    _outputDevice.Init(_audioFile);
+                    if (_equalizer != null) {
+                        _equalizer = new Equalizer(_audioFile, _bands);
+                        _outputDevice.Init(_equalizer);
+                    }
+                    else {
+                        _outputDevice.Init(_audioFile);
+                    }
                 }
 
                 base.Play();
@@ -147,7 +158,14 @@ namespace NoiseBox {
 
             _audioFile = new AudioFileReader(_pathToMusic);
             _audioFile.CurrentTime = TimeSpan.FromSeconds(startingPosition);
-            _outputDevice.Init(_audioFile);
+
+            if (_equalizer != null) {
+                _equalizer = new Equalizer(_audioFile, _bands);
+                _outputDevice.Init(_equalizer);
+            }
+            else {
+                _outputDevice.Init(_audioFile);
+            }
 
             MusicVolume = oldVol;
 
@@ -212,6 +230,174 @@ namespace NoiseBox {
 
         public void Seek(double offset) {
             CurrentTrackPosition += offset;
+        }
+
+        public void InitializeEqualizer() {
+            if (_audioFile != null) {
+                _bands = new EqualizerBand[]{
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 100, Gain = 0},
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 200, Gain = 0},
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 400, Gain = 0},
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 800, Gain = 0},
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 1200, Gain = 0},
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 2400, Gain = 0},
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 4800, Gain = 0},
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 9600, Gain = 0},
+                };
+
+                _equalizer = new Equalizer(_audioFile, _bands);
+            }
+        }
+
+        public void StopEqualizer() {
+            _bands = null;
+
+            _equalizer = null;
+        }
+
+        private void UpdateEqualizer() {
+            _equalizer.Update();
+        }
+
+        public float MinimumGain => -30;
+
+        public float MaximumGain => 30;
+
+        public float Band1 {
+            get {
+                if (_bands != null) {
+                    return _bands[0].Gain;
+                }
+                else {
+                    return 0;
+                }
+            }
+            set {
+                if (_bands[0].Gain != value && _bands != null) {
+                    _bands[0].Gain = value;
+                    UpdateEqualizer();
+                }
+            }
+        }
+
+        public float Band2 {
+            get {
+                if (_bands != null) {
+                    return _bands[1].Gain;
+                }
+                else {
+                    return 0;
+                }
+            }
+            set {
+                if (_bands[1].Gain != value && _bands != null) {
+                    _bands[1].Gain = value;
+                    UpdateEqualizer();
+                }
+            }
+        }
+
+        public float Band3 {
+            get {
+                if (_bands != null) {
+                    return _bands[2].Gain;
+                }
+                else {
+                    return 0;
+                }
+            }
+            set {
+                if (_bands[2].Gain != value && _bands != null) {
+                    _bands[2].Gain = value;
+                    UpdateEqualizer();
+                }
+            }
+        }
+
+        public float Band4 {
+            get {
+                if (_bands != null) {
+                    return _bands[3].Gain;
+                }
+                else {
+                    return 0;
+                }
+            }
+            set {
+                if (_bands[3].Gain != value && _bands != null) {
+                    _bands[3].Gain = value;
+                    UpdateEqualizer();
+                }
+            }
+        }
+
+        public float Band5 {
+            get {
+                if (_bands != null) {
+                    return _bands[4].Gain;
+                }
+                else {
+                    return 0;
+                }
+            }
+            set {
+                if (_bands[4].Gain != value && _bands != null) {
+                    _bands[4].Gain = value;
+                    UpdateEqualizer();
+                }
+            }
+        }
+
+        public float Band6 {
+            get {
+                if (_bands != null) {
+                    return _bands[5].Gain;
+                }
+                else {
+                    return 0;
+                }
+            }
+            set {
+                if (_bands[5].Gain != value && _bands != null) {
+                    _bands[5].Gain = value;
+                    UpdateEqualizer();
+                }
+            }
+        }
+
+
+        public float Band7 {
+            get {
+                if (_bands != null) {
+                    return _bands[6].Gain;
+                }
+                else {
+                    return 0;
+                }
+            }
+            set {
+                if (_bands[6].Gain != value && _bands != null) {
+                    _bands[6].Gain = value;
+                    UpdateEqualizer();
+                }
+            }
+        }
+
+        public float Band8 {
+            get {
+                if (_bands != null) {
+                    return _bands[7].Gain;
+                }
+                else {
+                    return 0;
+                }
+            }
+            set {
+                if (_bands[7].Gain != value && _bands != null) {
+                    _bands[7].Gain = value;
+                    UpdateEqualizer();
+                }
+            }
         }
     }
 
@@ -287,3 +473,5 @@ namespace NoiseBox {
         }
     }
 }
+
+

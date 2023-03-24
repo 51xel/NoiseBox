@@ -24,6 +24,9 @@ namespace NoiseBox_UI.View.UserControls {
         private bool _isDownloadsWindowOpen = false;
         private DownloadsWindow _downloadsWin;
 
+        private bool _isEqualizerWindowOpen = false;
+        private CustomEqualizer _equalizerWin;
+
         private void DownloadButton_Click(object sender, RoutedEventArgs e) {
             if (_isDownloadsWindowOpen) {
                 if (_downloadsWin.WindowState == WindowState.Minimized) {
@@ -89,6 +92,31 @@ namespace NoiseBox_UI.View.UserControls {
 
                 ConvertingProgress.Visibility = Visibility.Collapsed;
             }
+        }
+
+        private void EqualizerButton_Click(object sender, RoutedEventArgs e){
+            if (_isEqualizerWindowOpen){
+                if (_equalizerWin.WindowState == WindowState.Minimized){
+                    _equalizerWin.WindowState = WindowState.Normal;
+                }
+                return;
+            }
+            var win = (MainWindow)Window.GetWindow(this);
+
+            if (win.AudioStreamControl.MainMusic.PathToMusic != null) {
+                win.AudioStreamControl.MainMusic.InitializeEqualizer();
+                win.AudioStreamControl.MainMusic.StopAndPlayFromPosition(win.AudioStreamControl.MainMusic.CurrentTrackPosition);
+            }
+
+            _equalizerWin = new CustomEqualizer();
+            _equalizerWin.Owner = Window.GetWindow(this);
+            _equalizerWin.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            _equalizerWin.Closed += (_, _) => { 
+                _isEqualizerWindowOpen = false;
+            };
+            _isEqualizerWindowOpen = true;
+            
+            _equalizerWin.Show();
         }
     }
 }
