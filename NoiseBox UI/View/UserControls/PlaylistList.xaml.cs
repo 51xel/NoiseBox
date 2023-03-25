@@ -39,6 +39,19 @@ namespace NoiseBox_UI.View.UserControls
 
                     int removedIdx = win.SongList.List.Items.IndexOf(droppedData);
                     win.SongList.List.Items.RemoveAt(removedIdx);
+
+                    if (win.SelectedSong != null) {
+                        if (droppedData.Id == win.SelectedSong.Id) {
+                            foreach (var btn in Helper.FindVisualChildren<Button>(List)) {
+                                if (((btn.Content as ContentPresenter).Content as Playlist).Name == target) {
+                                    btn.FontWeight = FontWeights.ExtraBold;
+                                }
+                                else {
+                                    btn.FontWeight = FontWeights.DemiBold;
+                                }
+                            }
+                        }
+                    }
                 }
             }
             else if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
@@ -94,6 +107,13 @@ namespace NoiseBox_UI.View.UserControls
                 var win = (MainWindow)Window.GetWindow(this);
 
                 if (Equals(menuItem.Header, "Remove playlist")) {
+
+                    if (win.SelectedSong != null) {
+                        if (MusicLibrary.GetSongsFromPlaylist((menuItem.DataContext as Playlist).Name).FindIndex(item => item.Id == win.SelectedSong.Id) != -1) {
+                            win.SelectedSongRemoved();
+                        }
+                    }
+
                     MusicLibrary.RemovePlaylist((menuItem.DataContext as Playlist).Name);
                     List.Items.Remove(menuItem.DataContext as Playlist);
 
@@ -113,7 +133,7 @@ namespace NoiseBox_UI.View.UserControls
                     textBox.Focusable = true;
                     textBox.Focus();
 
-                    textBox.FontWeight = FontWeights.ExtraBold;
+                    //textBox.FontWeight = FontWeights.ExtraBold;
 
                     _oldTextBoxText = textBox.Text;
                 }
@@ -140,7 +160,7 @@ namespace NoiseBox_UI.View.UserControls
 
             textBox.Focusable = false;
 
-            textBox.FontWeight = FontWeights.DemiBold;
+            //textBox.FontWeight = FontWeights.DemiBold;
 
             var textBoxText = textBox.Text.Trim();
 

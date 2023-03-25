@@ -71,7 +71,22 @@ namespace NoiseBox_UI {
         }
 
         private void Song_Click(object sender, RoutedEventArgs e) {
+            var idBefore = SelectedSong != null ? SelectedSong.Id : "";
+
             SelectSong(((sender as Button).Content as GridViewRowPresenter).Content as Song);
+
+            var idAfter = SelectedSong != null ? SelectedSong.Id : "";
+
+            if (idBefore != idAfter) {
+                foreach (var button in Helper.FindVisualChildren<Button>(PlaylistList.List)) {
+                    if (((button.Content as ContentPresenter).Content as Playlist).Name == SelectedPlaylist.Name) {
+                        button.FontWeight = FontWeights.ExtraBold;
+                    }
+                    else {
+                        button.FontWeight = FontWeights.DemiBold;
+                    }
+                }
+            }
         }
 
         public void SelectSong(Song song) {
