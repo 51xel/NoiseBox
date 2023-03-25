@@ -42,6 +42,8 @@ namespace NoiseBox_UI.View.UserControls
 
                     if (win.SelectedSong != null) {
                         if (droppedData.Id == win.SelectedSong.Id) {
+                            win.BackgroundPlaylistName = target;
+
                             foreach (var btn in Helper.FindVisualChildren<Button>(List)) {
                                 if (((btn.Content as ContentPresenter).Content as Playlist).Name == target) {
                                     btn.FontWeight = FontWeights.ExtraBold;

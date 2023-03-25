@@ -78,6 +78,8 @@ namespace NoiseBox_UI {
             var idAfter = SelectedSong != null ? SelectedSong.Id : "";
 
             if (idBefore != idAfter) {
+                BackgroundPlaylistName = SelectedPlaylist.Name;
+
                 foreach (var button in Helper.FindVisualChildren<Button>(PlaylistList.List)) {
                     if (((button.Content as ContentPresenter).Content as Playlist).Name == SelectedPlaylist.Name) {
                         button.FontWeight = FontWeights.ExtraBold;
@@ -175,24 +177,8 @@ namespace NoiseBox_UI {
                     switch (BottomControlPanel.Mode) {
                         case BottomControlPanel.PlaybackMode.Loop:
 
-                            var backgroundSongs = new List<Song>();
-
-                            if (BackgroundPlaylistName != null) {
-                                backgroundSongs = MusicLibrary.GetSongsFromPlaylist(BackgroundPlaylistName);
-                                selectedSongIndex = backgroundSongs.FindIndex(item => item.Id == SelectedSong.Id);
-                            }
-
-                            if (selectedSongIndex == -1) {
-                                foreach (var p in MusicLibrary.GetPlaylists()) {
-                                    backgroundSongs = MusicLibrary.GetSongsFromPlaylist(p.Name);
-                                    var res = backgroundSongs.Find(s => s.Id == SelectedSong.Id);
-                                    if (res != null) {
-                                        BackgroundPlaylistName = p.Name;
-                                        selectedSongIndex = p.SongIds.IndexOf(SelectedSong.Id);
-                                        break;
-                                    }
-                                }
-                            }
+                            var backgroundSongs = MusicLibrary.GetSongsFromPlaylist(BackgroundPlaylistName);
+                            selectedSongIndex = backgroundSongs.FindIndex(item => item.Id == SelectedSong.Id);
 
                             if (selectedSongIndex != -1) {
                                 if (selectedSongIndex == backgroundSongs.Count - 1) {
@@ -247,24 +233,8 @@ namespace NoiseBox_UI {
                     switch (BottomControlPanel.Mode) {
                         case BottomControlPanel.PlaybackMode.Loop:
 
-                            var backgroundSongs = new List<Song>();
-
-                            if (BackgroundPlaylistName != null) {
-                                backgroundSongs = MusicLibrary.GetSongsFromPlaylist(BackgroundPlaylistName);
-                                selectedSongIndex = backgroundSongs.FindIndex(item => item.Id == SelectedSong.Id);
-                            }
-
-                            if (selectedSongIndex == -1) {
-                                foreach (var p in MusicLibrary.GetPlaylists()) {
-                                    backgroundSongs = MusicLibrary.GetSongsFromPlaylist(p.Name);
-                                    var res = backgroundSongs.Find(s => s.Id == SelectedSong.Id);
-                                    if (res != null) {
-                                        BackgroundPlaylistName = p.Name;
-                                        selectedSongIndex = p.SongIds.IndexOf(SelectedSong.Id);
-                                        break;
-                                    }
-                                }
-                            }
+                            var backgroundSongs = MusicLibrary.GetSongsFromPlaylist(BackgroundPlaylistName);
+                            selectedSongIndex = backgroundSongs.FindIndex(item => item.Id == SelectedSong.Id);
 
                             if (selectedSongIndex != -1) {
                                 if (selectedSongIndex == 0) {
@@ -363,6 +333,7 @@ namespace NoiseBox_UI {
                 BottomControlPanel.TotalTime.Text = "0:00";
                 BottomControlPanel.CurrentTime.Text = "0:00";
                 BottomControlPanel.SeekBar.Value = 0;
+                BackgroundPlaylistName = null;
             }
         }
 
