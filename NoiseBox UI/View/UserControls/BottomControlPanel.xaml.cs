@@ -13,6 +13,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -115,6 +116,35 @@ namespace NoiseBox_UI.View.UserControls {
                     Mode = PlaybackMode.Loop;
                     break;
             }
+        }
+
+        private void ToggleVolumeSliders(object sender, RoutedEventArgs e) {
+            if (VolumeSlidersGrid.RowDefinitions[0].Height.Value == new GridLength(0, GridUnitType.Star).Value) {
+                VolumeSlidersGrid.RowDefinitions[0].Height = new GridLength(33.3, GridUnitType.Star);
+                VolumeSlidersGrid.RowDefinitions[1].Height = new GridLength(33.3, GridUnitType.Star);
+
+                RotateToggle(0, -180);
+            }
+            else {
+                VolumeSlidersGrid.RowDefinitions[0].Height = new GridLength(0, GridUnitType.Star);
+                VolumeSlidersGrid.RowDefinitions[1].Height = new GridLength(0, GridUnitType.Star);
+
+                RotateToggle(-180, 0);
+            }
+        }
+
+        private void RotateToggle(double from, double to) {
+            DoubleAnimation rotateAnimation = new DoubleAnimation();
+            rotateAnimation.From = from;
+            rotateAnimation.To = to;
+            rotateAnimation.Duration = TimeSpan.FromSeconds(0.2);
+
+            ExpanderImage.RenderTransformOrigin = new Point(0.5, 0.5);
+
+            RotateTransform rotateTransform = new RotateTransform();
+            ExpanderImage.RenderTransform = rotateTransform;
+
+            rotateTransform.BeginAnimation(RotateTransform.AngleProperty, rotateAnimation);
         }
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null) {

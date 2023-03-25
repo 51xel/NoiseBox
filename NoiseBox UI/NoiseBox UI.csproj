@@ -14,6 +14,7 @@
     <None Remove="Images\Icons\close.png" />
     <None Remove="Images\Icons\convert.png" />
     <None Remove="Images\Icons\download.png" />
+    <None Remove="Images\Icons\expand.png" />
     <None Remove="Images\Icons\loop.png" />
     <None Remove="Images\Icons\loop1.png" />
     <None Remove="Images\Icons\maximize.png" />
@@ -44,6 +45,7 @@
     <Resource Include="Images\Icons\close.png" />
     <Resource Include="Images\Icons\convert.png" />
     <Resource Include="Images\Icons\download.png" />
+    <Resource Include="Images\Icons\expand.png" />
     <Resource Include="Images\Icons\loop.png" />
     <Resource Include="Images\Icons\loop1.png" />
     <Resource Include="Images\Icons\maximize.png" />
