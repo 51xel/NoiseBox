@@ -28,6 +28,7 @@ namespace NoiseBox_UI {
 
         public Playlist? SelectedPlaylist = MusicLibrary.GetPlaylists().FirstOrDefault();
         public Song? SelectedSong = null;
+        public string? BackgroundPlaylistName = null;
 
         public MainWindow() {
             InitializeComponent();
@@ -78,7 +79,7 @@ namespace NoiseBox_UI {
                 MessageBox.Show("File does not exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             else {
-                SelectedSong = song;
+                SelectedSong = song.Clone();
 
                 AudioStreamControl.MainMusic.PathToMusic = SelectedSong.Path;
 
@@ -96,10 +97,10 @@ namespace NoiseBox_UI {
 
                 foreach (var button in Helper.FindVisualChildren<Button>(SongList.List)) {
                     if (((button.Content as GridViewRowPresenter).Content as Song).Id == SelectedSong.Id) {
-                        button.Background = new SolidColorBrush(Colors.White) { Opacity = .1 };
+                        button.FontWeight = FontWeights.Bold;
                     }
                     else {
-                        button.Background = new SolidColorBrush(Colors.Transparent);
+                        button.FontWeight = FontWeights.Normal;
                     }
                 }
             }
@@ -150,26 +151,35 @@ namespace NoiseBox_UI {
 
         private void NextButton_Click(object sender, RoutedEventArgs e) {
             if (SelectedSong != null) {
-                var selectedSongIndex = SongList.List.Items.IndexOf(SelectedSong);
+                var selectedSongIndex = SongList.List.Items
+                                        .Cast<Song>()
+                                        .ToList()
+                                        .FindIndex(item => item.Id == SelectedSong.Id);
 
                 if (selectedSongIndex == -1) { // changed displayed playlist
                     switch (BottomControlPanel.Mode) {
                         case BottomControlPanel.PlaybackMode.Loop:
 
-                            string backgroundPlaylistName = "";
+                            var backgroundSongs = new List<Song>();
 
-                            foreach (var p in MusicLibrary.GetPlaylists()) {
-                                var res = MusicLibrary.GetSongsFromPlaylist(p.Name).Find(s => s.Id == SelectedSong.Id);
-                                if (res != null) {
-                                    backgroundPlaylistName = p.Name;
-                                    selectedSongIndex = p.SongIds.IndexOf(SelectedSong.Id);
-                                    break;
+                            if (BackgroundPlaylistName != null) {
+                                backgroundSongs = MusicLibrary.GetSongsFromPlaylist(BackgroundPlaylistName);
+                                selectedSongIndex = backgroundSongs.FindIndex(item => item.Id == SelectedSong.Id);
+                            }
+
+                            if (selectedSongIndex == -1) {
+                                foreach (var p in MusicLibrary.GetPlaylists()) {
+                                    backgroundSongs = MusicLibrary.GetSongsFromPlaylist(p.Name);
+                                    var res = backgroundSongs.Find(s => s.Id == SelectedSong.Id);
+                                    if (res != null) {
+                                        BackgroundPlaylistName = p.Name;
+                                        selectedSongIndex = p.SongIds.IndexOf(SelectedSong.Id);
+                                        break;
+                                    }
                                 }
                             }
 
                             if (selectedSongIndex != -1) {
-                                var backgroundSongs = MusicLibrary.GetSongsFromPlaylist(backgroundPlaylistName);
-
                                 if (selectedSongIndex == backgroundSongs.Count - 1) {
                                     SelectSong(backgroundSongs[0] as Song);
                                 }
@@ -213,28 +223,37 @@ namespace NoiseBox_UI {
 
         private void PrevButton_Click(object sender, RoutedEventArgs e) {
             if (SelectedSong != null) {
-                var selectedSongIndex = SongList.List.Items.IndexOf(SelectedSong);
+                var selectedSongIndex = SongList.List.Items
+                                        .Cast<Song>()
+                                        .ToList()
+                                        .FindIndex(item => item.Id == SelectedSong.Id);
 
                 if (selectedSongIndex == -1) { // changed displayed playlist
                     switch (BottomControlPanel.Mode) {
                         case BottomControlPanel.PlaybackMode.Loop:
 
-                            string backgroundPlaylistName = "";
+                            var backgroundSongs = new List<Song>();
 
-                            foreach (var p in MusicLibrary.GetPlaylists()) {
-                                var res = MusicLibrary.GetSongsFromPlaylist(p.Name).Find(s => s.Id == SelectedSong.Id);
-                                if (res != null) {
-                                    backgroundPlaylistName = p.Name;
-                                    selectedSongIndex = p.SongIds.IndexOf(SelectedSong.Id);
-                                    break;
+                            if (BackgroundPlaylistName != null) {
+                                backgroundSongs = MusicLibrary.GetSongsFromPlaylist(BackgroundPlaylistName);
+                                selectedSongIndex = backgroundSongs.FindIndex(item => item.Id == SelectedSong.Id);
+                            }
+
+                            if (selectedSongIndex == -1) {
+                                foreach (var p in MusicLibrary.GetPlaylists()) {
+                                    backgroundSongs = MusicLibrary.GetSongsFromPlaylist(p.Name);
+                                    var res = backgroundSongs.Find(s => s.Id == SelectedSong.Id);
+                                    if (res != null) {
+                                        BackgroundPlaylistName = p.Name;
+                                        selectedSongIndex = p.SongIds.IndexOf(SelectedSong.Id);
+                                        break;
+                                    }
                                 }
                             }
 
                             if (selectedSongIndex != -1) {
-                                var backgroundSongs = MusicLibrary.GetSongsFromPlaylist(backgroundPlaylistName);
-
                                 if (selectedSongIndex == 0) {
-                                    SelectSong(backgroundSongs[SongList.List.Items.Count - 1] as Song);
+                                    SelectSong(backgroundSongs[backgroundSongs.Count - 1] as Song);
                                 }
                                 else {
                                     SelectSong(backgroundSongs[selectedSongIndex - 1] as Song);
@@ -307,15 +326,28 @@ namespace NoiseBox_UI {
                     SongList.List.Items.Add(song);
                 }
 
-                await Task.Delay(100); // 😔
+                await Task.Delay(100); // waiting till list is loaded
                 if (SelectedSong != null) {
                     foreach (var button in Helper.FindVisualChildren<Button>(SongList.List)) {
                         if (((button.Content as GridViewRowPresenter).Content as Song).Id == SelectedSong.Id) {
-                            button.Background = new SolidColorBrush(Colors.White) { Opacity = .1 };
+                            button.FontWeight = FontWeights.Bold;
                             break;
                         }
                     }
                 }
+            }
+        }
+
+        public void SelectedSongRemoved() {
+            if (SelectedSong != null) {
+                AudioStreamControl.MainMusic.Stop();
+                SelectedSong = null;
+                BottomControlPanel.State = BottomControlPanel.ButtonState.Paused;
+                SeekBarTimer.Stop();
+                BottomControlPanel.CurrentSongName.Text = "Song not selected";
+                BottomControlPanel.TotalTime.Text = "0:00";
+                BottomControlPanel.CurrentTime.Text = "0:00";
+                BottomControlPanel.SeekBar.Value = 0;
             }
         }
 
