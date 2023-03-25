@@ -333,6 +333,14 @@ namespace NoiseBox_UI {
                 BottomControlPanel.TotalTime.Text = "0:00";
                 BottomControlPanel.CurrentTime.Text = "0:00";
                 BottomControlPanel.SeekBar.Value = 0;
+                
+                foreach (var button in Helper.FindVisualChildren<Button>(PlaylistList.List)) {
+                    if (((button.Content as ContentPresenter).Content as Playlist).Name == BackgroundPlaylistName) {
+                        button.FontWeight = FontWeights.DemiBold;
+                        break;
+                    }
+                }
+
                 BackgroundPlaylistName = null;
             }
         }
