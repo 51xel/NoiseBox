@@ -77,7 +77,7 @@ namespace NoiseBox_UI {
 
             var idAfter = SelectedSong != null ? SelectedSong.Id : "";
 
-            if (idBefore != idAfter) {
+            if (idBefore != idAfter) { // outline background playlist
                 BackgroundPlaylistName = SelectedPlaylist.Name;
 
                 foreach (var button in Helper.FindVisualChildren<Button>(PlaylistList.List)) {
@@ -85,7 +85,7 @@ namespace NoiseBox_UI {
                         button.FontWeight = FontWeights.ExtraBold;
                     }
                     else {
-                        button.FontWeight = FontWeights.DemiBold;
+                        button.FontWeight = FontWeights.Normal;
                     }
                 }
             }
@@ -112,9 +112,9 @@ namespace NoiseBox_UI {
                 BottomControlPanel.TotalTime.Text = string.Format("{0}:{1}", (int)ts.TotalMinutes, ts.Seconds.ToString("D2"));
                 BottomControlPanel.CurrentTime.Text = "0:00";
 
-                foreach (var button in Helper.FindVisualChildren<Button>(SongList.List)) {
+                foreach (var button in Helper.FindVisualChildren<Button>(SongList.List)) { // outline selected song
                     if (((button.Content as GridViewRowPresenter).Content as Song).Id == SelectedSong.Id) {
-                        button.FontWeight = FontWeights.Bold;
+                        button.FontWeight = FontWeights.ExtraBold;
                     }
                     else {
                         button.FontWeight = FontWeights.Normal;
@@ -311,11 +311,11 @@ namespace NoiseBox_UI {
                     SongList.List.Items.Add(song);
                 }
 
-                await Task.Delay(100); // waiting till list is loaded
+                await Task.Delay(10); // waiting till list is loaded and outline selected song
                 if (SelectedSong != null) {
                     foreach (var button in Helper.FindVisualChildren<Button>(SongList.List)) {
                         if (((button.Content as GridViewRowPresenter).Content as Song).Id == SelectedSong.Id) {
-                            button.FontWeight = FontWeights.Bold;
+                            button.FontWeight = FontWeights.ExtraBold;
                             break;
                         }
                     }
@@ -334,9 +334,9 @@ namespace NoiseBox_UI {
                 BottomControlPanel.CurrentTime.Text = "0:00";
                 BottomControlPanel.SeekBar.Value = 0;
                 
-                foreach (var button in Helper.FindVisualChildren<Button>(PlaylistList.List)) {
+                foreach (var button in Helper.FindVisualChildren<Button>(PlaylistList.List)) { // remove outlining from playlist
                     if (((button.Content as ContentPresenter).Content as Playlist).Name == BackgroundPlaylistName) {
-                        button.FontWeight = FontWeights.DemiBold;
+                        button.FontWeight = FontWeights.Normal;
                         break;
                     }
                 }

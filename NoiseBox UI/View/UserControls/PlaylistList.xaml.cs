@@ -44,12 +44,12 @@ namespace NoiseBox_UI.View.UserControls
                         if (droppedData.Id == win.SelectedSong.Id) {
                             win.BackgroundPlaylistName = target;
 
-                            foreach (var btn in Helper.FindVisualChildren<Button>(List)) {
+                            foreach (var btn in Helper.FindVisualChildren<Button>(List)) { // outline background playlist
                                 if (((btn.Content as ContentPresenter).Content as Playlist).Name == target) {
                                     btn.FontWeight = FontWeights.ExtraBold;
                                 }
                                 else {
-                                    btn.FontWeight = FontWeights.DemiBold;
+                                    btn.FontWeight = FontWeights.Normal;
                                 }
                             }
                         }
@@ -166,6 +166,8 @@ namespace NoiseBox_UI.View.UserControls
 
             var textBoxText = textBox.Text.Trim();
 
+            var win = (MainWindow)Window.GetWindow(this);
+
             if (!MusicLibrary.RenamePlaylist(_oldTextBoxText, textBoxText)) {
                 textBox.Text = _oldTextBoxText;
             }
@@ -173,16 +175,38 @@ namespace NoiseBox_UI.View.UserControls
                 textBox.Text = textBoxText;
                 (textBox.DataContext as Playlist).Name = textBoxText;
 
-                var win = (MainWindow)Window.GetWindow(this);
-
                 if (win.SelectedPlaylist != null) {
                     if (win.SelectedPlaylist.Name == _oldTextBoxText) {
                         win.RenameSelectedPlaylist(textBoxText);
                     }
                 }
+
+                if (win.BackgroundPlaylistName != null) {
+                    if (win.BackgroundPlaylistName == _oldTextBoxText) {
+                        win.BackgroundPlaylistName = textBoxText;
+                    }
+                }
             }
 
             List.Items.Refresh(); // list item goes to state before renaming without this line :)
+
+            OutlineBackgroundPlaylist(textBox.Text);
+        }
+
+        private async Task OutlineBackgroundPlaylist(string textBoxText) {
+            var win = (MainWindow)Window.GetWindow(this);
+
+            await Task.Delay(10);
+
+            if (win.BackgroundPlaylistName != null) { // background playlist outlining was lost after refresh 
+                if (win.BackgroundPlaylistName == textBoxText) {
+                    foreach (var btn in Helper.FindVisualChildren<Button>(List)) {
+                        if (((btn.Content as ContentPresenter).Content as Playlist).Name == textBoxText) {
+                            btn.FontWeight = FontWeights.ExtraBold;
+                        }
+                    }
+                }
+            }
         }
     }
 }

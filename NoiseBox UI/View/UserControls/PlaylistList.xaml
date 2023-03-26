@@ -27,7 +27,7 @@
                                 FontFamily="/Fonts/#Montserrat"
                                 FontSize="22"
                                 Foreground="#BDBDBD"
-                                FontWeight="DemiBold"
+                                FontWeight="Normal"
                                 Height="Auto"
                                 Click="ClickRowElement"
                                 materialDesign:RippleAssist.IsDisabled="True">
