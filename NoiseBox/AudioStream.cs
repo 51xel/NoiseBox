@@ -235,14 +235,14 @@ namespace NoiseBox {
         public void InitializeEqualizer() {
             if (_audioFile != null) {
                 _bands = new EqualizerBand[]{
-                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 100, Gain = 0},
-                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 200, Gain = 0},
-                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 400, Gain = 0},
-                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 800, Gain = 0},
-                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 1200, Gain = 0},
-                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 2400, Gain = 0},
-                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 4800, Gain = 0},
-                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 9600, Gain = 0},
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 40, Gain = 0},
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 80, Gain = 0},
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 320, Gain = 0},
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 640, Gain = 0},
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 1280, Gain = 0},
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 2560, Gain = 0},
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 5120, Gain = 0},
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 10240, Gain = 0},
                 };
 
                 _equalizer = new Equalizer(_audioFile, _bands);

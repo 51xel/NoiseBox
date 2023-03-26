@@ -59,7 +59,7 @@ namespace NoiseBox_UI {
         }
 
         private void Music_StoppedEvent(object sender, EventArgs e) {
-            if (AudioStreamControl.MainMusic.CurrentTrackLength == AudioStreamControl.MainMusic.CurrentTrackPosition) {
+            if (Math.Abs(AudioStreamControl.MainMusic.CurrentTrackLength - AudioStreamControl.MainMusic.CurrentTrackPosition) <= 0.1) {
                 BottomControlPanel.State = BottomControlPanel.ButtonState.Paused;
                 SeekBarTimer.Stop();
 
