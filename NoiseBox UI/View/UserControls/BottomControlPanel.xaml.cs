@@ -17,6 +17,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace NoiseBox_UI.View.UserControls {
     public partial class BottomControlPanel : UserControl, INotifyPropertyChanged {
@@ -118,19 +119,48 @@ namespace NoiseBox_UI.View.UserControls {
             }
         }
 
+        DispatcherTimer VSHeightTimer;
+
+        private void VSExpandTimer_Tick(object sender, EventArgs e) {
+            var rowHeight = VolumeSlidersGrid.RowDefinitions[0].Height;
+
+            if (rowHeight.Value < 100) {
+                VolumeSlidersGrid.RowDefinitions[0].Height = new GridLength(rowHeight.Value + 5, GridUnitType.Star);
+                VolumeSlidersGrid.RowDefinitions[1].Height = new GridLength(rowHeight.Value + 5, GridUnitType.Star);
+            }
+            else {
+                VSHeightTimer.Stop();
+            }
+        }
+
+        private void VSContractTimer_Tick(object sender, EventArgs e) {
+            var rowHeight = VolumeSlidersGrid.RowDefinitions[0].Height;
+
+            if (rowHeight.Value > 0) {
+                VolumeSlidersGrid.RowDefinitions[0].Height = new GridLength(rowHeight.Value - 5, GridUnitType.Star);
+                VolumeSlidersGrid.RowDefinitions[1].Height = new GridLength(rowHeight.Value - 5, GridUnitType.Star);
+            }
+            else {
+                VSHeightTimer.Stop();
+            }
+        }
+
         private void ToggleVolumeSliders(object sender, RoutedEventArgs e) {
-            if (VolumeSlidersGrid.RowDefinitions[0].Height.Value == new GridLength(0, GridUnitType.Star).Value) {
-                VolumeSlidersGrid.RowDefinitions[0].Height = new GridLength(33.3, GridUnitType.Star);
-                VolumeSlidersGrid.RowDefinitions[1].Height = new GridLength(33.3, GridUnitType.Star);
+            VSHeightTimer = new DispatcherTimer();
+            VSHeightTimer.Interval = TimeSpan.FromMilliseconds(5);
+            
+            if (VolumeSlidersGrid.RowDefinitions[0].Height.Value == 0) {
+                VSHeightTimer.Tick += VSExpandTimer_Tick;
 
                 RotateToggle(0, -180);
             }
             else {
-                VolumeSlidersGrid.RowDefinitions[0].Height = new GridLength(0, GridUnitType.Star);
-                VolumeSlidersGrid.RowDefinitions[1].Height = new GridLength(0, GridUnitType.Star);
+                VSHeightTimer.Tick += VSContractTimer_Tick;
 
                 RotateToggle(-180, 0);
             }
+
+            VSHeightTimer.Start();
         }
 
         private void RotateToggle(double from, double to) {

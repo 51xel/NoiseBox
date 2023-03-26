@@ -125,7 +125,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="0*"/>
                     <RowDefinition Height="0*"/>
-                    <RowDefinition Height="33.3*"/>
+                    <RowDefinition Height="100*"/>
                 </Grid.RowDefinitions>
 
                 <Slider Grid.Row="0" Grid.Column="0" Maximum="100" VerticalAlignment="Center"/>
