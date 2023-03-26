@@ -20,6 +20,7 @@
     <None Remove="Images\Icons\pause.png" />
     <None Remove="Images\Icons\play.png" />
     <None Remove="Images\Icons\plus.png" />
+    <None Remove="Images\Icons\reload.png" />
     <None Remove="Images\Icons\restore.png" />
     <None Remove="Images\Icons\settings.png" />
     <None Remove="Images\Icons\speaker.png" />
@@ -44,6 +45,7 @@
     <Resource Include="Images\Icons\pause.png" />
     <Resource Include="Images\Icons\play.png" />
     <Resource Include="Images\Icons\plus.png" />
+    <Resource Include="Images\Icons\reload.png" />
     <Resource Include="Images\Icons\restore.png" />
     <Resource Include="Images\Icons\settings.png" />
     <Resource Include="Images\Icons\speaker.png" />

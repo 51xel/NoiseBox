@@ -255,8 +255,8 @@ namespace NoiseBox {
             _equalizer = null;
         }
 
-        private void UpdateEqualizer() {
-            _equalizer.Update();
+        public bool IsEqualizerWorking {
+            get { return _equalizer != null; }
         }
 
         public float MinimumGain => -30;
@@ -273,9 +273,11 @@ namespace NoiseBox {
                 }
             }
             set {
-                if (_bands[0].Gain != value && _bands != null) {
-                    _bands[0].Gain = value;
-                    UpdateEqualizer();
+                if (_bands != null) {
+                    if (_bands[0].Gain != value) {
+                        _bands[0].Gain = value;
+                        _equalizer.Update();
+                    }
                 }
             }
         }
@@ -290,9 +292,11 @@ namespace NoiseBox {
                 }
             }
             set {
-                if (_bands[1].Gain != value && _bands != null) {
-                    _bands[1].Gain = value;
-                    UpdateEqualizer();
+                if (_bands != null) {
+                    if (_bands[1].Gain != value) {
+                        _bands[1].Gain = value;
+                        _equalizer.Update();
+                    }
                 }
             }
         }
@@ -307,9 +311,11 @@ namespace NoiseBox {
                 }
             }
             set {
-                if (_bands[2].Gain != value && _bands != null) {
-                    _bands[2].Gain = value;
-                    UpdateEqualizer();
+                if (_bands != null) {
+                    if (_bands[2].Gain != value) {
+                        _bands[2].Gain = value;
+                        _equalizer.Update();
+                    }
                 }
             }
         }
@@ -324,9 +330,11 @@ namespace NoiseBox {
                 }
             }
             set {
-                if (_bands[3].Gain != value && _bands != null) {
-                    _bands[3].Gain = value;
-                    UpdateEqualizer();
+                if (_bands != null) {
+                    if (_bands[3].Gain != value) {
+                        _bands[3].Gain = value;
+                        _equalizer.Update();
+                    }
                 }
             }
         }
@@ -341,9 +349,11 @@ namespace NoiseBox {
                 }
             }
             set {
-                if (_bands[4].Gain != value && _bands != null) {
-                    _bands[4].Gain = value;
-                    UpdateEqualizer();
+                if (_bands != null) {
+                    if (_bands[4].Gain != value) {
+                        _bands[4].Gain = value;
+                        _equalizer.Update();
+                    }
                 }
             }
         }
@@ -358,9 +368,11 @@ namespace NoiseBox {
                 }
             }
             set {
-                if (_bands[5].Gain != value && _bands != null) {
-                    _bands[5].Gain = value;
-                    UpdateEqualizer();
+                if (_bands != null) {
+                    if (_bands[5].Gain != value) {
+                        _bands[5].Gain = value;
+                        _equalizer.Update();
+                    }
                 }
             }
         }
@@ -376,9 +388,11 @@ namespace NoiseBox {
                 }
             }
             set {
-                if (_bands[6].Gain != value && _bands != null) {
-                    _bands[6].Gain = value;
-                    UpdateEqualizer();
+                if (_bands != null) {
+                    if (_bands[6].Gain != value) {
+                        _bands[6].Gain = value;
+                        _equalizer.Update();
+                    }
                 }
             }
         }
@@ -393,9 +407,11 @@ namespace NoiseBox {
                 }
             }
             set {
-                if (_bands[7].Gain != value && _bands != null) {
-                    _bands[7].Gain = value;
-                    UpdateEqualizer();
+                if (_bands != null) {
+                    if (_bands[7].Gain != value) {
+                        _bands[7].Gain = value;
+                        _equalizer.Update();
+                    }
                 }
             }
         }

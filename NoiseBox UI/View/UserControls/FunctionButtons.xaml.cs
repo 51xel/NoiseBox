@@ -103,19 +103,22 @@ namespace NoiseBox_UI.View.UserControls {
             }
             var win = (MainWindow)Window.GetWindow(this);
 
-            if (win.AudioStreamControl.MainMusic.PathToMusic != null) {
-                win.AudioStreamControl.MainMusic.InitializeEqualizer();
-                win.AudioStreamControl.MainMusic.StopAndPlayFromPosition(win.AudioStreamControl.MainMusic.CurrentTrackPosition);
-            }
-
             _equalizerWin = new CustomEqualizer();
             _equalizerWin.Owner = Window.GetWindow(this);
             _equalizerWin.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+
+            if (win.AudioStreamControl.MainMusic.IsEqualizerWorking) {
+                _equalizerWin.StartStopText.Text = "Stop";
+            }
+            else {
+                _equalizerWin.StartStopText.Text = "Start";
+            }
+
             _equalizerWin.Closed += (_, _) => { 
                 _isEqualizerWindowOpen = false;
             };
             _isEqualizerWindowOpen = true;
-            
+
             _equalizerWin.Show();
         }
     }
