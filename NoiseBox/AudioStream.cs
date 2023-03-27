@@ -245,7 +245,7 @@ namespace NoiseBox {
                         new EqualizerBand {Bandwidth = 0.8f, Frequency = 10240, Gain = 0},
                 };
 
-                _equalizer = new Equalizer(_audioFile, _bands);
+                _equalizer = new Equalizer(_audioFile, _bands); 
             }
         }
 

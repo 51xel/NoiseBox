@@ -14,9 +14,9 @@ using System.Windows.Media.Imaging;
 using WinForms = System.Windows.Forms;
 using NoiseBox;
 using System.Windows.Controls;
-using NAudio.Extras;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
+using System.Windows.Media.Animation;
 
 namespace NoiseBox_UI{
     public partial class CustomEqualizer : Window, INotifyPropertyChanged {
@@ -124,14 +124,20 @@ namespace NoiseBox_UI{
         }
 
         private void ReloadButton_Click(object sender, RoutedEventArgs e) {
-            Band0 = 0f;
-            Band1 = 0f;
-            Band2 = 0f;
-            Band3 = 0f;
-            Band4 = 0f;
-            Band5 = 0f;
-            Band6 = 0f;
-            Band7 = 0f;
+            for (int i = 0; i <= 7; i++) {
+                var slider = ((Slider)EqGrid.FindName($"Slider{i}"));
+
+                DoubleAnimation doubleAnimation = new DoubleAnimation();
+                doubleAnimation.From = slider.Value;
+                doubleAnimation.To = 0;
+                doubleAnimation.Duration = TimeSpan.FromMilliseconds(500);
+                doubleAnimation.Completed += (_, _) => {
+                    slider.BeginAnimation(Slider.ValueProperty, null);
+                    slider.Value = GetBand(i);
+                };
+
+                slider.BeginAnimation(Slider.ValueProperty, doubleAnimation);
+            }
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e) {
@@ -158,6 +164,8 @@ namespace NoiseBox_UI{
 
                 EqGrid.Children.Add(slider);
                 Grid.SetColumn(slider, i);
+
+                EqGrid.RegisterName(slider.Name, slider);
             }
         }
     }
