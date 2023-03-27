@@ -45,10 +45,9 @@
             </ListViewItem>
 
             <ListViewItem Padding="5">
-                <Button x:Name="EqualizerButton" Width="50" Height="50" Background="#212128" BorderBrush="Transparent" Padding="10"
+                <Button x:Name="EqualizerButton" Width="50" Height="50" Background="#212128" BorderBrush="Transparent" Padding="8"
                         Click="EqualizerButton_Click">
-                    <Grid>
-                    </Grid>
+                    <Image Source="/Images/Icons/equalizer.png" RenderOptions.BitmapScalingMode ="HighQuality"/>
                 </Button>
             </ListViewItem>
         </ListView>

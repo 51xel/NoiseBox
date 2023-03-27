@@ -14,6 +14,7 @@
     <None Remove="Images\Icons\close.png" />
     <None Remove="Images\Icons\convert.png" />
     <None Remove="Images\Icons\download.png" />
+    <None Remove="Images\Icons\equalizer.png" />
     <None Remove="Images\Icons\maximize.png" />
     <None Remove="Images\Icons\mic.png" />
     <None Remove="Images\Icons\minimize.png" />
@@ -39,6 +40,7 @@
     <Resource Include="Images\Icons\close.png" />
     <Resource Include="Images\Icons\convert.png" />
     <Resource Include="Images\Icons\download.png" />
+    <Resource Include="Images\Icons\equalizer.png" />
     <Resource Include="Images\Icons\maximize.png" />
     <Resource Include="Images\Icons\mic.png" />
     <Resource Include="Images\Icons\minimize.png" />

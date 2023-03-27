@@ -10,7 +10,6 @@
         WindowStyle="None"
         Title="Equalizer" Height="350" Width="500"
         MinHeight="250" MinWidth="500"
-        MaxHeight="500" MaxWidth="700"
         AllowsTransparency="True"
         
         StateChanged="Window_StateChanged"
@@ -33,7 +32,7 @@
 
         <userControls:TitlebarButtons x:Name="TitlebarButtons" Panel.ZIndex="1"/>
 
-        <Grid Name="EqGrid" Margin="30,0,30,0" Grid.Row="1"/> <!--initializes in Window_Loaded-->
+        <Grid Name="EqGrid" Margin="30,0,30,0" Grid.Row="1"/> <!--initialized in Window_Loaded-->
 
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
@@ -47,7 +46,8 @@
                     Width="100" 
                     Click="StartStopButton_Click" 
                     HorizontalAlignment="Center"
-                    Grid.Column="1" >
+                    Grid.Column="1"
+                    Background="Transparent">
                 <TextBlock Name="StartStopText" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Start" FontFamily="/Fonts/#Montserrat"/>
             </Button>
             
@@ -58,7 +58,8 @@
                 Height="25"
                 Width="25"
                 Grid.Column="2"
-                Click="ReloadButton_Click">
+                Click="ReloadButton_Click"
+                Background="Transparent">
                 <Button.Triggers>
                     <EventTrigger RoutedEvent="Button.Click">
                         <EventTrigger.Actions>
