@@ -14,6 +14,9 @@ using System.Windows.Media.Imaging;
 using WinForms = System.Windows.Forms;
 using NoiseBox;
 using System.Windows.Controls;
+using NAudio.Extras;
+using System.Windows.Controls.Primitives;
+using System.Windows.Data;
 
 namespace NoiseBox_UI{
     public partial class CustomEqualizer : Window, INotifyPropertyChanged {
@@ -31,44 +34,52 @@ namespace NoiseBox_UI{
             get { return (Owner as MainWindow).AudioStreamControl.MainMusic.MinimumGain; }
         }
 
+        private float GetBand(int index) {
+            return (Owner as MainWindow).AudioStreamControl.MainMusic.GetBand(index);
+        }
+
+        private void SetBand(int index, float value) {
+            (Owner as MainWindow).AudioStreamControl.MainMusic.SetBand(index, value);
+        }
+
+        public float Band0 {
+            get { return GetBand(0); }
+            set { SetBand(0, value); OnPropertyChanged(); }
+        }
+
         public float Band1 {
-            get { return (Owner as MainWindow).AudioStreamControl.MainMusic.Band1; }
-            set { (Owner as MainWindow).AudioStreamControl.MainMusic.Band1 = value; OnPropertyChanged(); }
+            get { return GetBand(1); }
+            set { SetBand(1, value); OnPropertyChanged(); }
         }
 
         public float Band2 {
-            get { return (Owner as MainWindow).AudioStreamControl.MainMusic.Band2; }
-            set { (Owner as MainWindow).AudioStreamControl.MainMusic.Band2 = value; OnPropertyChanged(); }
+            get { return GetBand(2); }
+            set { SetBand(2, value); OnPropertyChanged(); }
         }
 
         public float Band3 {
-            get { return (Owner as MainWindow).AudioStreamControl.MainMusic.Band3; }
-            set { (Owner as MainWindow).AudioStreamControl.MainMusic.Band3 = value; OnPropertyChanged(); }
+            get { return GetBand(3); }
+            set { SetBand(3, value); OnPropertyChanged(); }
         }
 
         public float Band4 {
-            get { return (Owner as MainWindow).AudioStreamControl.MainMusic.Band4; }
-            set { (Owner as MainWindow).AudioStreamControl.MainMusic.Band4 = value; OnPropertyChanged(); }
+            get { return GetBand(4); }
+            set { SetBand(4, value); OnPropertyChanged(); }
         }
 
         public float Band5 {
-            get { return (Owner as MainWindow).AudioStreamControl.MainMusic.Band5; }
-            set { (Owner as MainWindow).AudioStreamControl.MainMusic.Band5 = value; OnPropertyChanged(); }
+            get { return GetBand(5); }
+            set { SetBand(5, value); OnPropertyChanged(); }
         }
 
         public float Band6 {
-            get { return (Owner as MainWindow).AudioStreamControl.MainMusic.Band6; }
-            set { (Owner as MainWindow).AudioStreamControl.MainMusic.Band6 = value; OnPropertyChanged(); }
+            get { return GetBand(6); }
+            set { SetBand(6, value); OnPropertyChanged(); }
         }
 
         public float Band7 {
-            get { return (Owner as MainWindow).AudioStreamControl.MainMusic.Band7; }
-            set { (Owner as MainWindow).AudioStreamControl.MainMusic.Band7 = value; OnPropertyChanged(); }
-        }
-
-        public float Band8 {
-            get { return (Owner as MainWindow).AudioStreamControl.MainMusic.Band8; }
-            set { (Owner as MainWindow).AudioStreamControl.MainMusic.Band8 = value;}
+            get { return GetBand(7); }
+            set { SetBand(7, value); OnPropertyChanged(); }
         }
 
         private void Window_StateChanged(object sender, EventArgs e) {
@@ -101,16 +112,19 @@ namespace NoiseBox_UI{
                 win.AudioStreamControl.MainMusic.StopAndPlayFromPosition(win.AudioStreamControl.MainMusic.CurrentTrackPosition);
 
                 StartStopText.Text = "Start";
+
+                ReloadButton_Click(null, null);
             }
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-         private void OnPropertyChanged([CallerMemberName] string propertyName = null) {
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private void ReloadButton_Click(object sender, RoutedEventArgs e) {
+            Band0 = 0f;
             Band1 = 0f;
             Band2 = 0f;
             Band3 = 0f;
@@ -118,8 +132,33 @@ namespace NoiseBox_UI{
             Band5 = 0f;
             Band6 = 0f;
             Band7 = 0f;
-            Band8 = 0f;
         }
 
+        private void Window_Loaded(object sender, RoutedEventArgs e) {
+            for (int i = 0; i <= 7; i++) {
+                Slider slider = new Slider();
+
+                slider.Name = $"Slider{i}";
+                slider.Maximum = Maximum;
+                slider.Minimum = Minimum;
+                slider.Orientation = Orientation.Vertical;
+                slider.Style = (Style)FindResource("MaterialDesignDiscreteSlider");
+                slider.TickFrequency = 1;
+                slider.TickPlacement = TickPlacement.BottomRight;
+
+                Binding binding = new Binding();
+                binding.Path = new PropertyPath($"Band{i}");
+                binding.Mode = BindingMode.TwoWay;
+                slider.SetBinding(Slider.ValueProperty, binding);
+
+                slider.HorizontalAlignment = HorizontalAlignment.Center;
+
+                ColumnDefinition colDef = new ColumnDefinition();
+                EqGrid.ColumnDefinitions.Add(colDef);
+
+                EqGrid.Children.Add(slider);
+                Grid.SetColumn(slider, i);
+            }
+        }
     }
 }

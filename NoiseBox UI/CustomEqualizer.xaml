@@ -13,7 +13,8 @@
         MaxHeight="500" MaxWidth="700"
         AllowsTransparency="True"
         
-        StateChanged="Window_StateChanged">
+        StateChanged="Window_StateChanged"
+        Loaded="Window_Loaded">
     
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="25"/>
@@ -32,114 +33,7 @@
 
         <userControls:TitlebarButtons x:Name="TitlebarButtons" Panel.ZIndex="1"/>
 
-        <Grid Margin="30,0,30,0" Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-
-            <Slider
-                Name="Slider1"
-                Maximum="{Binding Maximum, Mode=OneWay}"
-                Minimum="{Binding Minimum, Mode=OneWay}"
-                Orientation="Vertical"
-                Style="{StaticResource MaterialDesignDiscreteSlider}"
-                TickFrequency="1"
-                TickPlacement="BottomRight"
-                Value="{Binding Band1, Mode=TwoWay}" 
-                HorizontalAlignment="Center"
-                Grid.Column="0"/>
-
-            <Slider
-                Name="Slider2"
-                Maximum="{Binding Maximum, Mode=OneWay}"
-                Minimum="{Binding Minimum, Mode=OneWay}"
-                Orientation="Vertical"
-                Style="{StaticResource MaterialDesignDiscreteSlider}"
-                TickFrequency="1"
-                TickPlacement="BottomRight"
-                Value="{Binding Band2, Mode=TwoWay}"
-                HorizontalAlignment="Center"
-                Grid.Column="1"/>
-
-            <Slider
-                Name="Slider3"
-                Maximum="{Binding Maximum, Mode=OneWay}"
-                Minimum="{Binding Minimum, Mode=OneWay}"
-                Orientation="Vertical"
-                Style="{StaticResource MaterialDesignDiscreteSlider}"
-                TickFrequency="1"
-                TickPlacement="BottomRight"
-                Value="{Binding Band3, Mode=TwoWay}"
-                HorizontalAlignment="Center"
-                Grid.Column="2"/>
-
-            <Slider
-                Name="Slider4"
-                Maximum="{Binding Maximum, Mode=OneWay}"
-                Minimum="{Binding Minimum, Mode=OneWay}"
-                Orientation="Vertical"
-                Style="{StaticResource MaterialDesignDiscreteSlider}"
-                TickFrequency="1"
-                TickPlacement="BottomRight"
-                Value="{Binding Band4, Mode=TwoWay}"
-                HorizontalAlignment="Center"
-                Grid.Column="3"/>
-
-            <Slider
-                Name="Slider5"
-                Maximum="{Binding Maximum, Mode=OneWay}"
-                Minimum="{Binding Minimum, Mode=OneWay}"
-                Orientation="Vertical"
-                Style="{StaticResource MaterialDesignDiscreteSlider}"
-                TickFrequency="1"
-                TickPlacement="BottomRight"
-                Value="{Binding Band5, Mode=TwoWay}"
-                HorizontalAlignment="Center"
-                Grid.Column="4"/>
-
-            <Slider
-                Name="Slider6"
-                Maximum="{Binding Maximum, Mode=OneWay}"
-                Minimum="{Binding Minimum, Mode=OneWay}"
-                Orientation="Vertical"
-                Style="{StaticResource MaterialDesignDiscreteSlider}"
-                TickFrequency="1"
-                TickPlacement="BottomRight"
-                Value="{Binding Band6, Mode=TwoWay}"
-                HorizontalAlignment="Center"
-                Grid.Column="5"/>
-
-            <Slider
-                Name="Slider7"
-                Maximum="{Binding Maximum, Mode=OneWay}"
-                Minimum="{Binding Minimum, Mode=OneWay}"
-                Orientation="Vertical"
-                Style="{StaticResource MaterialDesignDiscreteSlider}"
-                TickFrequency="1"
-                TickPlacement="BottomRight"
-                Value="{Binding Band7, Mode=TwoWay}"
-                HorizontalAlignment="Center"
-                Grid.Column="6"/>
-
-            <Slider
-                Name="Slider8"
-                Maximum="{Binding Maximum, Mode=OneWay}"
-                Minimum="{Binding Minimum, Mode=OneWay}"
-                Orientation="Vertical"
-                Style="{StaticResource MaterialDesignDiscreteSlider}"
-                TickFrequency="1"
-                TickPlacement="BottomRight"
-                Value="{Binding Band8, Mode=TwoWay}"
-                HorizontalAlignment="Center"
-                Grid.Column="7"/>
-        </Grid>
+        <Grid Name="EqGrid" Margin="30,0,30,0" Grid.Row="1"/> <!--initializes in Window_Loaded-->
 
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>

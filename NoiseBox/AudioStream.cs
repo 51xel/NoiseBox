@@ -263,155 +263,20 @@ namespace NoiseBox {
 
         public float MaximumGain => 30;
 
-        public float Band1 {
-            get {
-                if (_bands != null) {
-                    return _bands[0].Gain;
-                }
-                else {
-                    return 0;
-                }
+        public float GetBand(int index) {
+            if (_bands != null && index >= 0 && index <= 7) {
+                return _bands[index].Gain;
             }
-            set {
-                if (_bands != null) {
-                    if (_bands[0].Gain != value) {
-                        _bands[0].Gain = value;
-                        _equalizer.Update();
-                    }
-                }
+            else {
+                return 0;
             }
         }
 
-        public float Band2 {
-            get {
-                if (_bands != null) {
-                    return _bands[1].Gain;
-                }
-                else {
-                    return 0;
-                }
-            }
-            set {
-                if (_bands != null) {
-                    if (_bands[1].Gain != value) {
-                        _bands[1].Gain = value;
-                        _equalizer.Update();
-                    }
-                }
-            }
-        }
-
-        public float Band3 {
-            get {
-                if (_bands != null) {
-                    return _bands[2].Gain;
-                }
-                else {
-                    return 0;
-                }
-            }
-            set {
-                if (_bands != null) {
-                    if (_bands[2].Gain != value) {
-                        _bands[2].Gain = value;
-                        _equalizer.Update();
-                    }
-                }
-            }
-        }
-
-        public float Band4 {
-            get {
-                if (_bands != null) {
-                    return _bands[3].Gain;
-                }
-                else {
-                    return 0;
-                }
-            }
-            set {
-                if (_bands != null) {
-                    if (_bands[3].Gain != value) {
-                        _bands[3].Gain = value;
-                        _equalizer.Update();
-                    }
-                }
-            }
-        }
-
-        public float Band5 {
-            get {
-                if (_bands != null) {
-                    return _bands[4].Gain;
-                }
-                else {
-                    return 0;
-                }
-            }
-            set {
-                if (_bands != null) {
-                    if (_bands[4].Gain != value) {
-                        _bands[4].Gain = value;
-                        _equalizer.Update();
-                    }
-                }
-            }
-        }
-
-        public float Band6 {
-            get {
-                if (_bands != null) {
-                    return _bands[5].Gain;
-                }
-                else {
-                    return 0;
-                }
-            }
-            set {
-                if (_bands != null) {
-                    if (_bands[5].Gain != value) {
-                        _bands[5].Gain = value;
-                        _equalizer.Update();
-                    }
-                }
-            }
-        }
-
-
-        public float Band7 {
-            get {
-                if (_bands != null) {
-                    return _bands[6].Gain;
-                }
-                else {
-                    return 0;
-                }
-            }
-            set {
-                if (_bands != null) {
-                    if (_bands[6].Gain != value) {
-                        _bands[6].Gain = value;
-                        _equalizer.Update();
-                    }
-                }
-            }
-        }
-
-        public float Band8 {
-            get {
-                if (_bands != null) {
-                    return _bands[7].Gain;
-                }
-                else {
-                    return 0;
-                }
-            }
-            set {
-                if (_bands != null) {
-                    if (_bands[7].Gain != value) {
-                        _bands[7].Gain = value;
-                        _equalizer.Update();
-                    }
+        public void SetBand(int index, float value) {
+            if (_bands != null && index >= 0 && index <= 7) {
+                if (_bands[index].Gain != value) {
+                    _bands[index].Gain = value;
+                    _equalizer.Update();
                 }
             }
         }
