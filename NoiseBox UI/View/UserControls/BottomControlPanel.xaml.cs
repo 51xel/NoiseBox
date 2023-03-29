@@ -194,6 +194,22 @@ namespace NoiseBox_UI.View.UserControls {
                 Duration = TimeSpan.FromSeconds(1),
             };
 
+            // animate SeekBar opacity from 0 to 1
+            var seekBarOpacityAnimation = new DoubleAnimation {
+                From = 0,
+                To = 1,
+                Duration = TimeSpan.FromSeconds(1),
+            };
+
+            var storyboardSeekBarOpacity = new Storyboard();
+            Storyboard.SetTarget(seekBarOpacityAnimation, SeekBar);
+            Storyboard.SetTargetProperty(seekBarOpacityAnimation, new PropertyPath(Control.OpacityProperty));
+            storyboardSeekBarOpacity.Children.Add(seekBarOpacityAnimation);
+
+            if (SeekBar.Opacity <= 0) {
+                storyboardSeekBarOpacity.Begin();
+            }
+
             Storyboard storyboard = new Storyboard();
             Storyboard.SetTarget(scaleYAnimation, UniGrid);
             Storyboard.SetTargetProperty(scaleYAnimation, new PropertyPath("(UIElement.RenderTransform).(ScaleTransform.ScaleY)"));
@@ -238,12 +254,27 @@ namespace NoiseBox_UI.View.UserControls {
                 UniGrid.Children.Add(new Border() {
                     CornerRadius = new CornerRadius(2),
                     Height = peak,
-                    Background = new SolidColorBrush(Colors.Gray),
+                    Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3b2a5a")),
                     Margin = new Thickness(1)
                 });
             }
 
             UniGrid_SizeChanged(null, null);
+
+            // animate SeekBar opacity from 1 to 0
+            SeekBar.RenderTransformOrigin = new Point(0.5, 0.5);
+            SeekBar.RenderTransform = new ScaleTransform() { ScaleY = 1 };
+            seekBarOpacityAnimation = new DoubleAnimation {
+                From = 1,
+                To = 0,
+                Duration = TimeSpan.FromSeconds(1),
+            };
+
+            storyboardSeekBarOpacity = new Storyboard();
+            Storyboard.SetTarget(seekBarOpacityAnimation, SeekBar);
+            Storyboard.SetTargetProperty(seekBarOpacityAnimation, new PropertyPath(Control.OpacityProperty));
+            storyboardSeekBarOpacity.Children.Add(seekBarOpacityAnimation);
+            storyboardSeekBarOpacity.Begin();
 
             // animate UniGrid scaleY from 0 to 1
             UniGrid.RenderTransformOrigin = new Point(0.5, 0.5);
@@ -258,7 +289,6 @@ namespace NoiseBox_UI.View.UserControls {
                 // set SeekBar scaling to 2
                 SeekBar.RenderTransformOrigin = new Point(0.5, 0.5);
                 SeekBar.RenderTransform = new ScaleTransform() { ScaleY = 2 };
-                SeekBar.Opacity = 0;
             };
 
             storyboard = new Storyboard();
@@ -307,7 +337,7 @@ namespace NoiseBox_UI.View.UserControls {
                 if (i < before)
                     (borders[i] as Border).Background = new SolidColorBrush(Colors.BlueViolet);
                 else
-                    (borders[i] as Border).Background = new SolidColorBrush(Colors.Gray);
+                    (borders[i] as Border).Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3b2a5a"));
             }
         }
 
