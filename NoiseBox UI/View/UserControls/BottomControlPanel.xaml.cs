@@ -179,14 +179,26 @@ namespace NoiseBox_UI.View.UserControls {
         }
 
         public async void VisualizeAudio(string path) {
-            
+
             // reset SeekBar scaling to 1
             SeekBar.RenderTransformOrigin = new Point(0.5, 0.5);
             SeekBar.RenderTransform = new ScaleTransform() { ScaleY = 1 };
             SeekBar.Opacity = 1;
 
+            // animate UniGrid scaleY from 1 to 0
             UniGrid.RenderTransformOrigin = new Point(0.5, 0.5);
-            UniGrid.RenderTransform = new ScaleTransform() { ScaleY = 0 };
+            UniGrid.RenderTransform = new ScaleTransform() { ScaleY = 1 };
+            DoubleAnimation scaleYAnimation = new DoubleAnimation {
+                From = 1,
+                To = 0,
+                Duration = TimeSpan.FromSeconds(1),
+            };
+
+            Storyboard storyboard = new Storyboard();
+            Storyboard.SetTarget(scaleYAnimation, UniGrid);
+            Storyboard.SetTargetProperty(scaleYAnimation, new PropertyPath("(UIElement.RenderTransform).(ScaleTransform.ScaleY)"));
+            storyboard.Children.Add(scaleYAnimation);
+            storyboard.Begin();
 
             var peaks = new List<float>();
 
@@ -236,7 +248,7 @@ namespace NoiseBox_UI.View.UserControls {
             // animate UniGrid scaleY from 0 to 1
             UniGrid.RenderTransformOrigin = new Point(0.5, 0.5);
             UniGrid.RenderTransform = new ScaleTransform() { ScaleY = 1 };
-            DoubleAnimation scaleYAnimation = new DoubleAnimation {
+            scaleYAnimation = new DoubleAnimation {
                 From = 0,
                 To = 1,
                 Duration = TimeSpan.FromSeconds(1),
@@ -249,7 +261,7 @@ namespace NoiseBox_UI.View.UserControls {
                 SeekBar.Opacity = 0;
             };
 
-            Storyboard storyboard = new Storyboard();
+            storyboard = new Storyboard();
             Storyboard.SetTarget(scaleYAnimation, UniGrid);
             Storyboard.SetTargetProperty(scaleYAnimation, new PropertyPath("(UIElement.RenderTransform).(ScaleTransform.ScaleY)"));
             storyboard.Children.Add(scaleYAnimation);
