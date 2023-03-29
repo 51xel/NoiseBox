@@ -17,13 +17,28 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Media.Animation;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using System.Windows.Markup;
+using Newtonsoft.Json.Linq;
+using System.Reflection;
+using NoiseBox.Log;
 
 namespace NoiseBox_UI{
     public partial class CustomEqualizer : Window, INotifyPropertyChanged {
+        private List<BandsSettings> _bandsSettings = new List<BandsSettings>();
+        private string _jsonFilePath = "_bandsSettings.json";
+
         public CustomEqualizer(){
             InitializeComponent();
             WinMax.DoSourceInitialized(this);
             DataContext = this;
+
+            LoadFromJson();
+
+            foreach (var element in _bandsSettings) {
+                Profiles.Items.Add(element.Name);
+            }
         }
 
         public float Maximum {
@@ -104,6 +119,10 @@ namespace NoiseBox_UI{
                     win.AudioStreamControl.MainMusic.InitializeEqualizer();
                     win.AudioStreamControl.MainMusic.StopAndPlayFromPosition(win.AudioStreamControl.MainMusic.CurrentTrackPosition);
                     StartStopText.Text = "Stop";
+
+                    if(Profiles.SelectedItem != null) {
+                        LoadBends(_bandsSettings.FirstOrDefault(n => n.Name == Profiles.SelectedItem));
+                    }
                 }
             }else if (StartStopText.Text == "Stop"){
                 var win = Owner as MainWindow;
@@ -124,20 +143,92 @@ namespace NoiseBox_UI{
         }
 
         private void ReloadButton_Click(object sender, RoutedEventArgs e) {
-            for (int i = 0; i <= 7; i++) {
-                var slider = ((Slider)EqGrid.FindName($"Slider{i}"));
-
-                DoubleAnimation doubleAnimation = new DoubleAnimation();
-                doubleAnimation.From = slider.Value;
-                doubleAnimation.To = 0;
-                doubleAnimation.Duration = TimeSpan.FromMilliseconds(500);
-                doubleAnimation.Completed += (_, _) => {
-                    slider.BeginAnimation(Slider.ValueProperty, null);
-                    slider.Value = GetBand(i);
-                };
-
-                slider.BeginAnimation(Slider.ValueProperty, doubleAnimation);
+            for (int i = 0; i < 7; i++) {
+                AnimationChangingSliderValue(i, 0);
             }
+        }
+
+        private void SaveButton_Click(object sender, RoutedEventArgs e) {
+            if (StartStopText.Text == "Stop") {
+                SaveToJson();
+            }
+        }
+
+        private void Profiles_SelectionChanged(object sender, RoutedEventArgs e) {
+            var bands = _bandsSettings.FirstOrDefault(n => n.Name == (sender as ComboBox).SelectedItem);
+
+            if (bands != null) {
+                LoadBends(bands);
+            }
+        }
+
+        private void LoadBends(BandsSettings bands) {
+            (Owner as MainWindow).AudioStreamControl.MainMusic.SetBandsList(bands.EqualizerBands);
+
+            for (int i = 0; i < 7; i++) {
+                AnimationChangingSliderValue(i, GetBand(i));
+            }
+        }
+
+        private void Profiles_LostFocus(object sender, RoutedEventArgs e) {
+            //SaveToJson();
+        }
+
+        private void Profiles_KeyDown(object sender, KeyEventArgs e) {
+            if (e.Key == Key.Enter) {
+                //SaveToJson();
+            }
+        }
+
+        private void SaveToJson() {
+            if (!String.IsNullOrWhiteSpace(Profiles.Text)) {
+                var win = Owner as MainWindow;
+
+                var bands = _bandsSettings.FirstOrDefault(n => n.Name == Profiles.Text);
+
+                if (bands != null) {
+                    bands.EqualizerBands = win.AudioStreamControl.MainMusic.GetBandsList();
+                }
+                else {
+                    bands = new BandsSettings();
+
+                    bands.Name = Profiles.Text;
+                    bands.EqualizerBands = win.AudioStreamControl.MainMusic.GetBandsList();
+
+                    _bandsSettings.Add(bands);
+                }
+
+                var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
+                string json = JsonConvert.SerializeObject(_bandsSettings, Formatting.Indented, settings);
+                File.WriteAllText(_jsonFilePath, json);
+            }
+        }
+
+        private void LoadFromJson() {
+            if (File.Exists(_jsonFilePath)) {
+                string jsonString = File.ReadAllText(_jsonFilePath);
+                _bandsSettings = JsonConvert.DeserializeObject<List<BandsSettings>>(jsonString);
+            }
+            else {
+                File.Create(_jsonFilePath).Close();
+            }
+        }
+
+        private void AnimationChangingSliderValue(int index, float to) {
+            SetBand(index, to);
+
+            var slider = ((Slider)EqGrid.FindName($"Slider{index}"));
+
+            DoubleAnimation doubleAnimation = new DoubleAnimation();
+            doubleAnimation.From = slider.Value;
+            doubleAnimation.To = to;
+            doubleAnimation.Duration = TimeSpan.FromMilliseconds(500);
+            doubleAnimation.Completed += (_, _) => {
+                slider.BeginAnimation(Slider.ValueProperty, null);
+                slider.Value = GetBand(index);
+            };
+
+            slider.BeginAnimation(Slider.ValueProperty, doubleAnimation);
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e) {

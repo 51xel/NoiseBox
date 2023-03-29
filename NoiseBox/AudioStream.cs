@@ -1,6 +1,7 @@
 ﻿using NAudio.Extras;
 using NAudio.Wave;
 using NoiseBox.Log;
+using System;
 using System.Numerics;
 
 namespace NoiseBox {
@@ -280,6 +281,27 @@ namespace NoiseBox {
                 }
             }
         }
+
+        public List<EqualizerBand> GetBandsList() {
+            return _bands.ToList();
+        }
+
+        public void SetBandsList(List<EqualizerBand> setBands) {
+            if (_bands != null && setBands != null) {
+                if (setBands.Count == 8) {
+                    for (int i = 0; i < setBands.Count; i++) {
+                        _bands[i] = setBands[i];
+                    }
+
+                    _equalizer.Update();
+                }
+            }
+        }
+    }
+
+    public class BandsSettings {
+        public List<EqualizerBand> EqualizerBands;
+        public string Name;
     }
 
     public class MicrophoneStream : AudioStream {
@@ -354,5 +376,3 @@ namespace NoiseBox {
         }
     }
 }
-
-

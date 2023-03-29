@@ -23,6 +23,7 @@
     <None Remove="Images\Icons\plus.png" />
     <None Remove="Images\Icons\reload.png" />
     <None Remove="Images\Icons\restore.png" />
+    <None Remove="Images\Icons\save.png" />
     <None Remove="Images\Icons\settings.png" />
     <None Remove="Images\Icons\speaker.png" />
   </ItemGroup>
@@ -49,6 +50,7 @@
     <Resource Include="Images\Icons\plus.png" />
     <Resource Include="Images\Icons\reload.png" />
     <Resource Include="Images\Icons\restore.png" />
+    <Resource Include="Images\Icons\save.png" />
     <Resource Include="Images\Icons\settings.png" />
     <Resource Include="Images\Icons\speaker.png" />
   </ItemGroup>
