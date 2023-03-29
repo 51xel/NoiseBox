@@ -20,6 +20,7 @@ using NoiseBox_UI.View.UserControls;
 using System.Windows.Threading;
 using System.IO;
 using System.Threading;
+using NAudio.Wave;
 
 namespace NoiseBox_UI {
     public partial class MainWindow : Window {
@@ -29,6 +30,9 @@ namespace NoiseBox_UI {
         public Playlist? SelectedPlaylist = MusicLibrary.GetPlaylists().FirstOrDefault();
         public Song? SelectedSong = null;
         public string? BackgroundPlaylistName = null;
+
+        private bool VisualizationEnabled = true; // TODO Load from config
+        private string? CurrentlyVisualizedPath = null;
 
         public MainWindow() {
             InitializeComponent();
@@ -46,7 +50,7 @@ namespace NoiseBox_UI {
             BottomControlPanel.NextButton.Click += NextButton_Click;
             BottomControlPanel.SeekBar.PreviewMouseLeftButtonUp += SeekBar_PreviewMouseLeftButtonUp;
             BottomControlPanel.SeekBar.ValueChanged += SeekBar_ValueChanged;
-            BottomControlPanel.MainVolumeSlider.Value = 0.1 * 100;//TODO Load from config
+            BottomControlPanel.MainVolumeSlider.Value = 0.1 * 100; // TODO Load from config
             BottomControlPanel.MainVolumeSlider.ValueChanged += MainVolumeSlider_ValueChanged;
 
             SongList.ClickRowElement += Song_Click;
@@ -118,6 +122,14 @@ namespace NoiseBox_UI {
                     }
                     else {
                         button.FontWeight = FontWeights.Normal;
+                    }
+                }
+
+                if (VisualizationEnabled) {
+                    if (CurrentlyVisualizedPath != SelectedSong.Path) {
+                        CurrentlyVisualizedPath = SelectedSong.Path;
+
+                        BottomControlPanel.VisualizeAudio(SelectedSong.Path);
                     }
                 }
             }

@@ -41,6 +41,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="NAudio">
+      <HintPath>NAudio.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Fonts\Montserrat.ttf" />
     <Resource Include="Images\Icons\close.png" />
     <Resource Include="Images\Icons\convert.png" />
