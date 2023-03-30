@@ -45,8 +45,30 @@
                     <Grid>
                         <ProgressBar Name="DownloadingProgress" Style="{StaticResource MaterialDesignCircularProgressBar}"
                                      Width="40" Height="40" Value="0" Maximum="100" Margin="-15" Visibility="Collapsed"/>
-                        <Image Source="/Images/Icons/download.png" RenderOptions.BitmapScalingMode ="HighQuality"/>
+                        <Image Source="/Images/Icons/download.png" RenderOptions.BitmapScalingMode ="HighQuality" RenderTransformOrigin="0.5,1">
+                            <Image.RenderTransform>
+                                <ScaleTransform x:Name="DownloadArrowAnim"/>
+                            </Image.RenderTransform>
+                        </Image>
                     </Grid>
+                    <Button.Triggers>
+                        <EventTrigger RoutedEvent="Button.Click">
+                            <EventTrigger.Actions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation From ="1" To="0.7" Duration="0:0:0.2"
+                                                         Storyboard.TargetName="DownloadArrowAnim"
+                                                         Storyboard.TargetProperty="(ScaleTransform.ScaleY)"
+                                                         AutoReverse="True"/>
+                                        <DoubleAnimation From ="1" To="1.2" Duration="0:0:0.2"
+                                                         Storyboard.TargetName="DownloadArrowAnim"
+                                                         Storyboard.TargetProperty="(ScaleTransform.ScaleX)"
+                                                         AutoReverse="True"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger.Actions>
+                        </EventTrigger>
+                    </Button.Triggers>
                 </Button>
             </ListViewItem>
 
