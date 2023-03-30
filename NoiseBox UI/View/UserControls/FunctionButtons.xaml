@@ -18,7 +18,24 @@
                   ScrollViewer.CanContentScroll="False">
             <ListViewItem Padding="5">
                 <Button x:Name="SettingsButton" Width="50" Height="50" Background="#212128" BorderBrush="Transparent" Padding="15">
-                    <Image Source="/Images/Icons/settings.png" RenderOptions.BitmapScalingMode ="HighQuality"/>
+                    <Image Source="/Images/Icons/settings.png" RenderOptions.BitmapScalingMode ="HighQuality" RenderTransformOrigin="0.5,0.5">
+                        <Image.RenderTransform>
+                            <RotateTransform Angle="0" x:Name="CogRotateAnim"/>
+                        </Image.RenderTransform>
+                    </Image>
+                    <Button.Triggers>
+                        <EventTrigger RoutedEvent="Button.Click">
+                            <EventTrigger.Actions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation From ="0" To="135" Duration="0:0:0.5"
+                                                         Storyboard.TargetName="CogRotateAnim"
+                                                         Storyboard.TargetProperty="(RotateTransform.Angle)" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger.Actions>
+                        </EventTrigger>
+                    </Button.Triggers>
                 </Button>
             </ListViewItem>
 

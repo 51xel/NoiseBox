@@ -180,5 +180,103 @@ namespace NoiseBox_UI.View.UserControls {
         private void OnPropertyChanged([CallerMemberName] string propertyName = null) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+
+
+        private void MainVolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+            var icon = MainVolumeButton.Content as MaterialDesignThemes.Wpf.PackIcon;
+            var val = MainVolumeSlider.Value;
+
+            if (val == 0) {
+                icon.Kind = MaterialDesignThemes.Wpf.PackIconKind.VolumeMute;
+            }
+            else if (val < 50) {
+                icon.Kind = MaterialDesignThemes.Wpf.PackIconKind.VolumeMedium;
+            }
+            else if (val >= 50) {
+                icon.Kind = MaterialDesignThemes.Wpf.PackIconKind.VolumeHigh;
+            }
+        }
+
+        double mainVolumeSliderBeforeMuteValue = 0;
+        private void MainVolumeButton_Click(object sender, RoutedEventArgs e) {
+            if (MainVolumeSlider.Value != 0) {
+                mainVolumeSliderBeforeMuteValue = MainVolumeSlider.Value;
+                //MainVolumeSlider.Value = 0;
+
+                AnimateVolumeSliderValue(MainVolumeSlider, 0);
+            }
+            else {
+                //MainVolumeSlider.Value = mainVolumeSliderBeforeMuteValue;
+
+                AnimateVolumeSliderValue(MainVolumeSlider, mainVolumeSliderBeforeMuteValue);
+            }
+        }
+
+
+
+        private void MicVolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+            var icon = MicVolumeButton.Content as MaterialDesignThemes.Wpf.PackIcon;
+
+            if (MicVolumeSlider.Value == 0) {
+                icon.Kind = MaterialDesignThemes.Wpf.PackIconKind.MicrophoneOff;
+            }
+            else {
+                icon.Kind = MaterialDesignThemes.Wpf.PackIconKind.Microphone;
+            }
+        }
+
+        double micVolumeSliderBeforeMuteValue = 0;
+        private void MicVolumeButton_Click(object sender, RoutedEventArgs e) {
+            if (MicVolumeSlider.Value != 0) {
+                micVolumeSliderBeforeMuteValue = MicVolumeSlider.Value;
+                //MicVolumeSlider.Value = 0;
+
+                AnimateVolumeSliderValue(MicVolumeSlider, 0);
+            }
+            else {
+                //MicVolumeSlider.Value = micVolumeSliderBeforeMuteValue;
+
+                AnimateVolumeSliderValue(MicVolumeSlider, micVolumeSliderBeforeMuteValue);
+            }
+        }
+
+
+        private void VCVolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+            var icon = VCVolumeButton.Content as MaterialDesignThemes.Wpf.PackIcon;
+
+            if (VCVolumeSlider.Value == 0) {
+                icon.Kind = MaterialDesignThemes.Wpf.PackIconKind.MicrophoneVariantOff;
+            }
+            else {
+                icon.Kind = MaterialDesignThemes.Wpf.PackIconKind.MicrophoneVariant;
+            }
+        }
+
+        double vcVolumeSliderBeforeMuteValue = 0;
+        private void VCVolumeButton_Click(object sender, RoutedEventArgs e) {
+            if (VCVolumeSlider.Value != 0) {
+                vcVolumeSliderBeforeMuteValue = VCVolumeSlider.Value;
+                //VCVolumeSlider.Value = 0;
+
+                AnimateVolumeSliderValue(VCVolumeSlider, 0);
+            }
+            else {
+                //VCVolumeSlider.Value = vcVolumeSliderBeforeMuteValue;
+
+                AnimateVolumeSliderValue(VCVolumeSlider, vcVolumeSliderBeforeMuteValue);
+            }
+        }
+
+
+
+        private void AnimateVolumeSliderValue(Slider slider, double newVal) {
+            DoubleAnimation doubleAnimation = new DoubleAnimation();
+            doubleAnimation.From = slider.Value;
+            doubleAnimation.To = newVal;
+            doubleAnimation.Duration = TimeSpan.FromMilliseconds(100);
+
+            slider.BeginAnimation(Slider.ValueProperty, doubleAnimation);
+        }
     }
 }
