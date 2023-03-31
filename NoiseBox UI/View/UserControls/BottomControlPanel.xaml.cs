@@ -167,7 +167,8 @@ namespace NoiseBox_UI.View.UserControls {
             DoubleAnimation rotateAnimation = new DoubleAnimation();
             rotateAnimation.From = from;
             rotateAnimation.To = to;
-            rotateAnimation.Duration = TimeSpan.FromSeconds(0.2);
+            rotateAnimation.Duration = TimeSpan.FromMilliseconds(300);
+            rotateAnimation.EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut };
 
             ExpanderImage.RenderTransformOrigin = new Point(0.5, 0.5);
 
@@ -274,7 +275,8 @@ namespace NoiseBox_UI.View.UserControls {
             DoubleAnimation doubleAnimation = new DoubleAnimation();
             doubleAnimation.From = slider.Value;
             doubleAnimation.To = newVal;
-            doubleAnimation.Duration = TimeSpan.FromMilliseconds(100);
+            doubleAnimation.Duration = TimeSpan.FromMilliseconds(300);
+            doubleAnimation.EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut };
 
             slider.BeginAnimation(Slider.ValueProperty, doubleAnimation);
         }
