@@ -42,10 +42,22 @@ namespace NoiseBox_UI.View.UserControls {
         }
 
         private async void ConvertButton_Click(object sender, RoutedEventArgs e) {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "All Supported Formats (*.wav;*.aiff;*.flac;*.ogg;*.aac;*.wma;*.m4a;*.ac3;*.amr;*.mp2;*.avi;*.mpeg;*.wmv;*.mp4;*.mov;*.flv;*.mkv;*.3gp;*.asf;*.gxf;*.m2ts;*.ts;*.mxf;*.ogv)|*.wav;*.aiff;*.flac;*.ogg;*.aac;*.wma;*.m4a;*.ac3;*.amr;*.mp2;*.avi;*.mpeg;*.wmv;*.mp4;*.mov;*.flv;*.mkv;*.3gp;*.asf;*.gxf;*.m2ts;*.ts;*.mxf;*.ogv";
 
-            if (openFileDialog.ShowDialog() == true) {
+            OpenFileDialog openFileDialog = null;
+            bool? fileDialogRes = null;
+
+            ConvertButton.IsHitTestVisible = false;
+
+            await Task.Run(() => { // because ShowDialog blocks animations
+                openFileDialog = new OpenFileDialog();
+                openFileDialog.Filter = "All Supported Formats (*.wav;*.aiff;*.flac;*.ogg;*.aac;*.wma;*.m4a;*.ac3;*.amr;*.mp2;*.avi;*.mpeg;*.wmv;*.mp4;*.mov;*.flv;*.mkv;*.3gp;*.asf;*.gxf;*.m2ts;*.ts;*.mxf;*.ogv)|*.wav;*.aiff;*.flac;*.ogg;*.aac;*.wma;*.m4a;*.ac3;*.amr;*.mp2;*.avi;*.mpeg;*.wmv;*.mp4;*.mov;*.flv;*.mkv;*.3gp;*.asf;*.gxf;*.m2ts;*.ts;*.mxf;*.ogv";
+
+                fileDialogRes = openFileDialog.ShowDialog();
+            });
+
+            ConvertButton.IsHitTestVisible = true;
+
+            if (fileDialogRes == true) {
                 ConvertingProgress.Visibility = Visibility.Visible;
 
                 var fileName = openFileDialog.FileNames[0];

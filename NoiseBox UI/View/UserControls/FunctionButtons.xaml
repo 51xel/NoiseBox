@@ -30,7 +30,11 @@
                                     <Storyboard>
                                         <DoubleAnimation From ="0" To="135" Duration="0:0:0.5"
                                                          Storyboard.TargetName="CogRotateAnim"
-                                                         Storyboard.TargetProperty="(RotateTransform.Angle)" />
+                                                         Storyboard.TargetProperty="(RotateTransform.Angle)">
+                                            <DoubleAnimation.EasingFunction>
+                                                <CubicEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </EventTrigger.Actions>
@@ -78,8 +82,30 @@
                     <Grid>
                         <ProgressBar Name="ConvertingProgress" Style="{StaticResource MaterialDesignCircularProgressBar}"
                                      Width="40" Height="40" Margin="-15" Visibility="Collapsed" IsIndeterminate="True"/>
-                        <Image Source="/Images/Icons/convert.png" RenderOptions.BitmapScalingMode ="HighQuality"/>
+                        <Image Source="/Images/Icons/convert.png" RenderOptions.BitmapScalingMode ="HighQuality" RenderTransformOrigin="0.5,0.5">
+                            <Image.RenderTransform>
+                                <RotateTransform Angle="0" x:Name="ConvertRotateAnim"/>
+                            </Image.RenderTransform>
+                        </Image>
                     </Grid>
+
+                    <Button.Triggers>
+                        <EventTrigger RoutedEvent="Button.Click">
+                            <EventTrigger.Actions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation From ="0" To="360" Duration="0:0:0.5"
+                                                         Storyboard.TargetName="ConvertRotateAnim"
+                                                         Storyboard.TargetProperty="(RotateTransform.Angle)">
+                                            <DoubleAnimation.EasingFunction>
+                                                <CubicEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger.Actions>
+                        </EventTrigger>
+                    </Button.Triggers>
                 </Button>
             </ListViewItem>
         </ListView>
