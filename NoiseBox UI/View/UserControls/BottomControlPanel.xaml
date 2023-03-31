@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NoiseBox_UI.View.UserControls"
+             xmlns:cc="clr-namespace:NoiseBox_UI.CustomControls"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="80" d:DesignWidth="1000">
     <UserControl.Resources>
@@ -104,7 +106,7 @@
                                VerticalAlignment="Bottom" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" Text="Song not selected"/>
 
                     <Grid Grid.Row="1">
-                        <Slider Name="SeekBar" VerticalAlignment="Center" Maximum="100" Margin="0,0,0,10" Panel.ZIndex="1" ValueChanged="SeekBar_ValueChanged"/>
+                        <cc:CustomSlider x:Name="SeekBar" VerticalAlignment="Center" Maximum="100" Margin="0,0,0,10" Panel.ZIndex="1" ValueChanged="SeekBar_ValueChanged"/>
                         <UniformGrid Grid.Column="1" Name="UniGrid" Rows="1" HorizontalAlignment="Stretch" SizeChanged="UniGrid_SizeChanged" Margin="0,0,0,10"/>
                     </Grid>
                 </Grid>
@@ -132,14 +134,20 @@
                     <RowDefinition Height="100*"/>
                 </Grid.RowDefinitions>
 
-                <Slider Grid.Row="0" Grid.Column="0" Maximum="100" VerticalAlignment="Center"/>
-                <Image Grid.Row="0" Grid.Column="1" Source="/Images/Icons/mic.png" Width="15" RenderOptions.BitmapScalingMode="HighQuality"/>
+                <cc:CustomSlider Grid.Row="0" Grid.Column="0" x:Name="VCVolumeSlider" Maximum="100" VerticalAlignment="Center" ValueChanged="VCVolumeSlider_ValueChanged"/>
+                <Button Grid.Row="0" Grid.Column="1" Name="VCVolumeButton" Style="{StaticResource NoStylingButton}" Click="VCVolumeButton_Click">
+                    <materialDesign:PackIcon Kind="MicrophoneVariant" Foreground="White" Width="20" Height="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </Button>
 
-                <Slider Grid.Row="1" Grid.Column="0" Maximum="100" VerticalAlignment="Center"/>
-                <Image Grid.Row="1" Grid.Column="1" Source="/Images/Icons/mic.png" Width="15" RenderOptions.BitmapScalingMode="HighQuality"/>
+                <cc:CustomSlider Grid.Row="1" Grid.Column="0" x:Name="MicVolumeSlider" Maximum="100" VerticalAlignment="Center" ValueChanged="MicVolumeSlider_ValueChanged"/>
+                <Button Grid.Row="1" Grid.Column="1" Name="MicVolumeButton" Style="{StaticResource NoStylingButton}" Click="MicVolumeButton_Click">
+                    <materialDesign:PackIcon Kind="Microphone" Foreground="White" Width="20" Height="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </Button>
 
-                <Slider Grid.Row="2" Grid.Column="0" Name="MainVolumeSlider" Maximum="100" VerticalAlignment="Center"/>
-                <Image Grid.Row="2" Grid.Column="1" Source="/Images/Icons/speaker.png" Width="15" RenderOptions.BitmapScalingMode="HighQuality"/>
+                <cc:CustomSlider Grid.Row="2" Grid.Column="0" x:Name="MainVolumeSlider" Maximum="100" VerticalAlignment="Center" ValueChanged="MainVolumeSlider_ValueChanged"/>
+                <Button Grid.Row="2" Grid.Column="1" Name="MainVolumeButton" Style="{StaticResource NoStylingButton}" Click="MainVolumeButton_Click">
+                    <materialDesign:PackIcon Kind="VolumeMedium" Foreground="White" Width="20" Height="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </Button>
 
                 <Button Style="{StaticResource NoStylingButton}" Grid.Column="2" Grid.RowSpan="3" Click="ToggleVolumeSliders" Width="20" HorizontalAlignment="Left">
                     <Image  Name="ExpanderImage" Source="\Images\Icons\expand.png" RenderOptions.BitmapScalingMode="HighQuality" Opacity="0.7"/>

@@ -18,7 +18,28 @@
                   ScrollViewer.CanContentScroll="False">
             <ListViewItem Padding="5">
                 <Button x:Name="SettingsButton" Width="50" Height="50" Background="#212128" BorderBrush="Transparent" Padding="15">
-                    <Image Source="/Images/Icons/settings.png" RenderOptions.BitmapScalingMode ="HighQuality"/>
+                    <Image Source="/Images/Icons/settings.png" RenderOptions.BitmapScalingMode ="HighQuality" RenderTransformOrigin="0.5,0.5">
+                        <Image.RenderTransform>
+                            <RotateTransform Angle="0" x:Name="CogRotateAnim"/>
+                        </Image.RenderTransform>
+                    </Image>
+                    <Button.Triggers>
+                        <EventTrigger RoutedEvent="Button.Click">
+                            <EventTrigger.Actions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation From ="0" To="135" Duration="0:0:0.5"
+                                                         Storyboard.TargetName="CogRotateAnim"
+                                                         Storyboard.TargetProperty="(RotateTransform.Angle)">
+                                            <DoubleAnimation.EasingFunction>
+                                                <CubicEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger.Actions>
+                        </EventTrigger>
+                    </Button.Triggers>
                 </Button>
             </ListViewItem>
 
@@ -28,8 +49,38 @@
                     <Grid>
                         <ProgressBar Name="DownloadingProgress" Style="{StaticResource MaterialDesignCircularProgressBar}"
                                      Width="40" Height="40" Value="0" Maximum="100" Margin="-15" Visibility="Collapsed"/>
-                        <Image Source="/Images/Icons/download.png" RenderOptions.BitmapScalingMode ="HighQuality"/>
+                        <Image Source="/Images/Icons/download.png" RenderOptions.BitmapScalingMode ="HighQuality" RenderTransformOrigin="0.5,1">
+                            <Image.RenderTransform>
+                                <ScaleTransform x:Name="DownloadArrowAnim"/>
+                            </Image.RenderTransform>
+                        </Image>
                     </Grid>
+                    <Button.Triggers>
+                        <EventTrigger RoutedEvent="Button.Click">
+                            <EventTrigger.Actions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation From ="1" To="0.8" Duration="0:0:0.2"
+                                                         Storyboard.TargetName="DownloadArrowAnim"
+                                                         Storyboard.TargetProperty="(ScaleTransform.ScaleY)"
+                                                         AutoReverse="True">
+                                            <DoubleAnimation.EasingFunction>
+                                                <CubicEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <DoubleAnimation From ="1" To="1.2" Duration="0:0:0.2"
+                                                         Storyboard.TargetName="DownloadArrowAnim"
+                                                         Storyboard.TargetProperty="(ScaleTransform.ScaleX)"
+                                                         AutoReverse="True">
+                                            <DoubleAnimation.EasingFunction>
+                                                <CubicEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger.Actions>
+                        </EventTrigger>
+                    </Button.Triggers>
                 </Button>
             </ListViewItem>
 
@@ -39,8 +90,30 @@
                     <Grid>
                         <ProgressBar Name="ConvertingProgress" Style="{StaticResource MaterialDesignCircularProgressBar}"
                                      Width="40" Height="40" Margin="-15" Visibility="Collapsed" IsIndeterminate="True"/>
-                        <Image Source="/Images/Icons/convert.png" RenderOptions.BitmapScalingMode ="HighQuality"/>
+                        <Image Source="/Images/Icons/convert.png" RenderOptions.BitmapScalingMode ="HighQuality" RenderTransformOrigin="0.5,0.5">
+                            <Image.RenderTransform>
+                                <RotateTransform Angle="0" x:Name="ConvertRotateAnim"/>
+                            </Image.RenderTransform>
+                        </Image>
                     </Grid>
+
+                    <Button.Triggers>
+                        <EventTrigger RoutedEvent="Button.Click">
+                            <EventTrigger.Actions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation From ="0" To="360" Duration="0:0:0.5"
+                                                         Storyboard.TargetName="ConvertRotateAnim"
+                                                         Storyboard.TargetProperty="(RotateTransform.Angle)">
+                                            <DoubleAnimation.EasingFunction>
+                                                <CubicEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger.Actions>
+                        </EventTrigger>
+                    </Button.Triggers>
                 </Button>
             </ListViewItem>
         </ListView>

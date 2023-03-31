@@ -50,7 +50,11 @@ namespace NoiseBox_UI {
             BottomControlPanel.NextButton.Click += NextButton_Click;
             BottomControlPanel.SeekBar.PreviewMouseLeftButtonUp += SeekBar_PreviewMouseLeftButtonUp;
             BottomControlPanel.SeekBar.ValueChanged += SeekBar_ValueChanged;
-            BottomControlPanel.MainVolumeSlider.Value = 0.1 * 100; // TODO Load from config
+
+            BottomControlPanel.MainVolumeSlider.Value = 0.1 * 100;//TODO Load from config
+            BottomControlPanel.MicVolumeSlider.Value = 0.2 * 100; // TODO Load from config
+            BottomControlPanel.VCVolumeSlider.Value = 0.3 * 100; // TODO Load from config
+
             BottomControlPanel.MainVolumeSlider.ValueChanged += MainVolumeSlider_ValueChanged;
 
             SongList.ClickRowElement += Song_Click;
