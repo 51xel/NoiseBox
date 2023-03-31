@@ -202,6 +202,7 @@ namespace NoiseBox_UI.View.UserControls {
                     From = SeekBar.Opacity,
                     To = 1,
                     Duration = TimeSpan.FromSeconds(1),
+                    EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut }
                 };
 
                 storyboardSeekBarOpacity = new Storyboard();
@@ -220,6 +221,7 @@ namespace NoiseBox_UI.View.UserControls {
                     From = 1,
                     To = 0,
                     Duration = TimeSpan.FromSeconds(0.3),
+                    EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut }
                 };
 
                 storyboardUniGridScale = new Storyboard();
@@ -286,6 +288,7 @@ namespace NoiseBox_UI.View.UserControls {
                         CornerRadius = new CornerRadius(2),
                         Height = peak,
                         Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#673ab7")),
+                        Opacity = 0.4,
                         Margin = new Thickness(1)
                     });
                 }
@@ -302,6 +305,7 @@ namespace NoiseBox_UI.View.UserControls {
                     From = SeekBar.Opacity,
                     To = 0,
                     Duration = TimeSpan.FromSeconds(0.3),
+                    EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut }
                 };
 
                 storyboardSeekBarOpacity = new Storyboard();
@@ -318,6 +322,7 @@ namespace NoiseBox_UI.View.UserControls {
                     From = 0,
                     To = 1,
                     Duration = TimeSpan.FromSeconds(0.3),
+                    EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut }
                 };
 
                 uniGridScaleAnimation.Completed += (_, _) => {

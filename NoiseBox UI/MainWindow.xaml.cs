@@ -31,7 +31,7 @@ namespace NoiseBox_UI {
         public Song? SelectedSong = null;
         public string? BackgroundPlaylistName = null;
 
-        private bool VisualizationEnabled = true; // TODO Load from config
+        private bool VisualizationEnabled = false; // TODO Load from config
         private string? CurrentlyVisualizedPath = null;
 
         public MainWindow() {
