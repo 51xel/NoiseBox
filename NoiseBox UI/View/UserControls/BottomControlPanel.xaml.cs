@@ -121,6 +121,7 @@ namespace NoiseBox_UI.View.UserControls {
         }
 
         DispatcherTimer VSHeightTimer;
+        private bool _isToggling = false;
 
         private void VSExpandTimer_Tick(object sender, EventArgs e) {
             var rowHeight = VolumeSlidersGrid.RowDefinitions[0].Height;
@@ -130,6 +131,7 @@ namespace NoiseBox_UI.View.UserControls {
                 VolumeSlidersGrid.RowDefinitions[1].Height = new GridLength(rowHeight.Value + 5, GridUnitType.Star);
             }
             else {
+                _isToggling = false;
                 VSHeightTimer.Stop();
             }
         }
@@ -142,26 +144,30 @@ namespace NoiseBox_UI.View.UserControls {
                 VolumeSlidersGrid.RowDefinitions[1].Height = new GridLength(rowHeight.Value - 5, GridUnitType.Star);
             }
             else {
+                _isToggling = false;
                 VSHeightTimer.Stop();
             }
         }
 
         private void ToggleVolumeSliders(object sender, RoutedEventArgs e) {
-            VSHeightTimer = new DispatcherTimer();
-            VSHeightTimer.Interval = TimeSpan.FromMilliseconds(5);
-            
-            if (VolumeSlidersGrid.RowDefinitions[0].Height.Value == 0) {
-                VSHeightTimer.Tick += VSExpandTimer_Tick;
+            if (!_isToggling) {
+                VSHeightTimer = new DispatcherTimer();
+                VSHeightTimer.Interval = TimeSpan.FromMilliseconds(5);
 
-                RotateToggle(0, -180);
+                if (VolumeSlidersGrid.RowDefinitions[0].Height.Value == 0) {
+                    VSHeightTimer.Tick += VSExpandTimer_Tick;
+
+                    RotateToggle(0, -180);
+                }
+                else {
+                    VSHeightTimer.Tick += VSContractTimer_Tick;
+
+                    RotateToggle(-180, 0);
+                }
+
+                _isToggling = true;
+                VSHeightTimer.Start();
             }
-            else {
-                VSHeightTimer.Tick += VSContractTimer_Tick;
-
-                RotateToggle(-180, 0);
-            }
-
-            VSHeightTimer.Start();
         }
 
         private void RotateToggle(double from, double to) {
@@ -390,8 +396,6 @@ namespace NoiseBox_UI.View.UserControls {
         private void OnPropertyChanged([CallerMemberName] string propertyName = null) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-
 
         private void MainVolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
             var icon = MainVolumeButton.Content as MaterialDesignThemes.Wpf.PackIcon;

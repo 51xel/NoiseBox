@@ -135,21 +135,21 @@
                 </Grid.RowDefinitions>
 
                 <cc:CustomSlider Grid.Row="0" Grid.Column="0" x:Name="VCVolumeSlider" Maximum="100" VerticalAlignment="Center" ValueChanged="VCVolumeSlider_ValueChanged"/>
-                <Button Grid.Row="0" Grid.Column="1" Name="VCVolumeButton" Style="{StaticResource NoStylingButton}" Click="VCVolumeButton_Click">
+                <Button Grid.Row="0" Grid.Column="1" Name="VCVolumeButton" Style="{StaticResource NoStylingButton}" Click="VCVolumeButton_Click" Width="20" Height="20">
                     <materialDesign:PackIcon Kind="MicrophoneVariant" Foreground="White" Width="20" Height="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 </Button>
 
                 <cc:CustomSlider Grid.Row="1" Grid.Column="0" x:Name="MicVolumeSlider" Maximum="100" VerticalAlignment="Center" ValueChanged="MicVolumeSlider_ValueChanged"/>
-                <Button Grid.Row="1" Grid.Column="1" Name="MicVolumeButton" Style="{StaticResource NoStylingButton}" Click="MicVolumeButton_Click">
+                <Button Grid.Row="1" Grid.Column="1" Name="MicVolumeButton" Style="{StaticResource NoStylingButton}" Click="MicVolumeButton_Click" Width="20" Height="20">
                     <materialDesign:PackIcon Kind="Microphone" Foreground="White" Width="20" Height="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 </Button>
 
                 <cc:CustomSlider Grid.Row="2" Grid.Column="0" x:Name="MainVolumeSlider" Maximum="100" VerticalAlignment="Center" ValueChanged="MainVolumeSlider_ValueChanged"/>
-                <Button Grid.Row="2" Grid.Column="1" Name="MainVolumeButton" Style="{StaticResource NoStylingButton}" Click="MainVolumeButton_Click">
+                <Button Grid.Row="2" Grid.Column="1" Name="MainVolumeButton" Style="{StaticResource NoStylingButton}" Click="MainVolumeButton_Click" Width="20" Height="20">
                     <materialDesign:PackIcon Kind="VolumeMedium" Foreground="White" Width="20" Height="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 </Button>
 
-                <Button Style="{StaticResource NoStylingButton}" Grid.Column="2" Grid.RowSpan="3" Click="ToggleVolumeSliders" Width="20" HorizontalAlignment="Left">
+                <Button Style="{StaticResource NoStylingButton}" Grid.Column="2" Grid.RowSpan="3" Click="ToggleVolumeSliders" Width="20" HorizontalAlignment="Left" Height="40">
                     <Image  Name="ExpanderImage" Source="\Images\Icons\expand.png" RenderOptions.BitmapScalingMode="HighQuality" Opacity="0.7"/>
                 </Button>
             </Grid>
