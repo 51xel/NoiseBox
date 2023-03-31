@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using NAudio.Wave;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -178,6 +179,214 @@ namespace NoiseBox_UI.View.UserControls {
             rotateTransform.BeginAnimation(RotateTransform.AngleProperty, rotateAnimation);
         }
 
+        private bool _firstAnimationIsWorking = false;
+        private bool _secondAnimationIsWorking = false;
+
+        public async void VisualizeAudio(string path) {
+            DoubleAnimation seekBarOpacityAnimation;
+            Storyboard storyboardSeekBarOpacity;
+
+            DoubleAnimation uniGridScaleAnimation;
+            Storyboard storyboardUniGridScale;
+
+            if (_firstAnimationIsWorking) {
+                _secondAnimationIsWorking = true;
+            }
+
+            if (!_firstAnimationIsWorking) {
+                // reset SeekBar scaling to 1
+                SeekBar.RenderTransformOrigin = new Point(0.5, 0.5);
+                SeekBar.RenderTransform = new ScaleTransform() { ScaleY = 1 };
+
+                // animate SeekBar opacity from 0 to 1
+                seekBarOpacityAnimation = new DoubleAnimation {
+                    From = SeekBar.Opacity,
+                    To = 1,
+                    Duration = TimeSpan.FromSeconds(1),
+                    EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut }
+                };
+
+                storyboardSeekBarOpacity = new Storyboard();
+
+                Storyboard.SetTarget(seekBarOpacityAnimation, SeekBar);
+                Storyboard.SetTargetProperty(seekBarOpacityAnimation, new PropertyPath(Control.OpacityProperty));
+                storyboardSeekBarOpacity.Children.Add(seekBarOpacityAnimation);
+
+                storyboardSeekBarOpacity.Begin();
+
+                // animate UniGrid scaleY from 1 to 0
+                UniGrid.RenderTransformOrigin = new Point(0.5, 0.5);
+                UniGrid.RenderTransform = new ScaleTransform() { ScaleY = 1 };
+
+                uniGridScaleAnimation = new DoubleAnimation {
+                    From = 1,
+                    To = 0,
+                    Duration = TimeSpan.FromSeconds(0.3),
+                    EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut }
+                };
+
+                storyboardUniGridScale = new Storyboard();
+
+                Storyboard.SetTarget(uniGridScaleAnimation, UniGrid);
+                Storyboard.SetTargetProperty(uniGridScaleAnimation, new PropertyPath("(UIElement.RenderTransform).(ScaleTransform.ScaleY)"));
+                storyboardUniGridScale.Children.Add(uniGridScaleAnimation);
+                storyboardUniGridScale.Begin();
+            }
+
+            _firstAnimationIsWorking = true;
+
+            var peaks = new List<float>();
+
+            await Task.Run(() => {
+                bool canceledRender = false;
+
+                if (_secondAnimationIsWorking) {//is there a better idea?
+                    canceledRender = true;
+                }
+
+                using (var mp3 = new Mp3FileReader(path)) {
+                    // Convert the MP3 to a sample provider that provides audio samples
+                    var sampleProvider = mp3.ToSampleProvider();
+
+                    // Create a buffer to hold audio samples
+                    var buffer = new float[sampleProvider.WaveFormat.SampleRate];
+
+                    // Read audio samples into the buffer and calculate peak heights
+                    while (sampleProvider.Read(buffer, 0, buffer.Length) > 0) {
+                        // Calculate the peak height of the buffer
+                        if (_secondAnimationIsWorking && !canceledRender) {
+                            break;
+                        }
+
+                        float sum = 0;
+
+                        for (int i = 0; i < buffer.Length; i++) {
+                            sum += Math.Abs(buffer[i]);
+                        }
+                        float average = sum / buffer.Length;
+
+                        peaks.Add(average);
+                    }
+
+                    if (peaks.Count != 0) {
+                        float peaksMax = peaks.Max();
+                        for (int i = 0; i < peaks.Count; i++) {
+                            if (_secondAnimationIsWorking && !canceledRender) {
+                                break;
+                            }
+
+                            peaks[i] = (peaks[i] / peaksMax) * (int)UniGrid.ActualHeight; // peak height
+                        }
+                    }
+                }
+            });
+            
+            if (!_secondAnimationIsWorking) {
+                UniGrid.Children.Clear(); //TODO Animation UniGrid scaleY does not have time to complete
+
+                foreach (var peak in peaks) {
+                    UniGrid.Children.Add(new Border() {
+                        CornerRadius = new CornerRadius(2),
+                        Height = peak,
+                        Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#673ab7")),
+                        Opacity = 0.4,
+                        Margin = new Thickness(1)
+                    });
+                }
+            }
+
+            UniGrid_SizeChanged(null, null);
+
+            SeekBar.RenderTransformOrigin = new Point(0.5, 0.5);
+            SeekBar.RenderTransform = new ScaleTransform() { ScaleY = 1 };
+
+            if (!_secondAnimationIsWorking) {
+                // animate SeekBar opacity from 1 to 0
+                seekBarOpacityAnimation = new DoubleAnimation {
+                    From = SeekBar.Opacity,
+                    To = 0,
+                    Duration = TimeSpan.FromSeconds(0.3),
+                    EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut }
+                };
+
+                storyboardSeekBarOpacity = new Storyboard();
+            
+                Storyboard.SetTarget(seekBarOpacityAnimation, SeekBar);
+                Storyboard.SetTargetProperty(seekBarOpacityAnimation, new PropertyPath(Control.OpacityProperty));
+                storyboardSeekBarOpacity.Children.Add(seekBarOpacityAnimation);
+                storyboardSeekBarOpacity.Begin();
+
+                // animate UniGrid scaleY from 0 to 1
+                UniGrid.RenderTransformOrigin = new Point(0.5, 0.5);
+                UniGrid.RenderTransform = new ScaleTransform() { ScaleY = 1 };
+                uniGridScaleAnimation = new DoubleAnimation {
+                    From = 0,
+                    To = 1,
+                    Duration = TimeSpan.FromSeconds(0.3),
+                    EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut }
+                };
+
+                uniGridScaleAnimation.Completed += (_, _) => {
+                    // set SeekBar scaling to 2
+                    SeekBar.RenderTransformOrigin = new Point(0.5, 0.5);
+                    SeekBar.RenderTransform = new ScaleTransform() { ScaleY = 2 };
+                };
+
+                storyboardUniGridScale = new Storyboard();
+
+                Storyboard.SetTarget(uniGridScaleAnimation, UniGrid);
+                Storyboard.SetTargetProperty(uniGridScaleAnimation, new PropertyPath("(UIElement.RenderTransform).(ScaleTransform.ScaleY)"));
+                storyboardUniGridScale.Children.Add(uniGridScaleAnimation);
+                storyboardUniGridScale.Begin();
+            }
+
+            _firstAnimationIsWorking = false;
+            _secondAnimationIsWorking = false;
+        }
+
+        private void UniGrid_SizeChanged(object sender, SizeChangedEventArgs e) {
+
+            int n = UniGrid.Children.Count;
+
+            if (n == 0) {
+                return;
+            }
+
+            int k = (int)UniGrid.ActualWidth / 6;
+
+            List<int> numbers = new List<int>();
+            for (int i = 0; i < n; i++) {
+                numbers.Add(i);
+            }
+
+            List<int> reducedList = numbers.EvenlySpacedSubset(k);
+
+            for (int i = 0; i < UniGrid.Children.Count; i++) {
+                var border = UniGrid.Children[i] as Border;
+
+                if (reducedList.Contains(i)) {
+                    border.Visibility = Visibility.Visible;
+                }
+                else {
+                    border.Visibility = Visibility.Collapsed;
+                }
+            }
+        }
+
+        private void SeekBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+            var val = (sender as Slider).Value;
+            var borders = UniGrid.Children;
+
+            var before = (int)(borders.Count * val / 100);
+
+            for (int i = 0; i < borders.Count; i++) {
+                if (i < before)
+                    (borders[i] as Border).Opacity = 1;
+                else
+                    (borders[i] as Border).Opacity = 0.4;
+            }
+        }
+
         private void OnPropertyChanged([CallerMemberName] string propertyName = null) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
@@ -279,6 +488,16 @@ namespace NoiseBox_UI.View.UserControls {
             doubleAnimation.EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut };
 
             slider.BeginAnimation(Slider.ValueProperty, doubleAnimation);
+        }
+    }
+
+    public static class ListExtensions {
+        public static List<T> EvenlySpacedSubset<T>(this List<T> list, int count) {
+            int length = list.Count;
+            int[] indices = Enumerable.Range(0, count)
+                                       .Select(i => (int)Math.Round((double)(i * (length - 1)) / (count - 1)))
+                                       .ToArray();
+            return indices.Select(i => list[i]).ToList();
         }
     }
 }
