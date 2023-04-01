@@ -115,7 +115,11 @@ namespace NoiseBox_UI {
 
                 if (win.AudioStreamControl.MainMusic.PathToMusic != null) {
                     win.AudioStreamControl.MainMusic.InitializeEqualizer();
-                    win.AudioStreamControl.MainMusic.StopAndPlayFromPosition(win.AudioStreamControl.MainMusic.CurrentTrackPosition);
+
+                    if (win.AudioStreamControl.MainMusic.IsPlaying) {
+                        win.AudioStreamControl.MainMusic.StopAndPlayFromPosition(win.AudioStreamControl.MainMusic.CurrentTrackPosition);
+                    }
+
                     StartStopText.Text = "Stop";
 
                     Profiles_SelectionChanged(null, null);
@@ -125,7 +129,10 @@ namespace NoiseBox_UI {
                 var win = Owner as MainWindow;
 
                 win.AudioStreamControl.MainMusic.StopEqualizer();
-                win.AudioStreamControl.MainMusic.StopAndPlayFromPosition(win.AudioStreamControl.MainMusic.CurrentTrackPosition);
+
+                if (win.AudioStreamControl.MainMusic.IsPlaying) {
+                    win.AudioStreamControl.MainMusic.StopAndPlayFromPosition(win.AudioStreamControl.MainMusic.CurrentTrackPosition);
+                }
 
                 StartStopText.Text = "Start";
 
@@ -134,7 +141,7 @@ namespace NoiseBox_UI {
         }
 
         private void ReloadButton_Click(object sender, RoutedEventArgs e) {
-            for (int i = 0; i < 7; i++) {
+            for (int i = 0; i < 8; i++) {
                 AnimationChangingSliderValue(i, 0);
             }
         }
@@ -192,7 +199,7 @@ namespace NoiseBox_UI {
 
                     (Owner as MainWindow).SelectedBandsSettings = band;
 
-                    for (int i = 0; i < 7; i++) {
+                    for (int i = 0; i < 8; i++) {
                         AnimationChangingSliderValue(i, band.EqualizerBands[i].Gain);
                     }
                 }
@@ -226,7 +233,11 @@ namespace NoiseBox_UI {
         private void LoadFromJson() {
             if (File.Exists(_jsonFilePath)) {
                 string jsonString = File.ReadAllText(_jsonFilePath);
-                _bandsSettings = JsonConvert.DeserializeObject<List<BandsSettings>>(jsonString);
+
+                var tempBands = JsonConvert.DeserializeObject<List<BandsSettings>>(jsonString);
+                if (tempBands != null) {
+                    _bandsSettings = JsonConvert.DeserializeObject<List<BandsSettings>>(jsonString);
+                }
             }
             else {
                 File.Create(_jsonFilePath).Close();

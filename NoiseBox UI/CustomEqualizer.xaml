@@ -130,21 +130,21 @@
 
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="45"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="45"/>
             </Grid.ColumnDefinitions>
 
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="50"/>
-                    <RowDefinition MinHeight="10"/>
-                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="*" MinHeight="10"/>
+                    <RowDefinition Height="20"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Text="30 dB" Grid.Row="0" FontSize="10" FontFamily="/Fonts/#Montserrat" Foreground="#BDBDBD" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-                <TextBlock Text="0 dB" Grid.Row="1" FontSize="10" FontFamily="/Fonts/#Montserrat" Foreground="#BDBDBD" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <TextBlock Text="-30 dB" Grid.Row="2" FontSize="10" FontFamily="/Fonts/#Montserrat" Foreground="#BDBDBD" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                <TextBlock Text="30 dB" Grid.Row="0" FontSize="10" FontFamily="/Fonts/#Montserrat" Foreground="#BDBDBD" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+                <TextBlock Text="0 dB" Grid.Row="1" FontSize="10" FontFamily="/Fonts/#Montserrat" Foreground="#BDBDBD" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                <TextBlock Text="-30 dB" Grid.Row="2" FontSize="10" FontFamily="/Fonts/#Montserrat" Foreground="#BDBDBD" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
             </Grid>
             
             <Grid Name="EqGrid" Grid.Column="1"/>

@@ -55,10 +55,12 @@ namespace NoiseBox {
                 var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
                 var data = JsonConvert.DeserializeObject<Dictionary<string, object>>(json, settings);
 
-                _songs = ((JArray)data["songs"]).ToObject<List<Song>>();
-                _playlists = ((JArray)data["playlists"]).ToObject<List<Playlist>>();
+                if (data != null) {
+                    _songs = ((JArray)data["songs"]).ToObject<List<Song>>();
+                    _playlists = ((JArray)data["playlists"]).ToObject<List<Playlist>>();
 
-                _log.Print("Data loaded from json", LogInfoType.INFO);
+                    _log.Print("Data loaded from json", LogInfoType.INFO);
+                }
             }
             else {
                 File.Create(_jsonFilePath).Close();
