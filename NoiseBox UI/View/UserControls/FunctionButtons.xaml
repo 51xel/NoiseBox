@@ -17,7 +17,8 @@
         <ListView Name="List" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                   ScrollViewer.CanContentScroll="False">
             <ListViewItem Padding="5">
-                <Button x:Name="SettingsButton" Width="50" Height="50" Background="#212128" BorderBrush="Transparent" Padding="15">
+                <Button x:Name="SettingsButton" Width="50" Height="50" Background="#212128" BorderBrush="Transparent" Padding="15"
+                        Click="SettingsButton_Click">
                     <Image Source="/Images/Icons/settings.png" RenderOptions.BitmapScalingMode ="HighQuality" RenderTransformOrigin="0.5,0.5">
                         <Image.RenderTransform>
                             <RotateTransform Angle="0" x:Name="CogRotateAnim"/>
