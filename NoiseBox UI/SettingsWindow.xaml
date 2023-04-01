@@ -15,7 +15,9 @@
         StateChanged="Window_StateChanged"
         Closed="Window_Closed"
         
-        MouseDown="Window_MouseDown">
+        MouseDown="Window_MouseDown"
+        
+        Loaded="Window_Loaded">
 
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="25"/>
@@ -82,12 +84,7 @@
 
                 <TextBlock Grid.Column="0">Select output device</TextBlock>
 
-                <ComboBox Grid.Column="1" materialDesign:ColorZoneAssist.Mode="Dark">
-                    <ComboBoxItem Content="Android"/>
-                    <ComboBoxItem Content="iOS"/>
-                    <ComboBoxItem Content="Linux"/>
-                    <ComboBoxItem Content="Windows"/>
-                </ComboBox>
+                <ComboBox Grid.Column="1" Name="OutputDevicesList" materialDesign:ColorZoneAssist.Mode="Dark"/>
             </Grid>
 
             <Grid>
@@ -96,10 +93,10 @@
                     <ColumnDefinition/>
                     <ColumnDefinition Width="40"/>
                 </Grid.ColumnDefinitions>
-                
-                <TextBlock Grid.Column="0">Downloads location</TextBlock>
-                <TextBlock Grid.Column="1">D:\NoiseBox\SavedAudio</TextBlock>
-                <Button Grid.Column="2" Style="{StaticResource NoStylingButton}">
+
+                <TextBlock Grid.Column="0">Downloads folder</TextBlock>
+                <TextBlock Grid.Column="1" Name="DownloadsFolder"/>
+                <Button Grid.Column="2" Style="{StaticResource NoStylingButton}" Click="EditDownloadsFolder">
                     <materialDesign:PackIcon Kind="PencilOutline" Foreground="White"/>
                 </Button>
             </Grid>
@@ -110,31 +107,11 @@
                     <ColumnDefinition Width="40"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0">Enable mic volume</TextBlock>
-                <ToggleButton Grid.Column="1"/>
-            </Grid>
-
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="40"/>
-                </Grid.ColumnDefinitions>
-
-                <TextBlock Grid.Column="0">Enable virtual cable volume</TextBlock>
-                <ToggleButton Grid.Column="1"/>
-            </Grid>
-
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="40"/>
-                </Grid.ColumnDefinitions>
-
                 <TextBlock Grid.Column="0">Enable sound wave visualization</TextBlock>
-                <ToggleButton Grid.Column="1"/>
+                <ToggleButton Grid.Column="1" Name="VisualizationEnabled"/>
             </Grid>
         </StackPanel>
 
-        <Button Grid.Row="1" Content="Save" Background="Transparent" Width="150" HorizontalAlignment="Right" Margin="15"/>
+        <Button Grid.Row="1" Click="Save_Click" Content="Save" Background="Transparent" Width="150" HorizontalAlignment="Right" Margin="15"/>
     </Grid>
 </Window>
