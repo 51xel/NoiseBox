@@ -283,19 +283,28 @@ namespace NoiseBox {
         }
 
         public List<EqualizerBand> GetBandsList() {
-            return _bands.ToList();
+            var equalizerBands = new List<EqualizerBand>();
+
+            foreach (var band in _bands) {
+                equalizerBands.Add(new EqualizerBand {
+                    Bandwidth = band.Bandwidth,
+                    Frequency = band.Frequency,
+                    Gain = band.Gain
+                });
+            }
+
+            return equalizerBands;
         }
 
-        public void SetBandsList(List<EqualizerBand> setBands) {
-            if (_bands != null && setBands != null) {
-                if (setBands.Count == 8) {
-                    for (int i = 0; i < setBands.Count; i++) {
-                        _bands[i] = setBands[i];
-                    }
-
-                    _equalizer.Update();
-                }
+        public void SetBandsList(List<EqualizerBand> equalizerBandsToAdd) {
+            for (int i = 0; i < 8; i++) {
+                _bands[i] = new EqualizerBand {
+                    Bandwidth = equalizerBandsToAdd[i].Bandwidth,
+                    Frequency = equalizerBandsToAdd[i].Frequency,
+                    Gain = equalizerBandsToAdd[i].Gain
+                };
             }
+            _equalizer.Update();
         }
     }
 

@@ -36,19 +36,96 @@
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="130"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <ComboBox Name="Profiles" Grid.Column="1" materialDesign:HintAssist.Hint="Default" Foreground="#BDBDBD" FontFamily="/Fonts/#Montserrat" Background="#393946" Padding="5" LostFocus="Profiles_LostFocus" KeyDown="Profiles_KeyDown" SelectionChanged="Profiles_SelectionChanged" IsEditable="True">
+            <ComboBox Name="Profiles" 
+                      Grid.Column="1" 
+                      materialDesign:HintAssist.Hint="Default" 
+                      Foreground="#BDBDBD" 
+                      FontFamily="/Fonts/#Montserrat" 
+                      Background="#393946" Padding="5" 
+                      SelectionChanged="Profiles_SelectionChanged" 
+                      IsEditable="False" 
+                      IsTextSearchEnabled="false"
+                      Width="120">
                 <ComboBox.Resources>
                     <SolidColorBrush x:Key="MaterialDesignPaper" Color="#212128"/>
                 </ComboBox.Resources>
             </ComboBox>
 
-            <Button Grid.Column="2" Background="Transparent" Padding="0" Height="25" Width="35" Margin="5,25,149,25" Click="SaveButton_Click">
-                <Image Source="/Images/Icons/save.png" Opacity="0.8" RenderOptions.BitmapScalingMode ="HighQuality"/>
-            </Button>
+            <Grid x:Name="ControlButtons" Grid.Column="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="30"/>
+                </Grid.ColumnDefinitions>
+
+                <Button 
+                    Grid.Column="0"
+                    Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
+                    Background="#393946"
+                    BorderBrush="Transparent"
+                    Height="25" 
+                    Width="25"
+                    Click="SaveButton_Click">
+                    <Image Source="/Images/Icons/save.png" Opacity="0.8" RenderOptions.BitmapScalingMode ="HighQuality" Width="20"/>
+                </Button>
+
+                <Button 
+                    Grid.Column="1"
+                    Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
+                    Background="#393946"
+                    BorderBrush="Transparent"
+                    Height="25" 
+                    Width="25"
+                    Click="DeleteButton_Click">
+                    <Image Source="/Images/Icons/close.png" Opacity="0.8" RenderOptions.BitmapScalingMode ="HighQuality" Width="20"/>
+                </Button>
+
+                <Popup x:Name="EnterReNamePopup" PlacementTarget="{Binding ElementName=RenameButton}" StaysOpen="False"
+               Placement="Bottom" Width="100" VerticalOffset="15" HorizontalOffset="0">
+                    <Border Background="#393946" Padding="15">
+                        <TextBox Name="ReNamePopupTextBox" FontFamily="/Fonts/#Montserrat" FontSize="14" FontWeight="DemiBold" 
+                         Foreground="#BDBDBD" KeyDown="ReNamePopupTextBox_KeyDown"/>
+                    </Border>
+                </Popup>
+                <Button 
+                    Name="RenameButton"
+                    Grid.Column="2"
+                    Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
+                    Background="#393946"
+                    BorderBrush="Transparent"
+                    Height="25"
+                    Width="25"
+                    Click="RenameButton_Click">
+                    <TextBlock Text="R" Foreground="White"/>
+                    <!--<Image Source="/Images/Icons/rename.png" Opacity="0.8" RenderOptions.BitmapScalingMode ="HighQuality" Width="20"/>-->
+                </Button>
+
+
+                <Popup x:Name="EnterNamePopup" PlacementTarget="{Binding ElementName=AddButton}" StaysOpen="False"
+               Placement="Bottom" Width="100" VerticalOffset="15" HorizontalOffset="0">
+                    <Border Background="#393946" Padding="15">
+                        <TextBox Name="NamePopupTextBox" FontFamily="/Fonts/#Montserrat" FontSize="14" FontWeight="DemiBold" 
+                         Foreground="#BDBDBD" KeyDown="NamePopupTextBox_KeyDown"/>
+                    </Border>
+                </Popup>
+                <Button 
+                    Name="AddButton"
+                    Grid.Column="3"
+                    Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
+                    Background="#393946"
+                    BorderBrush="Transparent"
+                    Height="25" 
+                    Width="25"
+                    Click="AddButton_Click">
+                    <TextBlock Text="N" Foreground="White"/>
+                    <!--<Image Source="/Images/Icons/rename.png" Opacity="0.8" RenderOptions.BitmapScalingMode ="HighQuality" Width="20"/>-->
+                </Button>
+            </Grid>
         </Grid>
 
         <Grid Name="EqGrid" Margin="30,0,30,0" Grid.Row="1"/>

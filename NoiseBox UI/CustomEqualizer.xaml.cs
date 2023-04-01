@@ -23,22 +23,20 @@ using System.Windows.Markup;
 using Newtonsoft.Json.Linq;
 using System.Reflection;
 using NoiseBox.Log;
+using System.Windows.Threading;
 
-namespace NoiseBox_UI{
+namespace NoiseBox_UI {
     public partial class CustomEqualizer : Window, INotifyPropertyChanged {
         private List<BandsSettings> _bandsSettings = new List<BandsSettings>();
         private string _jsonFilePath = "_bandsSettings.json";
 
-        public CustomEqualizer(){
+        public CustomEqualizer() {
             InitializeComponent();
             WinMax.DoSourceInitialized(this);
             DataContext = this;
 
             LoadFromJson();
-
-            foreach (var element in _bandsSettings) {
-                Profiles.Items.Add(element.Name);
-            }
+            UpdateProfiles();
         }
 
         public float Maximum {
@@ -102,7 +100,7 @@ namespace NoiseBox_UI{
                 Uri uri = new Uri("/Images/Icons/restore.png", UriKind.Relative);
                 ImageSource imgSource = new BitmapImage(uri);
                 TitlebarButtons.MaximizeButtonImage.Source = imgSource;
-                
+
             }
             else if (WindowState == WindowState.Normal) {
                 Uri uri = new Uri("/Images/Icons/maximize.png", UriKind.Relative);
@@ -119,12 +117,9 @@ namespace NoiseBox_UI{
                     win.AudioStreamControl.MainMusic.InitializeEqualizer();
                     win.AudioStreamControl.MainMusic.StopAndPlayFromPosition(win.AudioStreamControl.MainMusic.CurrentTrackPosition);
                     StartStopText.Text = "Stop";
-
-                    if(Profiles.SelectedItem != null) {
-                        LoadBends(_bandsSettings.FirstOrDefault(n => n.Name == Profiles.SelectedItem));
-                    }
                 }
-            }else if (StartStopText.Text == "Stop"){
+            }
+            else if (StartStopText.Text == "Stop") {
                 var win = Owner as MainWindow;
 
                 win.AudioStreamControl.MainMusic.StopEqualizer();
@@ -136,12 +131,6 @@ namespace NoiseBox_UI{
             }
         }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null) {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
         private void ReloadButton_Click(object sender, RoutedEventArgs e) {
             for (int i = 0; i < 7; i++) {
                 AnimationChangingSliderValue(i, 0);
@@ -150,58 +139,80 @@ namespace NoiseBox_UI{
 
         private void SaveButton_Click(object sender, RoutedEventArgs e) {
             if (StartStopText.Text == "Stop") {
-                SaveToJson();
+                if (!String.IsNullOrEmpty(Profiles.SelectedItem as String)) {
+                    var band = _bandsSettings.FirstOrDefault(n => n.Name == Profiles.SelectedItem);
+
+                    band.EqualizerBands = (Owner as MainWindow).AudioStreamControl.MainMusic.GetBandsList();
+
+                    SaveToJson();
+                }
+            }
+        }
+
+        private void DeleteButton_Click(object sender, RoutedEventArgs e) {
+            if (StartStopText.Text == "Stop") {
+                if (!String.IsNullOrEmpty(Profiles.SelectedItem as String)) {
+                    _bandsSettings.Remove(_bandsSettings.FirstOrDefault(n => n.Name == Profiles.SelectedItem));
+
+                    Profiles.SelectedItem = -1;
+
+                    ReloadButton_Click(null, null);
+
+                    UpdateProfiles();
+
+                    SaveToJson();
+                }
+            }
+        }
+
+        private void AddButton_Click(object sender, RoutedEventArgs e) {
+            if (StartStopText.Text == "Stop") {
+                EnterNamePopup.IsOpen = true;
+                NamePopupTextBox.Focus();
+            }
+        }
+
+        private void RenameButton_Click(object sender, RoutedEventArgs e) {
+            if (StartStopText.Text == "Stop") {
+                EnterReNamePopup.IsOpen = true;
+                ReNamePopupTextBox.Focus();
             }
         }
 
         private void Profiles_SelectionChanged(object sender, RoutedEventArgs e) {
-            var bands = _bandsSettings.FirstOrDefault(n => n.Name == (sender as ComboBox).SelectedItem);
+            if (StartStopText.Text == "Stop") {
+                var band = _bandsSettings.FirstOrDefault(n => n.Name == Profiles.SelectedItem);
 
-            if (bands != null) {
-                LoadBends(bands);
+                if (band != null) {
+                    (Owner as MainWindow).AudioStreamControl.MainMusic.SetBandsList(band.EqualizerBands);
+
+                    for (int i = 0; i < 7; i++) {
+                        AnimationChangingSliderValue(i, band.EqualizerBands[i].Gain);
+                    }
+                }
+            }
+        }
+
+        private void UpdateProfiles(string bandNameToSelect = null) {
+            Profiles.Items.Clear();
+
+            foreach (var profile in _bandsSettings) {
+                Profiles.Items.Add(profile.Name);
+            }
+
+            if (bandNameToSelect != null) {
+                Profiles.SelectedItem = bandNameToSelect;
             }
         }
 
         private void LoadBends(BandsSettings bands) {
-            (Owner as MainWindow).AudioStreamControl.MainMusic.SetBandsList(bands.EqualizerBands);
 
-            for (int i = 0; i < 7; i++) {
-                AnimationChangingSliderValue(i, GetBand(i));
-            }
         }
 
-        private void Profiles_LostFocus(object sender, RoutedEventArgs e) {
-            //SaveToJson();
-        }
-
-        private void Profiles_KeyDown(object sender, KeyEventArgs e) {
-            if (e.Key == Key.Enter) {
-                //SaveToJson();
-            }
-        }
-
-        private void SaveToJson() {
-            if (!String.IsNullOrWhiteSpace(Profiles.Text)) {
-                var win = Owner as MainWindow;
-
-                var bands = _bandsSettings.FirstOrDefault(n => n.Name == Profiles.Text);
-
-                if (bands != null) {
-                    bands.EqualizerBands = win.AudioStreamControl.MainMusic.GetBandsList();
-                }
-                else {
-                    bands = new BandsSettings();
-
-                    bands.Name = Profiles.Text;
-                    bands.EqualizerBands = win.AudioStreamControl.MainMusic.GetBandsList();
-
-                    _bandsSettings.Add(bands);
-                }
-
-                var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
-                string json = JsonConvert.SerializeObject(_bandsSettings, Formatting.Indented, settings);
-                File.WriteAllText(_jsonFilePath, json);
-            }
+        private void SaveToJson() { 
+            var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
+            string json = JsonConvert.SerializeObject(_bandsSettings, Formatting.Indented, settings);
+            File.WriteAllText(_jsonFilePath, json);
         }
 
         private void LoadFromJson() {
@@ -211,6 +222,52 @@ namespace NoiseBox_UI{
             }
             else {
                 File.Create(_jsonFilePath).Close();
+            }
+        }
+
+        private void NamePopupTextBox_KeyDown(object sender, KeyEventArgs e) {
+            if (e.Key == Key.Enter) {
+                string popupTextBoxText = NamePopupTextBox.Text.Trim();
+
+                if (!string.IsNullOrEmpty(popupTextBoxText)) {
+                    if (_bandsSettings.FirstOrDefault(n => n.Name == popupTextBoxText) == null) {
+                        var band = new BandsSettings();
+
+                        band.Name = popupTextBoxText;
+                        band.EqualizerBands = (Owner as MainWindow).AudioStreamControl.MainMusic.GetBandsList();
+
+                        _bandsSettings.Add(band);
+
+                        SaveToJson();
+
+                        UpdateProfiles(band.Name);
+                    }
+
+                    NamePopupTextBox.Text = "";
+                    EnterNamePopup.IsOpen = false;
+                }
+            }
+        }
+
+        private void ReNamePopupTextBox_KeyDown(object sender, KeyEventArgs e){
+            if (e.Key == Key.Enter) {
+                string popupTextBoxText = ReNamePopupTextBox.Text.Trim();
+
+                if (!string.IsNullOrEmpty(popupTextBoxText)) {
+                    var band = _bandsSettings.FirstOrDefault(n => n.Name == Profiles.SelectedItem);
+
+                    if (band != null && _bandsSettings.FirstOrDefault(n => n.Name == popupTextBoxText) == null) {
+                        band.Name = popupTextBoxText;
+
+                        SaveToJson();
+
+                        UpdateProfiles(band.Name);
+                    }
+                    
+
+                    ReNamePopupTextBox.Text = "";
+                    EnterReNamePopup.IsOpen = false;
+                }
             }
         }
 
@@ -258,6 +315,12 @@ namespace NoiseBox_UI{
 
                 EqGrid.RegisterName(slider.Name, slider);
             }
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null) {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
