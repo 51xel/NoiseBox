@@ -29,6 +29,8 @@ namespace NoiseBox_UI {
         public Playlist? SelectedPlaylist = MusicLibrary.GetPlaylists().FirstOrDefault();
         public Song? SelectedSong = null;
 
+        public BandsSettings SelectedBandsSettings = null;
+
         public MainWindow() {
             InitializeComponent();
             DataContext = this;

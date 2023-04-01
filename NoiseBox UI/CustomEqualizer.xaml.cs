@@ -48,11 +48,11 @@ namespace NoiseBox_UI {
         }
 
         private float GetBand(int index) {
-            return (Owner as MainWindow).AudioStreamControl.MainMusic.GetBand(index);
+            return (Owner as MainWindow).AudioStreamControl.MainMusic.GetBandGain(index);
         }
 
         private void SetBand(int index, float value) {
-            (Owner as MainWindow).AudioStreamControl.MainMusic.SetBand(index, value);
+            (Owner as MainWindow).AudioStreamControl.MainMusic.SetBandGain(index, value);
         }
 
         public float Band0 {
@@ -117,6 +117,8 @@ namespace NoiseBox_UI {
                     win.AudioStreamControl.MainMusic.InitializeEqualizer();
                     win.AudioStreamControl.MainMusic.StopAndPlayFromPosition(win.AudioStreamControl.MainMusic.CurrentTrackPosition);
                     StartStopText.Text = "Stop";
+
+                    Profiles_SelectionChanged(null, null);
                 }
             }
             else if (StartStopText.Text == "Stop") {
@@ -140,7 +142,7 @@ namespace NoiseBox_UI {
         private void SaveButton_Click(object sender, RoutedEventArgs e) {
             if (StartStopText.Text == "Stop") {
                 if (!String.IsNullOrEmpty(Profiles.SelectedItem as String)) {
-                    var band = _bandsSettings.FirstOrDefault(n => n.Name == Profiles.SelectedItem);
+                    var band = _bandsSettings.FirstOrDefault(n => n.Name == Profiles.SelectedItem as String);
 
                     band.EqualizerBands = (Owner as MainWindow).AudioStreamControl.MainMusic.GetBandsList();
 
@@ -152,13 +154,15 @@ namespace NoiseBox_UI {
         private void DeleteButton_Click(object sender, RoutedEventArgs e) {
             if (StartStopText.Text == "Stop") {
                 if (!String.IsNullOrEmpty(Profiles.SelectedItem as String)) {
-                    _bandsSettings.Remove(_bandsSettings.FirstOrDefault(n => n.Name == Profiles.SelectedItem));
+                    _bandsSettings.Remove(_bandsSettings.FirstOrDefault(n => n.Name == Profiles.SelectedItem as String));
 
                     Profiles.SelectedItem = -1;
 
                     ReloadButton_Click(null, null);
 
                     UpdateProfiles();
+
+                    (Owner as MainWindow).SelectedBandsSettings = null;
 
                     SaveToJson();
                 }
@@ -167,24 +171,26 @@ namespace NoiseBox_UI {
 
         private void AddButton_Click(object sender, RoutedEventArgs e) {
             if (StartStopText.Text == "Stop") {
-                EnterNamePopup.IsOpen = true;
+                NamePopup.IsOpen = true;
                 NamePopupTextBox.Focus();
             }
         }
 
         private void RenameButton_Click(object sender, RoutedEventArgs e) {
             if (StartStopText.Text == "Stop") {
-                EnterReNamePopup.IsOpen = true;
+                ReNamePopup.IsOpen = true;
                 ReNamePopupTextBox.Focus();
             }
         }
 
         private void Profiles_SelectionChanged(object sender, RoutedEventArgs e) {
             if (StartStopText.Text == "Stop") {
-                var band = _bandsSettings.FirstOrDefault(n => n.Name == Profiles.SelectedItem);
+                var band = _bandsSettings.FirstOrDefault(n => n.Name == Profiles.SelectedItem as String);
 
                 if (band != null) {
                     (Owner as MainWindow).AudioStreamControl.MainMusic.SetBandsList(band.EqualizerBands);
+
+                    (Owner as MainWindow).SelectedBandsSettings = band;
 
                     for (int i = 0; i < 7; i++) {
                         AnimationChangingSliderValue(i, band.EqualizerBands[i].Gain);
@@ -205,8 +211,10 @@ namespace NoiseBox_UI {
             }
         }
 
-        private void LoadBends(BandsSettings bands) {
-
+        public void LoadSelectedBand(BandsSettings bandsSettingsToLoad) {
+            if(bandsSettingsToLoad != null) {
+                Profiles.SelectedItem = bandsSettingsToLoad.Name;
+            }
         }
 
         private void SaveToJson() { 
@@ -240,11 +248,13 @@ namespace NoiseBox_UI {
 
                         SaveToJson();
 
+                        (Owner as MainWindow).SelectedBandsSettings = band;
+
                         UpdateProfiles(band.Name);
                     }
 
                     NamePopupTextBox.Text = "";
-                    EnterNamePopup.IsOpen = false;
+                    NamePopup.IsOpen = false;
                 }
             }
         }
@@ -254,19 +264,21 @@ namespace NoiseBox_UI {
                 string popupTextBoxText = ReNamePopupTextBox.Text.Trim();
 
                 if (!string.IsNullOrEmpty(popupTextBoxText)) {
-                    var band = _bandsSettings.FirstOrDefault(n => n.Name == Profiles.SelectedItem);
+                    var band = _bandsSettings.FirstOrDefault(n => n.Name == Profiles.SelectedItem as String);
 
                     if (band != null && _bandsSettings.FirstOrDefault(n => n.Name == popupTextBoxText) == null) {
                         band.Name = popupTextBoxText;
 
                         SaveToJson();
 
+                        (Owner as MainWindow).SelectedBandsSettings = band;
+
                         UpdateProfiles(band.Name);
                     }
                     
 
                     ReNamePopupTextBox.Text = "";
-                    EnterReNamePopup.IsOpen = false;
+                    ReNamePopup.IsOpen = false;
                 }
             }
         }

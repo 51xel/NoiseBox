@@ -120,6 +120,8 @@ namespace NoiseBox_UI.View.UserControls {
             _isEqualizerWindowOpen = true;
 
             _equalizerWin.Show();
+
+            _equalizerWin.LoadSelectedBand(win.SelectedBandsSettings);
         }
     }
 }

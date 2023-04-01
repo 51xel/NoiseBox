@@ -28,6 +28,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="80"/>
             <RowDefinition/>
+            <RowDefinition Height="20"/>
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
 
@@ -39,17 +40,18 @@
                 <ColumnDefinition Width="130"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-
+            <!--Background="#393946"-->
             <ComboBox Name="Profiles" 
                       Grid.Column="1" 
                       materialDesign:HintAssist.Hint="Default" 
                       Foreground="#BDBDBD" 
                       FontFamily="/Fonts/#Montserrat" 
-                      Background="#393946" Padding="5" 
-                      SelectionChanged="Profiles_SelectionChanged" 
+                      Background="Transparent" Padding="5" 
                       IsEditable="False" 
                       IsTextSearchEnabled="false"
-                      Width="120">
+                      Width="120"
+                      SelectionChanged="Profiles_SelectionChanged"
+                      BorderBrush="{DynamicResource PrimaryHueMidBrush}">
                 <ComboBox.Resources>
                     <SolidColorBrush x:Key="MaterialDesignPaper" Color="#212128"/>
                 </ComboBox.Resources>
@@ -65,27 +67,29 @@
 
                 <Button 
                     Grid.Column="0"
-                    Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
-                    Background="#393946"
-                    BorderBrush="Transparent"
+                    Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}"
+                    Background="Transparent"
                     Height="25" 
                     Width="25"
                     Click="SaveButton_Click">
-                    <Image Source="/Images/Icons/save.png" Opacity="0.8" RenderOptions.BitmapScalingMode ="HighQuality" Width="20"/>
+                    <materialDesign:PackIcon Kind="ContentSave" Foreground="White"/>
                 </Button>
 
                 <Button 
                     Grid.Column="1"
-                    Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
-                    Background="#393946"
-                    BorderBrush="Transparent"
+                    Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}"
+                    Background="Transparent"
                     Height="25" 
                     Width="25"
                     Click="DeleteButton_Click">
-                    <Image Source="/Images/Icons/close.png" Opacity="0.8" RenderOptions.BitmapScalingMode ="HighQuality" Width="20"/>
+                    <materialDesign:PackIcon Kind="Plus" RenderTransformOrigin=".5, .5" Foreground="IndianRed">
+                        <materialDesign:PackIcon.RenderTransform>
+                            <RotateTransform Angle="45" />
+                        </materialDesign:PackIcon.RenderTransform>
+                    </materialDesign:PackIcon>
                 </Button>
 
-                <Popup x:Name="EnterReNamePopup" PlacementTarget="{Binding ElementName=RenameButton}" StaysOpen="False"
+                <Popup x:Name="ReNamePopup" PlacementTarget="{Binding ElementName=RenameButton}" StaysOpen="False"
                Placement="Bottom" Width="100" VerticalOffset="15" HorizontalOffset="0">
                     <Border Background="#393946" Padding="15">
                         <TextBox Name="ReNamePopupTextBox" FontFamily="/Fonts/#Montserrat" FontSize="14" FontWeight="DemiBold" 
@@ -95,18 +99,16 @@
                 <Button 
                     Name="RenameButton"
                     Grid.Column="2"
-                    Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
-                    Background="#393946"
-                    BorderBrush="Transparent"
+                    Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" 
+                    Background="Transparent"
                     Height="25"
                     Width="25"
                     Click="RenameButton_Click">
-                    <TextBlock Text="R" Foreground="White"/>
-                    <!--<Image Source="/Images/Icons/rename.png" Opacity="0.8" RenderOptions.BitmapScalingMode ="HighQuality" Width="20"/>-->
+                    <materialDesign:PackIcon Kind="PencilOutline" Foreground="White"/>
                 </Button>
 
 
-                <Popup x:Name="EnterNamePopup" PlacementTarget="{Binding ElementName=AddButton}" StaysOpen="False"
+                <Popup x:Name="NamePopup" PlacementTarget="{Binding ElementName=NameButton}" StaysOpen="False"
                Placement="Bottom" Width="100" VerticalOffset="15" HorizontalOffset="0">
                     <Border Background="#393946" Padding="15">
                         <TextBox Name="NamePopupTextBox" FontFamily="/Fonts/#Montserrat" FontSize="14" FontWeight="DemiBold" 
@@ -114,24 +116,64 @@
                     </Border>
                 </Popup>
                 <Button 
-                    Name="AddButton"
+                    Name="NameButton"
                     Grid.Column="3"
-                    Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
-                    Background="#393946"
-                    BorderBrush="Transparent"
+                    Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" 
+                    Background="Transparent"
                     Height="25" 
                     Width="25"
                     Click="AddButton_Click">
-                    <TextBlock Text="N" Foreground="White"/>
-                    <!--<Image Source="/Images/Icons/rename.png" Opacity="0.8" RenderOptions.BitmapScalingMode ="HighQuality" Width="20"/>-->
+                    <materialDesign:PackIcon Kind="Plus" Foreground="White"/>
                 </Button>
             </Grid>
         </Grid>
 
-        <Grid Name="EqGrid" Margin="30,0,30,0" Grid.Row="1"/>
-        <!--initialized in Window_Loaded-->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="35"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="35"/>
+            </Grid.ColumnDefinitions>
 
-        <Grid Grid.Row="2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition MinHeight="10"/>
+                    <RowDefinition Height="50"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="30 dB" Grid.Row="0" FontSize="10" FontFamily="/Fonts/#Montserrat" Foreground="#BDBDBD" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                <TextBlock Text="0 dB" Grid.Row="1" FontSize="10" FontFamily="/Fonts/#Montserrat" Foreground="#BDBDBD" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <TextBlock Text="-30 dB" Grid.Row="2" FontSize="10" FontFamily="/Fonts/#Montserrat" Foreground="#BDBDBD" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+            </Grid>
+            
+            <Grid Name="EqGrid" Grid.Column="1"/>
+            <!--initialized in Window_Loaded-->
+        </Grid>
+        
+        <Grid Grid.Row="2" Margin="30,0,30,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="40 Hz" Grid.Column="0" FontFamily="/Fonts/#Montserrat" Foreground="#BDBDBD" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+            <TextBlock Text="80 Hz" Grid.Column="1" FontFamily="/Fonts/#Montserrat" Foreground="#BDBDBD" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+            <TextBlock Text="320 Hz" Grid.Column="2" FontFamily="/Fonts/#Montserrat" Foreground="#BDBDBD" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+            <TextBlock Text="640 Hz" Grid.Column="3" FontFamily="/Fonts/#Montserrat" Foreground="#BDBDBD" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+            <TextBlock Text="1280 Hz" Grid.Column="4" FontFamily="/Fonts/#Montserrat" Foreground="#BDBDBD" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+            <TextBlock Text="2560 Hz" Grid.Column="5" FontFamily="/Fonts/#Montserrat" Foreground="#BDBDBD" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+            <TextBlock Text="5120 Hz" Grid.Column="6" FontFamily="/Fonts/#Montserrat" Foreground="#BDBDBD" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+            <TextBlock Text="10240 Hz" Grid.Column="7" FontFamily="/Fonts/#Montserrat" Foreground="#BDBDBD" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+        </Grid>
+        
+        <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="120"/>

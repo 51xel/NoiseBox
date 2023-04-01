@@ -264,7 +264,7 @@ namespace NoiseBox {
 
         public float MaximumGain => 30;
 
-        public float GetBand(int index) {
+        public float GetBandGain(int index) {
             if (_bands != null && index >= 0 && index <= 7) {
                 return _bands[index].Gain;
             }
@@ -273,7 +273,7 @@ namespace NoiseBox {
             }
         }
 
-        public void SetBand(int index, float value) {
+        public void SetBandGain(int index, float value) {
             if (_bands != null && index >= 0 && index <= 7) {
                 if (_bands[index].Gain != value) {
                     _bands[index].Gain = value;
@@ -297,14 +297,16 @@ namespace NoiseBox {
         }
 
         public void SetBandsList(List<EqualizerBand> equalizerBandsToAdd) {
-            for (int i = 0; i < 8; i++) {
-                _bands[i] = new EqualizerBand {
-                    Bandwidth = equalizerBandsToAdd[i].Bandwidth,
-                    Frequency = equalizerBandsToAdd[i].Frequency,
-                    Gain = equalizerBandsToAdd[i].Gain
-                };
+            if (equalizerBandsToAdd.Count == 8) {
+                for (int i = 0; i < 8; i++) {
+                    _bands[i] = new EqualizerBand {
+                        Bandwidth = equalizerBandsToAdd[i].Bandwidth,
+                        Frequency = equalizerBandsToAdd[i].Frequency,
+                        Gain = equalizerBandsToAdd[i].Gain
+                    };
+                }
+                _equalizer.Update();
             }
-            _equalizer.Update();
         }
     }
 
