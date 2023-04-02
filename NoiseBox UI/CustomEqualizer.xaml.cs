@@ -121,6 +121,9 @@ namespace NoiseBox_UI {
                         win.AudioStreamControl.MainMusic.StopAndPlayFromPosition(win.AudioStreamControl.MainMusic.CurrentTrackPosition);
                     }
 
+                    SliderSetEnabledState(true);
+                    ButtonsSetEnabledState(true);
+
                     StartStopText.Text = "Stop";
 
                     Profiles_SelectionChanged(null, null);
@@ -134,6 +137,9 @@ namespace NoiseBox_UI {
                 if (win.AudioStreamControl.MainMusic.IsPlaying) {
                     win.AudioStreamControl.MainMusic.StopAndPlayFromPosition(win.AudioStreamControl.MainMusic.CurrentTrackPosition);
                 }
+
+                SliderSetEnabledState(false);
+                ButtonsSetEnabledState(false);
 
                 StartStopText.Text = "Start";
 
@@ -312,6 +318,22 @@ namespace NoiseBox_UI {
             }
         }
 
+        public void SliderSetEnabledState(bool state) {
+            for (int i = 0; i < 8; i++) {
+                var slider = ((Slider)EqGrid.FindName($"Slider{i}"));
+
+                slider.IsEnabled = state;
+            }
+        }
+
+        public void ButtonsSetEnabledState(bool state) {
+            SaveButton.IsEnabled = state;
+            DeleteButton.IsEnabled = state;
+            RenameButton.IsEnabled = state;
+            NameButton.IsEnabled = state;
+            ReloadButton.IsEnabled = state;
+        }
+
         private void AnimationChangingSliderValue(int index, float to) {
             SetBand(index, to);
 
@@ -325,6 +347,7 @@ namespace NoiseBox_UI {
                 slider.BeginAnimation(Slider.ValueProperty, null);
                 slider.Value = GetBand(index);
             };
+            doubleAnimation.EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut };
 
             slider.BeginAnimation(Slider.ValueProperty, doubleAnimation);
         }

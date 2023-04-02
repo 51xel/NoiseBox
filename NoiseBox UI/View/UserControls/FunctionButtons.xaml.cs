@@ -122,6 +122,11 @@ namespace NoiseBox_UI.View.UserControls {
             _equalizerWin.Show();
 
             _equalizerWin.LoadSelectedBand(win.SelectedBandsSettings);
+
+            if(_equalizerWin.StartStopText.Text == "Start") {
+                _equalizerWin.ButtonsSetEnabledState(false);
+                _equalizerWin.SliderSetEnabledState(false);
+            }
         }
     }
 }
