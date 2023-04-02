@@ -28,7 +28,8 @@ using System.Windows.Threading;
 namespace NoiseBox_UI {
     public partial class CustomEqualizer : Window, INotifyPropertyChanged {
         private List<BandsSettings> _bandsSettings = new List<BandsSettings>();
-        private string _jsonFilePath = "_bandsSettings.json";
+        private string _jsonFilePath = "bandsSettings.json";
+        protected ILog _log = LogSettings.SelectedLog;
 
         public CustomEqualizer() {
             InitializeComponent();
@@ -171,6 +172,8 @@ namespace NoiseBox_UI {
 
                     (Owner as MainWindow).SelectedBandsSettings = null;
 
+                    _log.Print("Delete profile", LogInfoType.INFO);
+
                     SaveToJson();
                 }
             }
@@ -202,6 +205,8 @@ namespace NoiseBox_UI {
                     for (int i = 0; i < 8; i++) {
                         AnimationChangingSliderValue(i, band.EqualizerBands[i].Gain);
                     }
+
+                    _log.Print("Profile has been selected", LogInfoType.INFO);
                 }
             }
         }
@@ -228,6 +233,8 @@ namespace NoiseBox_UI {
             var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
             string json = JsonConvert.SerializeObject(_bandsSettings, Formatting.Indented, settings);
             File.WriteAllText(_jsonFilePath, json);
+
+            _log.Print("Save to json", LogInfoType.INFO);
         }
 
         private void LoadFromJson() {
@@ -238,6 +245,11 @@ namespace NoiseBox_UI {
                 if (tempBands != null) {
                     _bandsSettings = JsonConvert.DeserializeObject<List<BandsSettings>>(jsonString);
                 }
+                else {
+                    _log.Print("Json is empty", LogInfoType.WARNING);
+                }
+
+                _log.Print("Load from json", LogInfoType.INFO);
             }
             else {
                 File.Create(_jsonFilePath).Close();
@@ -256,6 +268,8 @@ namespace NoiseBox_UI {
                         band.EqualizerBands = (Owner as MainWindow).AudioStreamControl.MainMusic.GetBandsList();
 
                         _bandsSettings.Add(band);
+
+                        _log.Print("New profile created", LogInfoType.INFO);
 
                         SaveToJson();
 
@@ -278,11 +292,15 @@ namespace NoiseBox_UI {
                     var band = _bandsSettings.FirstOrDefault(n => n.Name == Profiles.SelectedItem as String);
 
                     if (band != null && _bandsSettings.FirstOrDefault(n => n.Name == popupTextBoxText) == null) {
+                        _log.Print($"Profile \"{band.Name}\" was renamed to \"{popupTextBoxText}\"", LogInfoType.INFO);
+
                         band.Name = popupTextBoxText;
 
                         SaveToJson();
 
                         (Owner as MainWindow).SelectedBandsSettings = band;
+
+                        _log.Print("Profile has been selected", LogInfoType.INFO);
 
                         UpdateProfiles(band.Name);
                     }
@@ -338,6 +356,8 @@ namespace NoiseBox_UI {
 
                 EqGrid.RegisterName(slider.Name, slider);
             }
+
+            _log.Print("Sliders was created", LogInfoType.INFO);
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

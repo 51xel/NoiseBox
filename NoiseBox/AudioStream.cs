@@ -246,7 +246,9 @@ namespace NoiseBox {
                         new EqualizerBand {Bandwidth = 0.8f, Frequency = 10240, Gain = 0},
                 };
 
-                _equalizer = new Equalizer(_audioFile, _bands); 
+                _equalizer = new Equalizer(_audioFile, _bands);
+
+                _log.Print("Initialize equalizer", LogInfoType.INFO);
             }
         }
 
@@ -254,6 +256,8 @@ namespace NoiseBox {
             _bands = null;
 
             _equalizer = null;
+
+            _log.Print("Stop equalizer", LogInfoType.INFO);
         }
 
         public bool IsEqualizerWorking {
