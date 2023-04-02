@@ -42,7 +42,7 @@
 
                 <Grid Grid.Column="0">
                     <TextBox x:Name="LinkTextBox" FontFamily="/Fonts/#Montserrat" Foreground="#BDBDBD" FontSize="18"
-                             KeyDown="LinkTextBox_KeyDown"/>
+                             KeyDown="LinkTextBox_KeyDown" BorderBrush="{DynamicResource PrimaryHueMidBrush}"/>
 
                     <TextBlock IsHitTestVisible="False" Text="Paste a link to youtube video here"
                                FontFamily="/Fonts/#Montserrat" Foreground="#BDBDBD" FontSize="18"
@@ -65,7 +65,7 @@
             </Grid>
             
             <TextBlock Name="yt_dlp_Output" Grid.Row="1" FontFamily="/Fonts/#Montserrat" Foreground="#BDBDBD" FontSize="18"
-                       FontWeight="DemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                       FontWeight="DemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center"/>
 
             <StackPanel Grid.Row="2" Orientation="Vertical">
                 <ProgressBar Name="DownloadingProgress" Value="0" Maximum="100" Visibility="Collapsed"/>

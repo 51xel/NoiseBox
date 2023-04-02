@@ -14,11 +14,14 @@ using System.Windows.Media.Imaging;
 using WinForms = System.Windows.Forms;
 using NoiseBox;
 using System.Windows.Controls;
+using NoiseBox.Log;
 
 namespace NoiseBox_UI {
     public partial class DownloadsWindow : Window, INotifyPropertyChanged {
 
         private Process process;
+
+        private static ILog _log = LogSettings.SelectedLog;
 
         private string _selectedDirectory = Directory.GetCurrentDirectory();
         public string SelectedDirectory { 
@@ -109,7 +112,10 @@ namespace NoiseBox_UI {
                                 isDownloading = true;
                                 yt_dlp_Output.Text = $"Downloading... ({match.Groups[2].ToString()})";
 
+                                DownloadingProgress.IsIndeterminate = false;
                                 DownloadingProgress.Visibility = Visibility.Visible;
+
+                                (Owner as MainWindow).FunctionButtons.DownloadingProgress.IsIndeterminate = false;
 
                                 if (WindowState == WindowState.Minimized) {
                                     (Owner as MainWindow).FunctionButtons.DownloadingProgress.Visibility = Visibility.Visible;
@@ -126,20 +132,25 @@ namespace NoiseBox_UI {
                         if (e.Data.StartsWith("[ExtractAudio]")) {
                             yt_dlp_Output.Text = $"Extracting audio...";
 
-                            DownloadingProgress.Visibility = Visibility.Collapsed;
-                            (Owner as MainWindow).FunctionButtons.DownloadingProgress.Visibility = Visibility.Collapsed;
-
                             CancelColumn.Width = new GridLength(0, GridUnitType.Star);
+
+                            DownloadingProgress.IsIndeterminate = true;
+
+                            (Owner as MainWindow).FunctionButtons.DownloadingProgress.Value = 0; // for indeterminate to work
+                            (Owner as MainWindow).FunctionButtons.DownloadingProgress.IsIndeterminate = true;
                         }
                     });
                 }
             };
 
             var hadErrors = false;
+            string errorMessage = "\n";
 
             process.ErrorDataReceived += (_, e) => {
                 if (!string.IsNullOrEmpty(e.Data)) {
                     hadErrors = true;
+
+                    errorMessage += e.Data + "\n";
                 }
             };
 
@@ -163,10 +174,17 @@ namespace NoiseBox_UI {
             }
             else {
                 yt_dlp_Output.Inlines.Add(new Run("[Error while downloading]") { Foreground = Brushes.IndianRed });
+
+                _log.Print(errorMessage, LogInfoType.ERROR);
+
+                yt_dlp_Output.Inlines.Add(new Run("\nSee logs for more info"));
             }
 
             DownloadColumn.Width = new GridLength(100, GridUnitType.Star);
             CancelColumn.Width = new GridLength(0, GridUnitType.Star);
+
+            (Owner as MainWindow).FunctionButtons.DownloadingProgress.Visibility = Visibility.Collapsed;
+            DownloadingProgress.Visibility = Visibility.Collapsed;
         }
 
         private void LinkTextBox_KeyDown(object sender, KeyEventArgs e) {
