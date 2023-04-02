@@ -20,6 +20,7 @@ using NoiseBox_UI.View.UserControls;
 using System.Windows.Threading;
 using System.IO;
 using System.Threading;
+using NAudio.Wave;
 
 namespace NoiseBox_UI {
     public partial class MainWindow : Window {
@@ -28,6 +29,10 @@ namespace NoiseBox_UI {
 
         public Playlist? SelectedPlaylist = MusicLibrary.GetPlaylists().FirstOrDefault();
         public Song? SelectedSong = null;
+        public string? BackgroundPlaylistName = null;
+
+        private bool VisualizationEnabled = true; // TODO Load from config
+        private string? CurrentlyVisualizedPath = null;
 
         public BandsSettings SelectedBandsSettings = null;
 
@@ -43,9 +48,15 @@ namespace NoiseBox_UI {
             DisplaySelectedPlaylist();
 
             BottomControlPanel.PlayPauseButton.Click += PlayPauseButton_Click;
+            BottomControlPanel.PrevButton.Click += PrevButton_Click;
+            BottomControlPanel.NextButton.Click += NextButton_Click;
             BottomControlPanel.SeekBar.PreviewMouseLeftButtonUp += SeekBar_PreviewMouseLeftButtonUp;
             BottomControlPanel.SeekBar.ValueChanged += SeekBar_ValueChanged;
+
             BottomControlPanel.MainVolumeSlider.Value = 0.1 * 100;//TODO Load from config
+            BottomControlPanel.MicVolumeSlider.Value = 0.2 * 100; // TODO Load from config
+            BottomControlPanel.VCVolumeSlider.Value = 0.3 * 100; // TODO Load from config
+
             BottomControlPanel.MainVolumeSlider.ValueChanged += MainVolumeSlider_ValueChanged;
 
             SongList.ClickRowElement += Song_Click;
@@ -65,18 +76,29 @@ namespace NoiseBox_UI {
                 BottomControlPanel.State = BottomControlPanel.ButtonState.Paused;
                 SeekBarTimer.Stop();
 
-                //TODO Change music logic 
-                if (SongList.List.Items.IndexOf(SelectedSong) + 1 == SongList.List.Items.Count) {
-                    SelectSong(SongList.List.Items[0] as Song);
-                }
-                else {
-                    SelectSong(SongList.List.Items[SongList.List.Items.IndexOf(SelectedSong) + 1] as Song);
-                }
+                NextButton_Click(null, null);
             }
         }
 
         private void Song_Click(object sender, RoutedEventArgs e) {
+            var idBefore = SelectedSong != null ? SelectedSong.Id : "";
+
             SelectSong(((sender as Button).Content as GridViewRowPresenter).Content as Song);
+
+            var idAfter = SelectedSong != null ? SelectedSong.Id : "";
+
+            if (idBefore != idAfter) { // outline background playlist
+                BackgroundPlaylistName = SelectedPlaylist.Name;
+
+                foreach (var button in Helper.FindVisualChildren<Button>(PlaylistList.List)) {
+                    if (((button.Content as ContentPresenter).Content as Playlist).Name == SelectedPlaylist.Name) {
+                        button.FontWeight = FontWeights.ExtraBold;
+                    }
+                    else {
+                        button.FontWeight = FontWeights.Normal;
+                    }
+                }
+            }
         }
 
         public void SelectSong(Song song) {
@@ -84,7 +106,7 @@ namespace NoiseBox_UI {
                 MessageBox.Show("File does not exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             else {
-                SelectedSong = song;
+                SelectedSong = song.Clone();
 
                 AudioStreamControl.MainMusic.PathToMusic = SelectedSong.Path;
 
@@ -99,6 +121,23 @@ namespace NoiseBox_UI {
                 var ts = SelectedSong.Duration;
                 BottomControlPanel.TotalTime.Text = string.Format("{0}:{1}", (int)ts.TotalMinutes, ts.Seconds.ToString("D2"));
                 BottomControlPanel.CurrentTime.Text = "0:00";
+
+                foreach (var button in Helper.FindVisualChildren<Button>(SongList.List)) { // outline selected song
+                    if (((button.Content as GridViewRowPresenter).Content as Song).Id == SelectedSong.Id) {
+                        button.FontWeight = FontWeights.ExtraBold;
+                    }
+                    else {
+                        button.FontWeight = FontWeights.Normal;
+                    }
+                }
+
+                if (VisualizationEnabled) {
+                    if (CurrentlyVisualizedPath != SelectedSong.Path) {
+                        CurrentlyVisualizedPath = SelectedSong.Path;
+
+                        BottomControlPanel.VisualizeAudio(SelectedSong.Path);
+                    }
+                }
             }
         }
 
@@ -145,6 +184,120 @@ namespace NoiseBox_UI {
             }
         }
 
+        private void NextButton_Click(object sender, RoutedEventArgs e) {
+            if (SelectedSong != null) {
+                var selectedSongIndex = SongList.List.Items
+                                        .Cast<Song>()
+                                        .ToList()
+                                        .FindIndex(item => item.Id == SelectedSong.Id);
+
+                if (selectedSongIndex == -1) { // changed displayed playlist
+                    switch (BottomControlPanel.Mode) {
+                        case BottomControlPanel.PlaybackMode.Loop:
+
+                            var backgroundSongs = MusicLibrary.GetSongsFromPlaylist(BackgroundPlaylistName);
+                            selectedSongIndex = backgroundSongs.FindIndex(item => item.Id == SelectedSong.Id);
+
+                            if (selectedSongIndex != -1) {
+                                if (selectedSongIndex == backgroundSongs.Count - 1) {
+                                    SelectSong(backgroundSongs[0] as Song);
+                                }
+                                else {
+                                    SelectSong(backgroundSongs[selectedSongIndex + 1] as Song);
+                                }
+                            }
+
+                            break;
+
+                        case BottomControlPanel.PlaybackMode.Loop1:
+                            SelectSong(SelectedSong);
+                            break;
+
+                        case BottomControlPanel.PlaybackMode.NoLoop:
+                            break;
+                    }
+
+                    return;
+                }
+
+                switch (BottomControlPanel.Mode) {
+                    case BottomControlPanel.PlaybackMode.Loop:
+                        if (selectedSongIndex == SongList.List.Items.Count - 1) {
+                            SelectSong(SongList.List.Items[0] as Song);
+                        }
+                        else {
+                            SelectSong(SongList.List.Items[selectedSongIndex + 1] as Song);
+                        }
+                        break;
+
+                    case BottomControlPanel.PlaybackMode.Loop1:
+                        SelectSong(SelectedSong);
+                        break;
+
+                    case BottomControlPanel.PlaybackMode.NoLoop:
+                        break;
+                }
+            }
+        }
+
+        private void PrevButton_Click(object sender, RoutedEventArgs e) {
+            if (SelectedSong != null) {
+                var selectedSongIndex = SongList.List.Items
+                                        .Cast<Song>()
+                                        .ToList()
+                                        .FindIndex(item => item.Id == SelectedSong.Id);
+
+                if (selectedSongIndex == -1) { // changed displayed playlist
+                    switch (BottomControlPanel.Mode) {
+                        case BottomControlPanel.PlaybackMode.Loop:
+
+                            var backgroundSongs = MusicLibrary.GetSongsFromPlaylist(BackgroundPlaylistName);
+                            selectedSongIndex = backgroundSongs.FindIndex(item => item.Id == SelectedSong.Id);
+
+                            if (selectedSongIndex != -1) {
+                                if (selectedSongIndex == 0) {
+                                    SelectSong(backgroundSongs[backgroundSongs.Count - 1] as Song);
+                                }
+                                else {
+                                    SelectSong(backgroundSongs[selectedSongIndex - 1] as Song);
+                                }
+                            }
+
+                            break;
+
+                        case BottomControlPanel.PlaybackMode.Loop1:
+                            SelectSong(SelectedSong);
+                            break;
+
+                        case BottomControlPanel.PlaybackMode.NoLoop:
+                            SelectSong(SelectedSong);
+                            break;
+                    }
+
+                    return;
+                }
+
+                switch (BottomControlPanel.Mode) {
+                    case BottomControlPanel.PlaybackMode.Loop:
+                        if (selectedSongIndex == 0) {
+                            SelectSong(SongList.List.Items[SongList.List.Items.Count - 1] as Song);
+                        }
+                        else {
+                            SelectSong(SongList.List.Items[selectedSongIndex - 1] as Song);
+                        }
+                        break;
+
+                    case BottomControlPanel.PlaybackMode.Loop1:
+                        SelectSong(SelectedSong);
+                        break;
+
+                    case BottomControlPanel.PlaybackMode.NoLoop:
+                        SelectSong(SelectedSong);
+                        break;
+                }
+            }
+        }
+
         private void DisplayPlaylists() {
             var playlists = MusicLibrary.GetPlaylists();
 
@@ -165,7 +318,7 @@ namespace NoiseBox_UI {
             }
         }
 
-        private void DisplaySelectedPlaylist() {
+        private async Task DisplaySelectedPlaylist() {
             if (SelectedPlaylist != null) {
                 PlaylistText.CurrentPlaylistName.Text = SelectedPlaylist.Name;
 
@@ -175,6 +328,38 @@ namespace NoiseBox_UI {
                 foreach (var song in songs) {
                     SongList.List.Items.Add(song);
                 }
+
+                await Task.Delay(10); // waiting till list is loaded and outline selected song
+                if (SelectedSong != null) {
+                    foreach (var button in Helper.FindVisualChildren<Button>(SongList.List)) {
+                        if (((button.Content as GridViewRowPresenter).Content as Song).Id == SelectedSong.Id) {
+                            button.FontWeight = FontWeights.ExtraBold;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        public void SelectedSongRemoved() {
+            if (SelectedSong != null) {
+                AudioStreamControl.MainMusic.Stop();
+                SelectedSong = null;
+                BottomControlPanel.State = BottomControlPanel.ButtonState.Paused;
+                SeekBarTimer.Stop();
+                BottomControlPanel.CurrentSongName.Text = "Song not selected";
+                BottomControlPanel.TotalTime.Text = "0:00";
+                BottomControlPanel.CurrentTime.Text = "0:00";
+                BottomControlPanel.SeekBar.Value = 0;
+                
+                foreach (var button in Helper.FindVisualChildren<Button>(PlaylistList.List)) { // remove outlining from playlist
+                    if (((button.Content as ContentPresenter).Content as Playlist).Name == BackgroundPlaylistName) {
+                        button.FontWeight = FontWeights.Normal;
+                        break;
+                    }
+                }
+
+                BackgroundPlaylistName = null;
             }
         }
 

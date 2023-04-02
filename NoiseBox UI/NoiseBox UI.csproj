@@ -15,16 +15,23 @@
     <None Remove="Images\Icons\convert.png" />
     <None Remove="Images\Icons\download.png" />
     <None Remove="Images\Icons\equalizer.png" />
+    <None Remove="Images\Icons\expand.png" />
+    <None Remove="Images\Icons\loop.png" />
+    <None Remove="Images\Icons\loop1.png" />
     <None Remove="Images\Icons\maximize.png" />
     <None Remove="Images\Icons\mic.png" />
     <None Remove="Images\Icons\minimize.png" />
+    <None Remove="Images\Icons\next.png" />
+    <None Remove="Images\Icons\noloop.png" />
     <None Remove="Images\Icons\pause.png" />
     <None Remove="Images\Icons\play.png" />
     <None Remove="Images\Icons\plus.png" />
     <None Remove="Images\Icons\reload.png" />
+    <None Remove="Images\Icons\prev.png" />
     <None Remove="Images\Icons\restore.png" />
     <None Remove="Images\Icons\save.png" />
     <None Remove="Images\Icons\settings.png" />
+    <None Remove="Images\Icons\shuffle.png" />
     <None Remove="Images\Icons\speaker.png" />
   </ItemGroup>
 
@@ -37,22 +44,50 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="NAudio">
+      <HintPath>NAudio.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Fonts\Montserrat.ttf" />
     <Resource Include="Images\Icons\close.png" />
     <Resource Include="Images\Icons\convert.png" />
     <Resource Include="Images\Icons\download.png" />
     <Resource Include="Images\Icons\equalizer.png" />
+    <Resource Include="Images\Icons\expand.png" />
+    <Resource Include="Images\Icons\loop.png" />
+    <Resource Include="Images\Icons\loop1.png" />
     <Resource Include="Images\Icons\maximize.png" />
     <Resource Include="Images\Icons\mic.png" />
     <Resource Include="Images\Icons\minimize.png" />
+    <Resource Include="Images\Icons\next.png" />
+    <Resource Include="Images\Icons\noloop.png" />
     <Resource Include="Images\Icons\pause.png" />
     <Resource Include="Images\Icons\play.png" />
     <Resource Include="Images\Icons\plus.png" />
     <Resource Include="Images\Icons\reload.png" />
+    <Resource Include="Images\Icons\prev.png" />
     <Resource Include="Images\Icons\restore.png" />
     <Resource Include="Images\Icons\save.png" />
     <Resource Include="Images\Icons\settings.png" />
+    <Resource Include="Images\Icons\shuffle.png" />
     <Resource Include="Images\Icons\speaker.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 
 </Project>

@@ -40,6 +40,7 @@ namespace NoiseBox {
 
         public class LogIntoFile : ILog {
             private string _pathToFile;
+            private long _fileSizeLimit = 100000; // 100 KB
 
             public LogIntoFile(string path = "./Logs/logs.txt") {
                 if (path == null || String.IsNullOrWhiteSpace(path)) {
@@ -52,16 +53,11 @@ namespace NoiseBox {
                     if (!Directory.Exists(Path.GetDirectoryName(path))) {
                         Directory.CreateDirectory(Path.GetDirectoryName(path));
                     }
+
                     File.Create(_pathToFile).Close();
-
-                    WriteMessageIntoFile("===Log file created [" + DateTime.Now + "]\n");
-                    WriteMessageIntoFile("\n===App Starting [" + DateTime.Now + "]\n");
                 }
-                else {
-                    ClearLog();
 
-                    WriteMessageIntoFile("\n===App Starting [" + DateTime.Now + "]\n");
-                }
+                WriteMessageIntoFile("\n===App Starting [" + DateTime.Now + "]===\n");
             }
 
             public void Print(string message, LogInfoType logType, [CallerMemberName] string callerName = "") {
@@ -69,16 +65,21 @@ namespace NoiseBox {
             }
 
             private void WriteMessageIntoFile(string message) {
+                if (File.Exists(_pathToFile) && new FileInfo(_pathToFile).Length > _fileSizeLimit) {
+                    
+                    string pathToOldFile = Path.Combine(Path.GetDirectoryName(_pathToFile), Path.GetFileNameWithoutExtension(_pathToFile)) + "_old.txt";
+
+                    if (File.Exists(pathToOldFile)) {
+                        File.Delete(pathToOldFile);
+                    }
+
+                    File.Move(_pathToFile, pathToOldFile);
+
+                    File.Create(_pathToFile).Close();
+                }
+
                 using (StreamWriter writer = new StreamWriter(_pathToFile, true)) {
                     writer.WriteLine(message);
-                }
-            }
-
-            private void ClearLog() {
-                if (new FileInfo(_pathToFile).Length >= 100000) {
-                    using (StreamWriter writer = new StreamWriter(_pathToFile)) {
-                        writer.WriteLine("===Log file has been cleared [" + DateTime.Now + "]\n");
-                    }
                 }
             }
         }

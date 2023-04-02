@@ -21,11 +21,31 @@ namespace NoiseBox_UI.View.UserControls {
             InitializeComponent();
         }
 
+        private bool _isSettingsWindowOpen = false;
+        private SettingsWindow _settingsWin;
+
         private bool _isDownloadsWindowOpen = false;
         private DownloadsWindow _downloadsWin;
-
+        
         private bool _isEqualizerWindowOpen = false;
         private CustomEqualizer _equalizerWin;
+
+        private void SettingsButton_Click(object sender, RoutedEventArgs e) {
+            if (_isSettingsWindowOpen) {
+                if (_settingsWin.WindowState == WindowState.Minimized) {
+                    _settingsWin.WindowState = WindowState.Normal;
+                }
+                return;
+            }
+
+            _settingsWin = new SettingsWindow();
+            _settingsWin.Owner = Window.GetWindow(this);
+            _settingsWin.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            _settingsWin.Closed += (_, _) => { _isSettingsWindowOpen = false; };
+            _isSettingsWindowOpen = true;
+
+            _settingsWin.Show();
+        }
 
         private void DownloadButton_Click(object sender, RoutedEventArgs e) {
             if (_isDownloadsWindowOpen) {
@@ -45,10 +65,22 @@ namespace NoiseBox_UI.View.UserControls {
         }
 
         private async void ConvertButton_Click(object sender, RoutedEventArgs e) {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "All Supported Formats (*.wav;*.aiff;*.flac;*.ogg;*.aac;*.wma;*.m4a;*.ac3;*.amr;*.mp2;*.avi;*.mpeg;*.wmv;*.mp4;*.mov;*.flv;*.mkv;*.3gp;*.asf;*.gxf;*.m2ts;*.ts;*.mxf;*.ogv)|*.wav;*.aiff;*.flac;*.ogg;*.aac;*.wma;*.m4a;*.ac3;*.amr;*.mp2;*.avi;*.mpeg;*.wmv;*.mp4;*.mov;*.flv;*.mkv;*.3gp;*.asf;*.gxf;*.m2ts;*.ts;*.mxf;*.ogv";
 
-            if (openFileDialog.ShowDialog() == true) {
+            OpenFileDialog openFileDialog = null;
+            bool? fileDialogRes = null;
+
+            ConvertButton.IsHitTestVisible = false;
+
+            await Task.Run(() => { // because ShowDialog blocks animations
+                openFileDialog = new OpenFileDialog();
+                openFileDialog.Filter = "All Supported Formats (*.wav;*.aiff;*.flac;*.ogg;*.aac;*.wma;*.m4a;*.ac3;*.amr;*.mp2;*.avi;*.mpeg;*.wmv;*.mp4;*.mov;*.flv;*.mkv;*.3gp;*.asf;*.gxf;*.m2ts;*.ts;*.mxf;*.ogv)|*.wav;*.aiff;*.flac;*.ogg;*.aac;*.wma;*.m4a;*.ac3;*.amr;*.mp2;*.avi;*.mpeg;*.wmv;*.mp4;*.mov;*.flv;*.mkv;*.3gp;*.asf;*.gxf;*.m2ts;*.ts;*.mxf;*.ogv";
+
+                fileDialogRes = openFileDialog.ShowDialog();
+            });
+
+            ConvertButton.IsHitTestVisible = true;
+
+            if (fileDialogRes == true) {
                 ConvertingProgress.Visibility = Visibility.Visible;
 
                 var fileName = openFileDialog.FileNames[0];

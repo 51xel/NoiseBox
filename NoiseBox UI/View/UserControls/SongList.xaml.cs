@@ -173,6 +173,12 @@ namespace NoiseBox_UI.View.UserControls {
                     MusicLibrary.RemoveSongFromPlaylist((menuItem.DataContext as Song).Id, win.SelectedPlaylist.Name);
                     MusicLibrary.RemoveSong((menuItem.DataContext as Song).Id);
 
+                    if (win.SelectedSong != null) {
+                        if ((menuItem.DataContext as Song).Id == win.SelectedSong.Id) {
+                            win.SelectedSongRemoved();
+                        }
+                    }
+
                     List.Items.Remove(menuItem.DataContext as Song);
                 }
                 else if (Equals(menuItem.Header, "Rename")) {
@@ -188,7 +194,7 @@ namespace NoiseBox_UI.View.UserControls {
                     textBox.Focusable = true;
                     textBox.Focus();
 
-                    textBox.FontWeight = FontWeights.Bold;
+                    //textBox.FontWeight = FontWeights.Bold;
 
                     _oldTextBoxText = textBox.Text;
 
@@ -207,7 +213,7 @@ namespace NoiseBox_UI.View.UserControls {
 
             textBox.Focusable = false;
 
-            textBox.FontWeight = FontWeights.Normal;
+            //textBox.FontWeight = FontWeights.Normal;
 
             var textBoxText = textBox.Text.Trim();
 

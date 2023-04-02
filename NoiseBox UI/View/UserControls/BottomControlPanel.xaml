@@ -4,8 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NoiseBox_UI.View.UserControls"
+             xmlns:cc="clr-namespace:NoiseBox_UI.CustomControls"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
-             d:DesignHeight="80" d:DesignWidth="800">
+             d:DesignHeight="80" d:DesignWidth="1000">
     <UserControl.Resources>
         <Style x:Key="PlayPauseButton" TargetType="{x:Type Button}">
             <Setter Property="Width" Value="50"/>
@@ -20,7 +22,7 @@
                     <ControlTemplate TargetType="{x:Type Button}">
                         <Grid>
                             <Border x:Name="border" CornerRadius="100" Background="#EBEBEB">
-                                <Image Source="{Binding PathToImage}" Height="20" Width="20" RenderOptions.BitmapScalingMode ="HighQuality"/>
+                                <Image Source="{Binding ButtonStateImagePath}" Height="20" Width="20" RenderOptions.BitmapScalingMode ="HighQuality"/>
                             </Border>
 
                             <Grid.RenderTransform>
@@ -46,17 +48,46 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <Style x:Key="NoStylingButton" TargetType="{x:Type Button}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="Transparent">
+                            <ContentPresenter/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
     <Grid>
         <Border Background="#212121"/>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="200"/>
                 <ColumnDefinition/>
+                <ColumnDefinition Width="90"/>
                 <ColumnDefinition Width="250"/>
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="0" Name="PlayPauseButton" Style="{StaticResource PlayPauseButton}"/>
+            <Grid Grid.Column="0" Margin="40,0,40,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="20"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0" Name="PrevButton" Style="{StaticResource NoStylingButton}">
+                    <Image Source="\Images\Icons\prev.png" RenderOptions.BitmapScalingMode="HighQuality" Opacity="0.7"/>
+                </Button>
+                
+                <Button Grid.Column="1" Name="PlayPauseButton" Style="{StaticResource PlayPauseButton}"/>
+                
+                <Button Grid.Column="2" Name="NextButton" Style="{StaticResource NoStylingButton}">
+                    <Image Source="\Images\Icons\next.png" RenderOptions.BitmapScalingMode="HighQuality" Opacity="0.7"/>
+                </Button>
+            </Grid>
 
             <Grid Grid.Column="1">
                 <Grid.ColumnDefinitions>
@@ -73,7 +104,11 @@
 
                     <TextBlock Name="CurrentSongName" Grid.Row="0" FontFamily="/Fonts/#Montserrat" FontSize="18" Foreground="#BDBDBD" FontWeight="DemiBold"
                                VerticalAlignment="Bottom" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" Text="Song not selected"/>
-                    <Slider Name="SeekBar" Grid.Row="1" VerticalAlignment="Center" Maximum="100" Margin="0,0,0,10"/>
+
+                    <Grid Grid.Row="1">
+                        <cc:CustomSlider x:Name="SeekBar" VerticalAlignment="Center" Maximum="100" Margin="0,0,0,10" Panel.ZIndex="1" ValueChanged="SeekBar_ValueChanged"/>
+                        <UniformGrid Grid.Column="1" Name="UniGrid" Rows="1" HorizontalAlignment="Stretch" SizeChanged="UniGrid_SizeChanged" Margin="0,0,0,10"/>
+                    </Grid>
                 </Grid>
 
                 <TextBlock Name="CurrentTime" Grid.Column="0" FontFamily="/Fonts/#Montserrat" FontSize="15" Foreground="#BDBDBD" FontWeight="DemiBold"
@@ -82,20 +117,41 @@
                            VerticalAlignment="Center" HorizontalAlignment="Center" Padding="10,0,0,0">0:00</TextBlock>
             </Grid>
 
-            <Grid Grid.Column="2" Margin="50,0,0,0">
+            <Button Grid.Column="2" Name="PlaybackModeButton" Style="{StaticResource NoStylingButton}" HorizontalAlignment="Left" Margin="10,0,0,0" Click="PlaybackModeButton_Click">
+                <Image Source="{Binding PlaybackModeImagePath}" Width="40" RenderOptions.BitmapScalingMode="HighQuality" Opacity="0.7"/>
+            </Button>
+
+            <Grid Grid.Column="3" Name="VolumeSlidersGrid">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="70*"/>
-                    <ColumnDefinition Width="30*"/>
+                    <ColumnDefinition Width="60*"/>
+                    <ColumnDefinition Width="20*"/>
+                    <ColumnDefinition Width="20*"/>
                 </Grid.ColumnDefinitions>
+
                 <Grid.RowDefinitions>
-                    <RowDefinition/>
+                    <RowDefinition Height="0*"/>
+                    <RowDefinition Height="0*"/>
+                    <RowDefinition Height="100*"/>
                 </Grid.RowDefinitions>
 
-                <!--<Slider Grid.Row="0" Grid.Column="0" Name="Volume1Slider" Maximum="100" VerticalAlignment="Center" Margin="0,10,0,0"/>-->
-                <Slider Grid.Row="1" Grid.Column="0" Name="MainVolumeSlider" Maximum="100" VerticalAlignment="Center"/>
+                <cc:CustomSlider Grid.Row="0" Grid.Column="0" x:Name="VCVolumeSlider" Maximum="100" VerticalAlignment="Center" ValueChanged="VCVolumeSlider_ValueChanged"/>
+                <Button Grid.Row="0" Grid.Column="1" Name="VCVolumeButton" Style="{StaticResource NoStylingButton}" Click="VCVolumeButton_Click" Width="20" Height="20">
+                    <materialDesign:PackIcon Kind="MicrophoneVariant" Foreground="White" Width="20" Height="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </Button>
 
-                <!--<Image Grid.Row="0" Grid.Column="1" Source="/Images/Icons/mic.png" Width="17" Margin="-5,10,0,0" RenderOptions.BitmapScalingMode ="HighQuality"/>-->
-                <Image Grid.Row="1" Grid.Column="1" Source="/Images/Icons/speaker.png" Width="15" RenderOptions.BitmapScalingMode ="HighQuality"/>
+                <cc:CustomSlider Grid.Row="1" Grid.Column="0" x:Name="MicVolumeSlider" Maximum="100" VerticalAlignment="Center" ValueChanged="MicVolumeSlider_ValueChanged"/>
+                <Button Grid.Row="1" Grid.Column="1" Name="MicVolumeButton" Style="{StaticResource NoStylingButton}" Click="MicVolumeButton_Click" Width="20" Height="20">
+                    <materialDesign:PackIcon Kind="Microphone" Foreground="White" Width="20" Height="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </Button>
+
+                <cc:CustomSlider Grid.Row="2" Grid.Column="0" x:Name="MainVolumeSlider" Maximum="100" VerticalAlignment="Center" ValueChanged="MainVolumeSlider_ValueChanged"/>
+                <Button Grid.Row="2" Grid.Column="1" Name="MainVolumeButton" Style="{StaticResource NoStylingButton}" Click="MainVolumeButton_Click" Width="20" Height="20">
+                    <materialDesign:PackIcon Kind="VolumeMedium" Foreground="White" Width="20" Height="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </Button>
+
+                <Button Style="{StaticResource NoStylingButton}" Grid.Column="2" Grid.RowSpan="3" Click="ToggleVolumeSliders" Width="20" HorizontalAlignment="Left" Height="40">
+                    <Image  Name="ExpanderImage" Source="\Images\Icons\expand.png" RenderOptions.BitmapScalingMode="HighQuality" Opacity="0.7"/>
+                </Button>
             </Grid>
         </Grid>
     </Grid>
