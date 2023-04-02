@@ -1,5 +1,8 @@
-﻿using NAudio.Wave;
+﻿using NAudio.Extras;
+using NAudio.Wave;
 using NoiseBox.Log;
+using System;
+using System.Numerics;
 
 namespace NoiseBox {
     public class AudioStream {
@@ -54,7 +57,7 @@ namespace NoiseBox {
             StoppedEvent(sender, e);
         }
 
-        public virtual void Play() { 
+        public virtual void Play() {
             _log.Print("Playing to " + DeviceControll.GetOutputDeviceNameById(_outputDevice.DeviceNumber), LogInfoType.INFO);
 
             _outputDevice.Play();
@@ -99,6 +102,9 @@ namespace NoiseBox {
         private AudioFileReader _audioFile;
         private string _pathToMusic;
 
+        private Equalizer _equalizer;
+        private EqualizerBand[] _bands;
+
         public float MusicVolume {
             get {
                 if (_audioFile != null) {
@@ -127,13 +133,19 @@ namespace NoiseBox {
             }
         }
 
-        public MusicStream(string deviceName = "CABLE Input (VB-Audio Virtual C") : base(deviceName) {}
+        public MusicStream(string deviceName = "CABLE Input (VB-Audio Virtual C") : base(deviceName) { }
 
         public override void Play() {
             if (_pathToMusic != null) {
                 if (!IsPlaying && !IsPaused) {
                     _audioFile = new AudioFileReader(_pathToMusic);
-                    _outputDevice.Init(_audioFile);
+                    if (_equalizer != null) {
+                        _equalizer = new Equalizer(_audioFile, _bands);
+                        _outputDevice.Init(_equalizer);
+                    }
+                    else {
+                        _outputDevice.Init(_audioFile);
+                    }
                 }
 
                 base.Play();
@@ -147,7 +159,14 @@ namespace NoiseBox {
 
             _audioFile = new AudioFileReader(_pathToMusic);
             _audioFile.CurrentTime = TimeSpan.FromSeconds(startingPosition);
-            _outputDevice.Init(_audioFile);
+
+            if (_equalizer != null) {
+                _equalizer = new Equalizer(_audioFile, _bands);
+                _outputDevice.Init(_equalizer);
+            }
+            else {
+                _outputDevice.Init(_audioFile);
+            }
 
             MusicVolume = oldVol;
 
@@ -213,6 +232,91 @@ namespace NoiseBox {
         public void Seek(double offset) {
             CurrentTrackPosition += offset;
         }
+
+        public void InitializeEqualizer() {
+            if (_audioFile != null) {
+                _bands = new EqualizerBand[]{
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 40, Gain = 0},
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 80, Gain = 0},
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 320, Gain = 0},
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 640, Gain = 0},
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 1280, Gain = 0},
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 2560, Gain = 0},
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 5120, Gain = 0},
+                        new EqualizerBand {Bandwidth = 0.8f, Frequency = 10240, Gain = 0},
+                };
+
+                _equalizer = new Equalizer(_audioFile, _bands);
+
+                _log.Print("Initialize equalizer", LogInfoType.INFO);
+            }
+        }
+
+        public void StopEqualizer() {
+            _bands = null;
+
+            _equalizer = null;
+
+            _log.Print("Stop equalizer", LogInfoType.INFO);
+        }
+
+        public bool IsEqualizerWorking {
+            get { return _equalizer != null; }
+        }
+
+        public float MinimumGain => -30;
+
+        public float MaximumGain => 30;
+
+        public float GetBandGain(int index) {
+            if (_bands != null && index >= 0 && index <= 7) {
+                return _bands[index].Gain;
+            }
+            else {
+                return 0;
+            }
+        }
+
+        public void SetBandGain(int index, float value) {
+            if (_bands != null && index >= 0 && index <= 7) {
+                if (_bands[index].Gain != value) {
+                    _bands[index].Gain = value;
+                    _equalizer.Update();
+                }
+            }
+        }
+
+        public List<EqualizerBand> GetBandsList() {
+            var equalizerBands = new List<EqualizerBand>();
+
+            foreach (var band in _bands) {
+                equalizerBands.Add(new EqualizerBand {
+                    Bandwidth = band.Bandwidth,
+                    Frequency = band.Frequency,
+                    Gain = band.Gain
+                });
+            }
+
+            return equalizerBands;
+        }
+
+        public void SetBandsList(List<EqualizerBand> equalizerBandsToAdd) {
+            if (equalizerBandsToAdd.Count == 8) {
+                for (int i = 0; i < 8; i++) {
+                    _bands[i] = new EqualizerBand {
+                        Bandwidth = equalizerBandsToAdd[i].Bandwidth,
+                        Frequency = equalizerBandsToAdd[i].Frequency,
+                        Gain = equalizerBandsToAdd[i].Gain
+                    };
+                }
+                _equalizer.Update();
+            }
+        }
+    }
+
+    public class BandsSettings {
+        public List<EqualizerBand> EqualizerBands;
+        public string Name;
     }
 
     public class MicrophoneStream : AudioStream {

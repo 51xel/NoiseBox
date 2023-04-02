@@ -14,6 +14,7 @@
     <None Remove="Images\Icons\close.png" />
     <None Remove="Images\Icons\convert.png" />
     <None Remove="Images\Icons\download.png" />
+    <None Remove="Images\Icons\equalizer.png" />
     <None Remove="Images\Icons\expand.png" />
     <None Remove="Images\Icons\loop.png" />
     <None Remove="Images\Icons\loop1.png" />
@@ -25,15 +26,17 @@
     <None Remove="Images\Icons\pause.png" />
     <None Remove="Images\Icons\play.png" />
     <None Remove="Images\Icons\plus.png" />
+    <None Remove="Images\Icons\reload.png" />
     <None Remove="Images\Icons\prev.png" />
     <None Remove="Images\Icons\restore.png" />
+    <None Remove="Images\Icons\save.png" />
     <None Remove="Images\Icons\settings.png" />
     <None Remove="Images\Icons\shuffle.png" />
     <None Remove="Images\Icons\speaker.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MaterialDesignThemes" Version="4.7.1" />
+    <PackageReference Include="MaterialDesignThemes" Version="4.8.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -51,6 +54,7 @@
     <Resource Include="Images\Icons\close.png" />
     <Resource Include="Images\Icons\convert.png" />
     <Resource Include="Images\Icons\download.png" />
+    <Resource Include="Images\Icons\equalizer.png" />
     <Resource Include="Images\Icons\expand.png" />
     <Resource Include="Images\Icons\loop.png" />
     <Resource Include="Images\Icons\loop1.png" />
@@ -62,8 +66,10 @@
     <Resource Include="Images\Icons\pause.png" />
     <Resource Include="Images\Icons\play.png" />
     <Resource Include="Images\Icons\plus.png" />
+    <Resource Include="Images\Icons\reload.png" />
     <Resource Include="Images\Icons\prev.png" />
     <Resource Include="Images\Icons\restore.png" />
+    <Resource Include="Images\Icons\save.png" />
     <Resource Include="Images\Icons\settings.png" />
     <Resource Include="Images\Icons\shuffle.png" />
     <Resource Include="Images\Icons\speaker.png" />

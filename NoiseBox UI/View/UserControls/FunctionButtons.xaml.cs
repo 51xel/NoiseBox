@@ -26,6 +26,9 @@ namespace NoiseBox_UI.View.UserControls {
 
         private bool _isDownloadsWindowOpen = false;
         private DownloadsWindow _downloadsWin;
+        
+        private bool _isEqualizerWindowOpen = false;
+        private CustomEqualizer _equalizerWin;
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e) {
             if (_isSettingsWindowOpen) {
@@ -120,6 +123,41 @@ namespace NoiseBox_UI.View.UserControls {
                 }
 
                 ConvertingProgress.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void EqualizerButton_Click(object sender, RoutedEventArgs e){
+            if (_isEqualizerWindowOpen){
+                if (_equalizerWin.WindowState == WindowState.Minimized){
+                    _equalizerWin.WindowState = WindowState.Normal;
+                }
+                return;
+            }
+            var win = (MainWindow)Window.GetWindow(this);
+
+            _equalizerWin = new CustomEqualizer();
+            _equalizerWin.Owner = Window.GetWindow(this);
+            _equalizerWin.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+
+            if (win.AudioStreamControl.MainMusic.IsEqualizerWorking) {
+                _equalizerWin.StartStopText.Text = "Stop";
+            }
+            else {
+                _equalizerWin.StartStopText.Text = "Start";
+            }
+
+            _equalizerWin.Closed += (_, _) => { 
+                _isEqualizerWindowOpen = false;
+            };
+            _isEqualizerWindowOpen = true;
+
+            _equalizerWin.Show();
+
+            _equalizerWin.LoadSelectedBand(win.SelectedBandsSettings);
+
+            if(_equalizerWin.StartStopText.Text == "Start") {
+                _equalizerWin.ButtonsSetEnabledState(false);
+                _equalizerWin.SliderSetEnabledState(false);
             }
         }
     }
