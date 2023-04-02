@@ -119,7 +119,7 @@ namespace NoiseBox {
             var psi = new ProcessStartInfo(Path.Combine(ffmpegDir, "ffmpeg.exe")) {
                 UseShellExecute = false,
                 CreateNoWindow = true,
-                Arguments = $" -i \"{path}\" -vn -ac 2 \"{newPath}\""
+                Arguments = $" -i \"{path}\" -vn -ar 44100 -ac 2 -ab 192k -f mp3 \"{newPath}\""
             };
 
             var process = new Process { StartInfo = psi };

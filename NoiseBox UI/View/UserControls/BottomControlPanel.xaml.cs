@@ -17,7 +17,6 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace NoiseBox_UI.View.UserControls {
@@ -251,25 +250,32 @@ namespace NoiseBox_UI.View.UserControls {
                 }
 
                 using (var mp3 = new Mp3FileReader(path)) {
-                    // Convert the MP3 to a sample provider that provides audio samples
-                    var sampleProvider = mp3.ToSampleProvider();
 
-                    // Create a buffer to hold audio samples
-                    var buffer = new float[sampleProvider.WaveFormat.SampleRate];
+                    int peakCount = 300;
 
-                    // Read audio samples into the buffer and calculate peak heights
-                    while (sampleProvider.Read(buffer, 0, buffer.Length) > 0) {
-                        // Calculate the peak height of the buffer
+                    int bytesPerSample = (mp3.WaveFormat.BitsPerSample / 8) * mp3.WaveFormat.Channels;
+                    int samplesPerPeak = (int)(mp3.Length / (double)(peakCount * bytesPerSample));
+                    int bytesPerPeak = bytesPerSample * samplesPerPeak;
+
+                    var buffer = new byte[bytesPerPeak];
+
+                    for (int x = 0; x < peakCount; x++) {
+
                         if (_secondAnimationIsWorking && !canceledRender) {
                             break;
                         }
 
+                        int bytesRead = mp3.Read(buffer, 0, bytesPerPeak);
+                        if (bytesRead == 0)
+                            break;
+
                         float sum = 0;
 
-                        for (int i = 0; i < buffer.Length; i++) {
-                            sum += Math.Abs(buffer[i]);
+                        for (int n = 0; n < bytesRead; n += 2) {
+                            sum += Math.Abs(BitConverter.ToInt16(buffer, n));
                         }
-                        float average = sum / buffer.Length;
+
+                        float average = sum / (bytesRead / 2);
 
                         peaks.Add(average);
                     }
@@ -281,7 +287,11 @@ namespace NoiseBox_UI.View.UserControls {
                                 break;
                             }
 
-                            peaks[i] = (peaks[i] / peaksMax) * (int)UniGrid.ActualHeight; // peak height
+                            peaks[i] = (peaks[i] / peaksMax) * (int)(UniGrid.ActualHeight * 0.95); // peak height
+
+                            if (peaks[i] < 2) {
+                                peaks[i] = 2;
+                            }
                         }
                     }
                 }
@@ -302,6 +312,7 @@ namespace NoiseBox_UI.View.UserControls {
             }
 
             UniGrid_SizeChanged(null, null);
+            SeekBar_ValueChanged(null, null);
 
             SeekBar.RenderTransformOrigin = new Point(0.5, 0.5);
             SeekBar.RenderTransform = new ScaleTransform() { ScaleY = 1 };
@@ -380,7 +391,7 @@ namespace NoiseBox_UI.View.UserControls {
         }
 
         private void SeekBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
-            var val = (sender as Slider).Value;
+            var val = SeekBar.Value;
             var borders = UniGrid.Children;
 
             var before = (int)(borders.Count * val / 100);
