@@ -246,7 +246,7 @@ namespace NoiseBox_UI.View.UserControls {
             await Task.Run(() => {
                 bool canceledRender = false;
 
-                if (_secondAnimationIsWorking) {//is there a better idea?
+                if (_secondAnimationIsWorking) {
                     canceledRender = true;
                 }
 
@@ -288,7 +288,7 @@ namespace NoiseBox_UI.View.UserControls {
             });
             
             if (!_secondAnimationIsWorking) {
-                UniGrid.Children.Clear(); //TODO Animation UniGrid scaleY does not have time to complete
+                UniGrid.Children.Clear();
 
                 foreach (var peak in peaks) {
                     UniGrid.Children.Add(new Border() {
@@ -427,8 +427,6 @@ namespace NoiseBox_UI.View.UserControls {
             }
         }
 
-
-
         private void MicVolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
             var icon = MicVolumeButton.Content as MaterialDesignThemes.Wpf.PackIcon;
 
@@ -455,7 +453,6 @@ namespace NoiseBox_UI.View.UserControls {
             }
         }
 
-
         private void VCVolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
             var icon = VCVolumeButton.Content as MaterialDesignThemes.Wpf.PackIcon;
 
@@ -481,8 +478,6 @@ namespace NoiseBox_UI.View.UserControls {
                 AnimateVolumeSliderValue(VCVolumeSlider, vcVolumeSliderBeforeMuteValue);
             }
         }
-
-
 
         private void AnimateVolumeSliderValue(Slider slider, double newVal) {
             DoubleAnimation doubleAnimation = new DoubleAnimation();
