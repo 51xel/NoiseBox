@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.IO;
 using WinForms = System.Windows.Forms;
 using NoiseBox;
+using NoiseBox_UI.View.UserControls;
 
 namespace NoiseBox_UI {
     public partial class SettingsWindow : Window {
@@ -23,9 +24,9 @@ namespace NoiseBox_UI {
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e) {
-            foreach (var device in DeviceControll.GetOutputDevicesList()) {
-                OutputDevicesList.Items.Add(device);
-            }
+            //foreach (var device in DeviceControll.GetOutputDevicesList()) {
+            //    OutputDevicesList.Items.Add(device);
+            //}
 
             if (string.IsNullOrEmpty(Properties.Settings.Default.DownloadsFolder)) {
                 string downloadsFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
@@ -36,14 +37,28 @@ namespace NoiseBox_UI {
                 DownloadsFolder.Text = Properties.Settings.Default.DownloadsFolder;
             }
 
+            MicOutputEnabled.IsChecked = Properties.Settings.Default.MicOutputEnabled;
+
+            VirtualCableOutputEnabled.IsChecked = Properties.Settings.Default.VirtualCableOutputEnabled;
+
             VisualizationEnabled.IsChecked = Properties.Settings.Default.VisualizationEnabled;
         }
 
         private void Save_Click(object sender, RoutedEventArgs e) {
             Properties.Settings.Default.DownloadsFolder = DownloadsFolder.Text;
+            Properties.Settings.Default.MicOutputEnabled = MicOutputEnabled.IsChecked.GetValueOrDefault();
+            Properties.Settings.Default.VirtualCableOutputEnabled = VirtualCableOutputEnabled.IsChecked.GetValueOrDefault();
             Properties.Settings.Default.VisualizationEnabled = VisualizationEnabled.IsChecked.GetValueOrDefault();
 
             Properties.Settings.Default.Save();
+
+            // TODO: stop output
+            var win = (Owner as MainWindow);
+            win.BottomControlPanel.MicVolumeSlider.IsEnabled = Properties.Settings.Default.MicOutputEnabled;
+            win.BottomControlPanel.MicVolumeButton.IsEnabled = Properties.Settings.Default.MicOutputEnabled;
+            win.BottomControlPanel.VCVolumeSlider.IsEnabled = Properties.Settings.Default.VirtualCableOutputEnabled;
+            win.BottomControlPanel.VCVolumeButton.IsEnabled = Properties.Settings.Default.VirtualCableOutputEnabled;
+            // TODO: start and stop visualization in the current instance of an app
         }
 
         private void EditDownloadsFolder(object sender, RoutedEventArgs e) {

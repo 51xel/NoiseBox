@@ -21,17 +21,18 @@ using System.Windows.Threading;
 using System.IO;
 using System.Threading;
 using NAudio.Wave;
+using NAudio.Gui;
 
 namespace NoiseBox_UI {
     public partial class MainWindow : Window {
         public AudioStreamControl AudioStreamControl;
         DispatcherTimer SeekBarTimer = new DispatcherTimer();
 
-        public Playlist? SelectedPlaylist = MusicLibrary.GetPlaylists().FirstOrDefault();
+        public Playlist? SelectedPlaylist;
         public Song? SelectedSong = null;
         public string? BackgroundPlaylistName = null;
 
-        private bool VisualizationEnabled = true; // TODO Load from config
+        public bool VisualizationEnabled = Properties.Settings.Default.VisualizationEnabled;
         private string? CurrentlyVisualizedPath = null;
 
         public BandsSettings SelectedBandsSettings = null;
@@ -45,7 +46,16 @@ namespace NoiseBox_UI {
             AudioStreamControl.MainMusic.StoppedEvent += Music_StoppedEvent;
 
             DisplayPlaylists();
-            DisplaySelectedPlaylist();
+
+            var lastSelectedPlaylistName = Properties.Settings.Default.LastSelectedPlaylistName;
+
+            if (!string.IsNullOrEmpty(lastSelectedPlaylistName)) {
+                SelectedPlaylist = MusicLibrary.GetPlaylists().Find(p => p.Name == lastSelectedPlaylistName);
+
+                if (SelectedPlaylist != null) {
+                    SelectPlaylistByName(lastSelectedPlaylistName);
+                }
+            }
 
             BottomControlPanel.PlayPauseButton.Click += PlayPauseButton_Click;
             BottomControlPanel.PrevButton.Click += PrevButton_Click;
@@ -53,9 +63,14 @@ namespace NoiseBox_UI {
             BottomControlPanel.SeekBar.PreviewMouseLeftButtonUp += SeekBar_PreviewMouseLeftButtonUp;
             BottomControlPanel.SeekBar.ValueChanged += SeekBar_ValueChanged;
 
-            BottomControlPanel.MainVolumeSlider.Value = 0.1 * 100;//TODO Load from config
-            BottomControlPanel.MicVolumeSlider.Value = 0.2 * 100; // TODO Load from config
-            BottomControlPanel.VCVolumeSlider.Value = 0.3 * 100; // TODO Load from config
+            BottomControlPanel.MicVolumeSlider.IsEnabled = Properties.Settings.Default.MicOutputEnabled;
+            BottomControlPanel.MicVolumeButton.IsEnabled = Properties.Settings.Default.MicOutputEnabled;
+            BottomControlPanel.VCVolumeSlider.IsEnabled = Properties.Settings.Default.VirtualCableOutputEnabled;
+            BottomControlPanel.VCVolumeButton.IsEnabled = Properties.Settings.Default.VirtualCableOutputEnabled;
+
+            BottomControlPanel.MainVolumeSlider.Value = Properties.Settings.Default.MainVolumeSliderValue;
+            BottomControlPanel.MicVolumeSlider.Value = Properties.Settings.Default.MicVolumeSliderValue;
+            BottomControlPanel.VCVolumeSlider.Value = Properties.Settings.Default.VCVolumeSliderValue;
 
             BottomControlPanel.MainVolumeSlider.ValueChanged += MainVolumeSlider_ValueChanged;
 
@@ -392,6 +407,16 @@ namespace NoiseBox_UI {
                 ImageSource imgSource = new BitmapImage(uri);
                 TitlebarButtons.MaximizeButtonImage.Source = imgSource;
             }
+        }
+
+        private void Window_Closed(object sender, EventArgs e) {
+            Properties.Settings.Default.MainVolumeSliderValue = BottomControlPanel.MainVolumeSlider.Value;
+            Properties.Settings.Default.MicVolumeSliderValue = BottomControlPanel.MicVolumeSlider.Value;
+            Properties.Settings.Default.VCVolumeSliderValue = BottomControlPanel.VCVolumeSlider.Value;
+
+            Properties.Settings.Default.LastSelectedPlaylistName = SelectedPlaylist != null ? SelectedPlaylist.Name : "";
+
+            Properties.Settings.Default.Save();
         }
     }
 }

@@ -17,7 +17,9 @@
         
         StateChanged="Window_StateChanged"
         
-        MouseDown="Window_MouseDown">
+        MouseDown="Window_MouseDown"
+        
+        Closed="Window_Closed">
 
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="25"/>

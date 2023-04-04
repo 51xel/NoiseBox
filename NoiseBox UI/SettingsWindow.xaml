@@ -84,7 +84,11 @@
 
                 <TextBlock Grid.Column="0">Select output device</TextBlock>
 
-                <ComboBox Grid.Column="1" Name="OutputDevicesList" materialDesign:ColorZoneAssist.Mode="Dark"/>
+                <ComboBox Grid.Column="1" Name="OutputDevicesList" BorderBrush="{DynamicResource PrimaryHueMidBrush}">
+                    <ComboBox.Resources>
+                        <SolidColorBrush x:Key="MaterialDesignPaper" Color="#212128"/>
+                    </ComboBox.Resources>
+                </ComboBox>
             </Grid>
 
             <Grid>
@@ -99,6 +103,26 @@
                 <Button Grid.Column="2" Style="{StaticResource NoStylingButton}" Click="EditDownloadsFolder">
                     <materialDesign:PackIcon Kind="PencilOutline" Foreground="White"/>
                 </Button>
+            </Grid>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="40"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0">Enable mic output to virtual cable</TextBlock>
+                <ToggleButton Grid.Column="1" Name="MicOutputEnabled"/>
+            </Grid>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="40"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0">Enable output to virtual cable</TextBlock>
+                <ToggleButton Grid.Column="1" Name="VirtualCableOutputEnabled"/>
             </Grid>
 
             <Grid>

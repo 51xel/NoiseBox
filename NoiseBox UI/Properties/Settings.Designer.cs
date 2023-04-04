@@ -46,5 +46,77 @@ namespace NoiseBox_UI.Properties {
                 this["VisualizationEnabled"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool MicOutputEnabled {
+            get {
+                return ((bool)(this["MicOutputEnabled"]));
+            }
+            set {
+                this["MicOutputEnabled"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool VirtualCableOutputEnabled {
+            get {
+                return ((bool)(this["VirtualCableOutputEnabled"]));
+            }
+            set {
+                this["VirtualCableOutputEnabled"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
+        public double MainVolumeSliderValue {
+            get {
+                return ((double)(this["MainVolumeSliderValue"]));
+            }
+            set {
+                this["MainVolumeSliderValue"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
+        public double MicVolumeSliderValue {
+            get {
+                return ((double)(this["MicVolumeSliderValue"]));
+            }
+            set {
+                this["MicVolumeSliderValue"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
+        public double VCVolumeSliderValue {
+            get {
+                return ((double)(this["VCVolumeSliderValue"]));
+            }
+            set {
+                this["VCVolumeSliderValue"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastSelectedPlaylistName {
+            get {
+                return ((string)(this["LastSelectedPlaylistName"]));
+            }
+            set {
+                this["LastSelectedPlaylistName"] = value;
+            }
+        }
     }
 }

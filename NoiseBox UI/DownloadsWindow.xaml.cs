@@ -23,13 +23,17 @@ namespace NoiseBox_UI {
 
         private static ILog _log = LogSettings.SelectedLog;
 
-        private string _selectedDirectory = Directory.GetCurrentDirectory();
+        private string _selectedDirectory;
         public string SelectedDirectory { 
             get {
                 return _selectedDirectory;
             }
             set {
                 _selectedDirectory = value;
+
+                Properties.Settings.Default.DownloadsFolder = value;
+                Properties.Settings.Default.Save();
+
                 OnPropertyChanged();
             }
         }
@@ -40,6 +44,13 @@ namespace NoiseBox_UI {
             InitializeComponent();
             WinMax.DoSourceInitialized(this);
             DataContext = this;
+
+            if (string.IsNullOrEmpty(Properties.Settings.Default.DownloadsFolder)) {
+                SelectedDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+            }
+            else {
+                SelectedDirectory = Properties.Settings.Default.DownloadsFolder;
+            }
         }
 
         private void Window_StateChanged(object sender, EventArgs e) {
