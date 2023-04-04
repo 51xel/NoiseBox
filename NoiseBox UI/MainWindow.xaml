@@ -19,7 +19,9 @@
         
         MouseDown="Window_MouseDown"
         
-        Closed="Window_Closed">
+        Closed="Window_Closed"
+        
+        Loaded="Window_Loaded">
 
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="25"/>

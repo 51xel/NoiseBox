@@ -118,5 +118,53 @@ namespace NoiseBox_UI.Properties {
                 this["LastSelectedPlaylistName"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastBackgroundPlaylistName {
+            get {
+                return ((string)(this["LastBackgroundPlaylistName"]));
+            }
+            set {
+                this["LastBackgroundPlaylistName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastSelectedSongId {
+            get {
+                return ((string)(this["LastSelectedSongId"]));
+            }
+            set {
+                this["LastSelectedSongId"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double LastSeekBarValue {
+            get {
+                return ((double)(this["LastSeekBarValue"]));
+            }
+            set {
+                this["LastSeekBarValue"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int LastPlaybackMode {
+            get {
+                return ((int)(this["LastPlaybackMode"]));
+            }
+            set {
+                this["LastPlaybackMode"] = value;
+            }
+        }
     }
 }

@@ -47,16 +47,6 @@ namespace NoiseBox_UI {
 
             DisplayPlaylists();
 
-            var lastSelectedPlaylistName = Properties.Settings.Default.LastSelectedPlaylistName;
-
-            if (!string.IsNullOrEmpty(lastSelectedPlaylistName)) {
-                SelectedPlaylist = MusicLibrary.GetPlaylists().Find(p => p.Name == lastSelectedPlaylistName);
-
-                if (SelectedPlaylist != null) {
-                    SelectPlaylistByName(lastSelectedPlaylistName);
-                }
-            }
-
             BottomControlPanel.PlayPauseButton.Click += PlayPauseButton_Click;
             BottomControlPanel.PrevButton.Click += PrevButton_Click;
             BottomControlPanel.NextButton.Click += NextButton_Click;
@@ -80,6 +70,50 @@ namespace NoiseBox_UI {
 
             SeekBarTimer.Interval = TimeSpan.FromMilliseconds(50);
             SeekBarTimer.Tick += timer_Tick;
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e) {
+            var lastSelectedPlaylistName = Properties.Settings.Default.LastSelectedPlaylistName;
+
+            if (!string.IsNullOrEmpty(lastSelectedPlaylistName)) {
+                SelectedPlaylist = MusicLibrary.GetPlaylists().Find(p => p.Name == lastSelectedPlaylistName);
+
+                if (SelectedPlaylist != null) {
+                    SelectPlaylistByName(lastSelectedPlaylistName);
+                }
+            }
+
+            var lastBackgroundPlaylistName = Properties.Settings.Default.LastBackgroundPlaylistName;
+            var lastSelectedSongId = Properties.Settings.Default.LastSelectedSongId;
+
+            if (!string.IsNullOrEmpty(lastBackgroundPlaylistName)) {
+                var backgroundPlaylist = MusicLibrary.GetPlaylists().Find(p => p.Name == lastBackgroundPlaylistName);
+
+                if (backgroundPlaylist != null) {
+                    BackgroundPlaylistName = lastBackgroundPlaylistName;
+
+                    foreach (var button in Helper.FindVisualChildren<Button>(PlaylistList.List)) {
+                        if (((button.Content as ContentPresenter).Content as Playlist).Name == BackgroundPlaylistName) {
+                            button.FontWeight = FontWeights.ExtraBold;
+                            break;
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(lastSelectedSongId)) {
+                        SelectedSong = MusicLibrary.GetSongsFromPlaylist(BackgroundPlaylistName).Find(s => s.Id == lastSelectedSongId);
+
+                        if (SelectedSong != null) {
+                            SelectSong(SelectedSong);
+
+                            PlayPauseButton_Click(null, null);
+
+                            BottomControlPanel.SeekBar.Value = Properties.Settings.Default.LastSeekBarValue;
+                        }
+                    }
+                }
+            }
+
+            BottomControlPanel.Mode = (BottomControlPanel.PlaybackMode)Properties.Settings.Default.LastPlaybackMode;
         }
 
         private void MainVolumeSlider_ValueChanged(object sender, EventArgs e) {
@@ -415,6 +449,12 @@ namespace NoiseBox_UI {
             Properties.Settings.Default.VCVolumeSliderValue = BottomControlPanel.VCVolumeSlider.Value;
 
             Properties.Settings.Default.LastSelectedPlaylistName = SelectedPlaylist != null ? SelectedPlaylist.Name : "";
+            Properties.Settings.Default.LastBackgroundPlaylistName = BackgroundPlaylistName != null ? BackgroundPlaylistName : "";
+            Properties.Settings.Default.LastSelectedSongId = SelectedSong != null ? SelectedSong.Id : "";
+
+            Properties.Settings.Default.LastSeekBarValue = BottomControlPanel.SeekBar.Value;
+
+            Properties.Settings.Default.LastPlaybackMode = (int)BottomControlPanel.Mode;
 
             Properties.Settings.Default.Save();
         }
