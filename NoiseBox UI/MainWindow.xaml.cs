@@ -22,6 +22,7 @@ using System.IO;
 using System.Threading;
 using NAudio.Wave;
 using NAudio.Gui;
+using System.Windows.Media.Animation;
 
 namespace NoiseBox_UI {
     public partial class MainWindow : Window {
@@ -390,7 +391,7 @@ namespace NoiseBox_UI {
             }
         }
 
-        public void SelectedSongRemoved() {
+        public async void SelectedSongRemoved() {
             if (SelectedSong != null) {
                 AudioStreamControl.MainMusic.Stop();
                 SelectedSong = null;
@@ -409,6 +410,12 @@ namespace NoiseBox_UI {
                 }
 
                 BackgroundPlaylistName = null;
+
+                BottomControlPanel.Rendering = false;
+
+                BottomControlPanel.ShowSeekBarHideBorders();
+
+                BottomControlPanel.UniGrid.Children.Clear();
             }
         }
 

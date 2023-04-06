@@ -106,6 +106,27 @@ namespace NoiseBox_UI.View.UserControls {
             button.BorderThickness = new Thickness(0);
 
             e.Handled = true; // prevents ListView_Drop from being raised
+
+            if (droppedData != null) {
+                if (droppedData.Id == win.SelectedSong.Id) {
+                    List.Items.Refresh();
+
+                    OutlineSelectedSong();
+                }
+            }
+        }
+
+        private async void OutlineSelectedSong() {
+            var win = (MainWindow)Window.GetWindow(this);
+
+            await Task.Delay(10);
+
+            foreach (var buttonToChange in Helper.FindVisualChildren<Button>(List)) {
+                if (((buttonToChange.Content as GridViewRowPresenter).Content as Song).Id == win.SelectedSong.Id) {
+                    buttonToChange.FontWeight = FontWeights.ExtraBold;
+                    break;
+                }
+            }
         }
 
         private void ListViewItem_PreviewDragEnter(object sender, DragEventArgs e) {
