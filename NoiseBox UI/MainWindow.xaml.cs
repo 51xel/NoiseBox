@@ -181,13 +181,7 @@ namespace NoiseBox_UI {
                     }
                 }
 
-                if (VisualizationEnabled) {
-                    if (CurrentlyVisualizedPath != SelectedSong.Path) {
-                        CurrentlyVisualizedPath = SelectedSong.Path;
-
-                        BottomControlPanel.VisualizeAudio(SelectedSong.Path);
-                    }
-                }
+                StartVisualization();
             }
         }
 
@@ -391,7 +385,7 @@ namespace NoiseBox_UI {
             }
         }
 
-        public async void SelectedSongRemoved() {
+        public void SelectedSongRemoved() {
             if (SelectedSong != null) {
                 AudioStreamControl.MainMusic.Stop();
                 SelectedSong = null;
@@ -411,11 +405,7 @@ namespace NoiseBox_UI {
 
                 BackgroundPlaylistName = null;
 
-                BottomControlPanel.Rendering = false;
-
-                BottomControlPanel.ShowSeekBarHideBorders();
-
-                BottomControlPanel.UniGrid.Children.Clear();
+                StopVisualization();
             }
         }
 
@@ -431,6 +421,24 @@ namespace NoiseBox_UI {
                 SelectedSong.Name = newName;
                 BottomControlPanel.CurrentSongName.Text = newName;
             }
+        }
+
+        public void StartVisualization() {
+            if (VisualizationEnabled && SelectedSong != null) {
+                if (CurrentlyVisualizedPath != SelectedSong.Path) {
+                    CurrentlyVisualizedPath = SelectedSong.Path;
+
+                    BottomControlPanel.VisualizeAudio(SelectedSong.Path);
+                }
+            }
+        }
+
+        public void StopVisualization() {
+            BottomControlPanel.Rendering = false;
+            BottomControlPanel.ShowSeekBarHideBorders();
+            BottomControlPanel.UniGrid.Children.Clear();
+
+            CurrentlyVisualizedPath = null;
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e) {

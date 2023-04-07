@@ -48,6 +48,7 @@ namespace NoiseBox_UI {
             Properties.Settings.Default.DownloadsFolder = DownloadsFolder.Text;
             Properties.Settings.Default.MicOutputEnabled = MicOutputEnabled.IsChecked.GetValueOrDefault();
             Properties.Settings.Default.VirtualCableOutputEnabled = VirtualCableOutputEnabled.IsChecked.GetValueOrDefault();
+            bool visualizationPrevState = Properties.Settings.Default.VisualizationEnabled;
             Properties.Settings.Default.VisualizationEnabled = VisualizationEnabled.IsChecked.GetValueOrDefault();
 
             Properties.Settings.Default.Save();
@@ -58,7 +59,17 @@ namespace NoiseBox_UI {
             win.BottomControlPanel.MicVolumeButton.IsEnabled = Properties.Settings.Default.MicOutputEnabled;
             win.BottomControlPanel.VCVolumeSlider.IsEnabled = Properties.Settings.Default.VirtualCableOutputEnabled;
             win.BottomControlPanel.VCVolumeButton.IsEnabled = Properties.Settings.Default.VirtualCableOutputEnabled;
-            // TODO: start and stop visualization in the current instance of an app
+
+            if (visualizationPrevState != Properties.Settings.Default.VisualizationEnabled) {
+                win.VisualizationEnabled = Properties.Settings.Default.VisualizationEnabled;
+
+                if (Properties.Settings.Default.VisualizationEnabled) {
+                    win.StartVisualization();
+                }
+                else {
+                    win.StopVisualization();
+                }
+            }
         }
 
         private void EditDownloadsFolder(object sender, RoutedEventArgs e) {
