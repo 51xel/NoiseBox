@@ -15,6 +15,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using NoiseBox;
+using NoiseBox_UI.Utils;
+using NoiseBox_UI.View.Windows;
 
 namespace NoiseBox_UI.View.UserControls {
 

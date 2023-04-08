@@ -8,12 +8,12 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
-namespace NoiseBox_UI.CustomControls {
+namespace NoiseBox_UI.Utils.CustomControls {
     public class CustomSlider : Slider {
         private Thumb _thumb = null;
 
         public CustomSlider() {
-            this.Style = this.FindResource("MaterialDesignSlider") as Style;
+            Style = FindResource("MaterialDesignSlider") as Style;
         }
 
         public override void OnApplyTemplate() {

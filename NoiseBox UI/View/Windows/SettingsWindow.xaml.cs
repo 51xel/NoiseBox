@@ -14,8 +14,9 @@ using System.IO;
 using WinForms = System.Windows.Forms;
 using NoiseBox;
 using NoiseBox_UI.View.UserControls;
+using NoiseBox_UI.Utils;
 
-namespace NoiseBox_UI {
+namespace NoiseBox_UI.View.Windows {
     public partial class SettingsWindow : Window {
         public SettingsWindow() {
             InitializeComponent();

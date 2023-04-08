@@ -24,8 +24,9 @@ using Newtonsoft.Json.Linq;
 using System.Reflection;
 using NoiseBox.Log;
 using System.Windows.Threading;
+using NoiseBox_UI.Utils;
 
-namespace NoiseBox_UI {
+namespace NoiseBox_UI.View.Windows {
     public partial class CustomEqualizer : Window, INotifyPropertyChanged {
         private List<BandsSettings> _bandsSettings = new List<BandsSettings>();
         private string _jsonFilePath = "bandsSettings.json";

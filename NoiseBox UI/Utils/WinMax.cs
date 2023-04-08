@@ -16,7 +16,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using NoiseBox.Log;
 
-namespace NoiseBox_UI {
+namespace NoiseBox_UI.Utils {
     internal class WinMax {
 
         public static void DoSourceInitialized(Window win) {

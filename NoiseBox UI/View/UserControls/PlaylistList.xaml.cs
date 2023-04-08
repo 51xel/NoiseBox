@@ -12,8 +12,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
-using TagLib.Id3v2;
+using NoiseBox_UI.View.Windows;
+using NoiseBox_UI.Utils;
 
 namespace NoiseBox_UI.View.UserControls
 {

@@ -15,8 +15,9 @@ using WinForms = System.Windows.Forms;
 using NoiseBox;
 using System.Windows.Controls;
 using NoiseBox.Log;
+using NoiseBox_UI.Utils;
 
-namespace NoiseBox_UI {
+namespace NoiseBox_UI.View.Windows {
     public partial class DownloadsWindow : Window, INotifyPropertyChanged {
 
         private Process process;

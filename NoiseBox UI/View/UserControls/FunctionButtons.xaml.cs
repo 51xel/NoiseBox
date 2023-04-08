@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.IO;
+using NoiseBox_UI.View.Windows;
 
 namespace NoiseBox_UI.View.UserControls {
     public partial class FunctionButtons : UserControl {

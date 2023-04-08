@@ -23,8 +23,9 @@ using System.Threading;
 using NAudio.Wave;
 using NAudio.Gui;
 using System.Windows.Media.Animation;
+using NoiseBox_UI.Utils;
 
-namespace NoiseBox_UI {
+namespace NoiseBox_UI.View.Windows {
     public partial class MainWindow : Window {
         public AudioStreamControl AudioStreamControl;
         DispatcherTimer SeekBarTimer = new DispatcherTimer();
