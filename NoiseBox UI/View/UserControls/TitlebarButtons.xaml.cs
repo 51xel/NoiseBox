@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NoiseBox_UI.View.Windows;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata;
@@ -20,6 +21,8 @@ namespace NoiseBox_UI.View.UserControls {
             InitializeComponent();
         }
 
+        public event RoutedEventHandler CloseButtonPressed;
+
         private void ButtonMouseEnter(object sender, MouseEventArgs e) {
             ((sender as Button).Content as Image).Opacity = 1;
         }
@@ -39,8 +42,9 @@ namespace NoiseBox_UI.View.UserControls {
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e) {
-            var win = Window.GetWindow(this);
-            win.Close();
+            if (CloseButtonPressed != null) {
+                CloseButtonPressed(sender, e);
+            }
         }
     }
 }

@@ -37,9 +37,16 @@ namespace NoiseBox_UI.View.Windows {
             WinMax.DoSourceInitialized(this);
             DataContext = this;
 
+            TitlebarButtons.CloseButtonPressed += CloseWindow;
+
             LoadFromJson();
             UpdateProfiles();
         }
+
+        private void CloseWindow(object sender, RoutedEventArgs e) {
+            this.Close();
+        }
+
 
         public float Maximum {
             get { return (Owner as MainWindow).AudioStreamControl.MainMusic.MaximumGain; }

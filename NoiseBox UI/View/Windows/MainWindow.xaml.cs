@@ -1,34 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using NoiseBox.Log;
 using NoiseBox;
 using NoiseBox_UI.View.UserControls;
 using System.Windows.Threading;
 using System.IO;
-using System.Threading;
-using NAudio.Wave;
-using NAudio.Gui;
-using System.Windows.Media.Animation;
 using NoiseBox_UI.Utils;
 
 namespace NoiseBox_UI.View.Windows {
     public partial class MainWindow : Window {
         public AudioStreamControl AudioStreamControl;
-        DispatcherTimer SeekBarTimer = new DispatcherTimer();
+        DispatcherTimer SeekBarTimer = new DispatcherTimer();   //TODO make private or public
 
         public Playlist? SelectedPlaylist;
         public Song? SelectedSong = null;
@@ -48,6 +35,8 @@ namespace NoiseBox_UI.View.Windows {
             AudioStreamControl.MainMusic.StoppedEvent += Music_StoppedEvent;
 
             DisplayPlaylists();
+
+            TitlebarButtons.CloseButtonPressed += CloseWindow;
 
             BottomControlPanel.PlayPauseButton.Click += PlayPauseButton_Click;
             BottomControlPanel.PrevButton.Click += PrevButton_Click;
@@ -72,6 +61,26 @@ namespace NoiseBox_UI.View.Windows {
 
             SeekBarTimer.Interval = TimeSpan.FromMilliseconds(50);
             SeekBarTimer.Tick += timer_Tick;
+
+            //TaskbarIcon.CustomPopupPosition = () => { return new Hardcodet.Wpf.TaskbarNotification.Interop.Point() { X = (int)Mouse.GetPosition(this).X, Y = (int)Mouse.GetPosition(this).Y }; };
+        }
+
+        private void TaskbarIcon_Click(object sender, RoutedEventArgs e) {
+            if (Visibility == Visibility.Hidden) {
+                Topmost = true;
+                Visibility = Visibility.Visible;
+            }
+            else {
+                if (WindowState == WindowState.Minimized) {
+                    Topmost = true;
+                    WindowState = WindowState.Normal;
+                }
+                else {
+                    Visibility = Visibility.Hidden;
+                }
+            }
+
+            Topmost = false;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e) {
@@ -473,6 +482,16 @@ namespace NoiseBox_UI.View.Windows {
             Properties.Settings.Default.LastPlaybackMode = (int)BottomControlPanel.Mode;
 
             Properties.Settings.Default.Save();
+        }
+
+        private void CloseWindow(object sender, RoutedEventArgs e) {
+            Visibility = Visibility.Hidden;
+        }
+
+        private void TaskbarIconCloseButton_Click(object sender, RoutedEventArgs e) {//Smth went wrong
+            Close();
+
+            TaskbarIcon.Dispose();
         }
     }
 }

@@ -65,7 +65,8 @@
                       IsTextSearchEnabled="false"
                       Width="120"
                       SelectionChanged="Profiles_SelectionChanged"
-                      BorderBrush="{DynamicResource PrimaryHueMidBrush}">
+                      BorderBrush="{DynamicResource PrimaryHueMidBrush}"
+                      ToolTip="Profiles">
                 <ComboBox.Resources>
                     <SolidColorBrush x:Key="MaterialDesignPaper" Color="#212128"/>
                 </ComboBox.Resources>
@@ -86,14 +87,16 @@
                 <Button 
                     Name="SaveButton"
                     Grid.Column="0"
-                    Click="SaveButton_Click">
+                    Click="SaveButton_Click"
+                    ToolTip="Save">
                     <materialDesign:PackIcon Kind="ContentSave" Foreground="White"/>
                 </Button>
 
                 <Button 
                     Name="DeleteButton"
                     Grid.Column="1"
-                    Click="DeleteButton_Click">
+                    Click="DeleteButton_Click"
+                    ToolTip="Delete">
                     <materialDesign:PackIcon Kind="Plus" RenderTransformOrigin=".5, .5" Foreground="IndianRed">
                         <materialDesign:PackIcon.RenderTransform>
                             <RotateTransform Angle="45" />
@@ -110,7 +113,8 @@
                 <Button 
                     Name="RenameButton"
                     Grid.Column="2"
-                    Click="RenameButton_Click">
+                    Click="RenameButton_Click"
+                    ToolTip="Change">
                     <materialDesign:PackIcon Kind="PencilOutline" Foreground="White"/>
                 </Button>
 
@@ -123,7 +127,8 @@
                 <Button 
                     Name="NameButton"
                     Grid.Column="3"
-                    Click="AddButton_Click">
+                    Click="AddButton_Click"
+                    ToolTip="Add">
                     <materialDesign:PackIcon Kind="Plus" Foreground="White"/>
                 </Button>
             </Grid>
@@ -212,7 +217,8 @@
                 Width="25"
                 Grid.Column="2"
                 Click="ReloadButton_Click"
-                Background="Transparent">
+                Background="Transparent"
+                ToolTip="Reset bands">
                 <Button.Triggers>
                     <EventTrigger RoutedEvent="Button.Click">
                         <EventTrigger.Actions>

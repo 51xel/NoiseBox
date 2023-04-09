@@ -33,9 +33,12 @@
     <None Remove="Images\Icons\settings.png" />
     <None Remove="Images\Icons\shuffle.png" />
     <None Remove="Images\Icons\speaker.png" />
+    <None Remove="Images\Icons\temporary_app_icon.ico" />
+    <None Remove="Images\Icons\temporary_app_icon.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.1.0" />
     <PackageReference Include="MaterialDesignThemes" Version="4.8.0" />
     <PackageReference Include="NAudio" Version="2.1.0" />
   </ItemGroup>
@@ -74,6 +77,7 @@
     <Resource Include="Images\Icons\settings.png" />
     <Resource Include="Images\Icons\shuffle.png" />
     <Resource Include="Images\Icons\speaker.png" />
+    <Resource Include="Images\Icons\temporary_app_icon.ico" />
   </ItemGroup>
 
   <ItemGroup>
