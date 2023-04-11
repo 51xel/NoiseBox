@@ -11,6 +11,7 @@ using NoiseBox_UI.View.UserControls;
 using System.Windows.Threading;
 using System.IO;
 using NoiseBox_UI.Utils;
+using System.Collections.Generic;
 
 namespace NoiseBox_UI.View.Windows {
     public partial class MainWindow : Window {
@@ -41,8 +42,6 @@ namespace NoiseBox_UI.View.Windows {
             AudioStreamControl.MainMusic.StoppedEvent += Music_StoppedEvent;
 
             DisplayPlaylists();
-
-            TitlebarButtons.CloseButtonPressed += CloseWindow;
 
             BottomControlPanel.PlayPauseButton.Click += PlayPauseButton_Click;
             BottomControlPanel.PrevButton.Click += PrevButton_Click;
@@ -472,8 +471,31 @@ namespace NoiseBox_UI.View.Windows {
             Properties.Settings.Default.Save();
         }
 
-        private void CloseWindow(object sender, RoutedEventArgs e) {
-            Visibility = Visibility.Hidden;
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
+            if (Properties.Settings.Default.MinimizeToTrayEnabled) {
+                e.Cancel = true;
+                Hide();
+            }
+        }
+
+        private void Window_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e) {
+            bool isVisible = (bool)e.NewValue;
+            UpdateChildWindowVisibility(this, isVisible);
+        }
+
+        private void UpdateChildWindowVisibility(Window parentWindow, bool isVisible) {
+            var childWindows = new List<Window>();
+
+            foreach (Window window in Application.Current.Windows) {
+                if (window != parentWindow && window.Owner == parentWindow) {
+                    childWindows.Add(window);
+                }
+            }
+
+            foreach (Window childWindow in childWindows) {
+                childWindow.Visibility = isVisible ? Visibility.Visible : Visibility.Hidden;
+                UpdateChildWindowVisibility(childWindow, isVisible);
+            }
         }
     }
 }

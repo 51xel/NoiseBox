@@ -19,29 +19,29 @@
                         PopupActivation="RightClick">
             <tb:TaskbarIcon.TrayPopup>
                 <Border
-                    Background="#FF0A192F"
+                    Background="#212128"
                     CornerRadius="4"
                     Width="160"
-                    Height="80" 
-                    Padding="0">
+                    Padding="0,10,0,10">
                     <StackPanel VerticalAlignment="Center">
                         <StackPanel.Resources>
                             <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatSecondaryLightButton}">
-                                <Setter Property="Width" Value="160"/>
                                 <Setter Property="BorderThickness" Value="0"/>
-                                <Setter Property="Opacity" Value="0.9"/>
+                                <Setter Property="Width" Value="160"/>
                                 <Setter Property="Background" Value="Transparent"/>
-                                <Setter Property="HorizontalAlignment" Value="Center"/>
-                                <Setter Property="materialDesign:RippleAssist.Feedback" Value="White"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                                <Setter Property="materialDesign:RippleAssist.IsDisabled" Value="True"/>
+                                <Setter Property="FontFamily" Value="/Fonts/#Montserrat"/>
+                                <Setter Property="FontSize" Value="14"/>
                             </Style>
                         </StackPanel.Resources>
 
                         <Button Name="TaskbarIconOpenButton"
-                                Content="Hide" 
-                                Foreground="White"
+                                Content="Minimize to Tray" 
+                                Foreground="#BDBDBD"
                                 Click="TaskbarIcon_Click"/>
-                        <Button Content="Close" 
-                                Foreground="Red"
+                        <Button Content="Quit NoiseBox" 
+                                Foreground="IndianRed"
                                 Click="TaskbarIconCloseButton_Click"/>
                     </StackPanel>
                 </Border>

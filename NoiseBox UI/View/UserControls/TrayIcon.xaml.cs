@@ -22,7 +22,7 @@ namespace NoiseBox_UI.View.UserControls {
         private void TaskbarIcon_Loaded(object sender, RoutedEventArgs e) {
             var win = Window.GetWindow(this);
             win.IsVisibleChanged += (_, _) => {
-                TaskbarIconOpenButton.Content = win.Visibility != Visibility.Hidden ? "Hide" : "Open";
+                TaskbarIconOpenButton.Content = win.Visibility != Visibility.Hidden ? "Minimize to Tray" : "Open NoiseBox";
             };
         }
 
@@ -30,27 +30,24 @@ namespace NoiseBox_UI.View.UserControls {
             var win = Window.GetWindow(this);
 
             if (win.Visibility == Visibility.Hidden) {
-                win.Topmost = true;
                 win.Visibility = Visibility.Visible;
+                win.Activate();
             }
             else {
                 if (win.WindowState == WindowState.Minimized) {
-                    win.Topmost = true;
                     win.WindowState = WindowState.Normal;
+                    win.Activate();
                 }
                 else {
-                    win.Visibility = Visibility.Hidden;
+                    win.Hide();
                 }
             }
-
-            win.Topmost = false;
         }
 
         private void TaskbarIconCloseButton_Click(object sender, RoutedEventArgs e) {
-            var win = Window.GetWindow(this);
-
             TaskbarIcon.Dispose();
 
+            var win = Window.GetWindow(this);
             win.Close();
 
             Environment.Exit(0);

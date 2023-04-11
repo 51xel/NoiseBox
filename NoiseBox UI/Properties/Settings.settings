@@ -38,6 +38,9 @@
     <Setting Name="LastPlaybackMode" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
+    <Setting Name="MinimizeToTrayEnabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
     <Setting Name="MainOutputDevice" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>

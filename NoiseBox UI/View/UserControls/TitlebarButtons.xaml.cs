@@ -21,8 +21,6 @@ namespace NoiseBox_UI.View.UserControls {
             InitializeComponent();
         }
 
-        public event RoutedEventHandler CloseButtonPressed;
-
         private void ButtonMouseEnter(object sender, MouseEventArgs e) {
             ((sender as Button).Content as Image).Opacity = 1;
         }
@@ -42,9 +40,8 @@ namespace NoiseBox_UI.View.UserControls {
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e) {
-            if (CloseButtonPressed != null) {
-                CloseButtonPressed(sender, e);
-            }
+            var win = Window.GetWindow(this);
+            win.Close();
         }
     }
 }

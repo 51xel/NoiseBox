@@ -153,11 +153,22 @@
                             <TextBlock Grid.Column="0">Enable sound wave visualization</TextBlock>
                             <ToggleButton Grid.Column="1" Name="VisualizationEnabled"/>
                         </Grid>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0">On Close, minimize to Tray</TextBlock>
+                            <ToggleButton Grid.Column="1" Name="MinimizeToTrayEnabled"/>
+                        </Grid>
                     </StackPanel>
                 </TabItem.Content>
             </TabItem>
         </TabControl>
 
         <Button Grid.Row="2" Click="Save_Click" Content="Save" Background="Transparent" Width="150" HorizontalAlignment="Right" Margin="15"/>
+        <materialDesign:Snackbar Grid.Row="1" Name="SavedSnackbar" MessageQueue="{materialDesign:MessageQueue}" IsActive="False"/>
     </Grid>
 </Window>
