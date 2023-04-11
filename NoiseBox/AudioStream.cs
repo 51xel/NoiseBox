@@ -2,6 +2,7 @@
 using NAudio.Wave;
 using NoiseBox.Log;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Numerics;
 
 namespace NoiseBox {
@@ -36,7 +37,7 @@ namespace NoiseBox {
             SelectOutputDevice(deviceName);
         }
 
-        public void SelectOutputDevice(string deviceName) {
+        protected void SelectOutputDevice(string deviceName) {
             if (String.IsNullOrWhiteSpace(deviceName)) {
                 _log.Print("Name device can`t be null", LogInfoType.ERROR);
 
@@ -310,6 +311,30 @@ namespace NoiseBox {
                     };
                 }
                 _equalizer.Update();
+            }
+        }
+
+        public void SelectMainOutputDevice(string deviceName) {
+            if (IsPlaying) {
+                var tempPosition = CurrentTrackPosition;
+                var tempDeviceVolume = OutputDeviceVolume;
+                var tempMusicVolume = MusicVolume;
+
+                Stop();
+
+                _outputDevice.Dispose();
+
+                SelectOutputDevice(deviceName);
+
+                StopAndPlayFromPosition(tempPosition);
+
+                OutputDeviceVolume = tempDeviceVolume;
+                MusicVolume = tempMusicVolume;
+            }
+            else {
+                _outputDevice.Dispose();
+
+                SelectOutputDevice(deviceName);
             }
         }
     }

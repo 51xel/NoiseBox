@@ -9,7 +9,7 @@ namespace NoiseBox {
     public class AudioStreamControl {
         protected ILog _log = LogSettings.SelectedLog;
 
-        private string _outputDevice;
+        private string _mainOutputDevice;
         private string _secondOutputDevice;
 
         private string _inputDevice;
@@ -19,14 +19,14 @@ namespace NoiseBox {
 
         public readonly MicrophoneStream Microphone;
 
-        public AudioStreamControl(string outputDevice) {
-            if (String.IsNullOrWhiteSpace(outputDevice)) {
+        public AudioStreamControl(string mainOutputDevice) {
+            if (String.IsNullOrWhiteSpace(mainOutputDevice)) {
                 _log.Print("Name device can`t be null", LogInfoType.ERROR);
             }
             else {
-                _outputDevice = outputDevice;
+                _mainOutputDevice = mainOutputDevice;
 
-                MainMusic = new MusicStream(_outputDevice);
+                MainMusic = new MusicStream(_mainOutputDevice);
             }
         }
     }

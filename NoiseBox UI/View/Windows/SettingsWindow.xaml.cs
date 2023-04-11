@@ -31,9 +31,9 @@ namespace NoiseBox_UI.View.Windows {
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e) {
-            //foreach (var device in DeviceControll.GetOutputDevicesList()) {
-            //    OutputDevicesList.Items.Add(device);
-            //}
+            foreach (var device in DeviceControll.GetOutputDevicesList()) {
+                OutputDevicesList.Items.Add(device);
+            }
 
             if (string.IsNullOrEmpty(Properties.Settings.Default.DownloadsFolder)) {
                 string downloadsFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
@@ -42,6 +42,10 @@ namespace NoiseBox_UI.View.Windows {
             }
             else {
                 DownloadsFolder.Text = Properties.Settings.Default.DownloadsFolder;
+            }
+
+            if (Properties.Settings.Default.MainOutputDevice != null) {
+                OutputDevicesList.SelectedItem = Properties.Settings.Default.MainOutputDevice;
             }
 
             MicOutputEnabled.IsChecked = Properties.Settings.Default.MicOutputEnabled;
@@ -57,6 +61,10 @@ namespace NoiseBox_UI.View.Windows {
             Properties.Settings.Default.VirtualCableOutputEnabled = VirtualCableOutputEnabled.IsChecked.GetValueOrDefault();
             bool visualizationPrevState = Properties.Settings.Default.VisualizationEnabled;
             Properties.Settings.Default.VisualizationEnabled = VisualizationEnabled.IsChecked.GetValueOrDefault();
+
+            if (Properties.Settings.Default.MainOutputDevice != null) {
+                Properties.Settings.Default.MainOutputDevice = OutputDevicesList.SelectedItem.ToString();
+            }
 
             Properties.Settings.Default.Save();
 
@@ -76,6 +84,9 @@ namespace NoiseBox_UI.View.Windows {
                 else {
                     win.StopVisualization();
                 }
+            }
+            if (Properties.Settings.Default.MainOutputDevice != null) {
+                win.AudioStreamControl.MainMusic.SelectMainOutputDevice(Properties.Settings.Default.MainOutputDevice);
             }
         }
 

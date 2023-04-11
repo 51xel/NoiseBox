@@ -31,7 +31,13 @@ namespace NoiseBox_UI.View.Windows {
             DataContext = this;
             WinMax.DoSourceInitialized(this);
 
-            AudioStreamControl = new AudioStreamControl(DeviceControll.GetOutputDeviceNameById(0));
+            if (Properties.Settings.Default.MainOutputDevice != null) {
+                AudioStreamControl = new AudioStreamControl(Properties.Settings.Default.MainOutputDevice);
+            }
+            else {
+                AudioStreamControl = new AudioStreamControl(DeviceControll.GetOutputDeviceNameById(0));
+            }
+
             AudioStreamControl.MainMusic.StoppedEvent += Music_StoppedEvent;
 
             DisplayPlaylists();

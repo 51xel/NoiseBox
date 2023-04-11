@@ -39,6 +39,7 @@
 
     <Grid Focusable="True">
         <Grid.RowDefinitions>
+            <RowDefinition Height="35"/>
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -49,8 +50,8 @@
 
         <userControls:TitlebarButtons x:Name="TitlebarButtons" Panel.ZIndex="1"/>
 
-        <StackPanel Margin="30,50,30,0" Grid.Row="0">
-            <StackPanel.Resources>
+        <TabControl Grid.Row="1">
+            <TabControl.Resources>
                 <Style TargetType="TextBlock">
                     <Setter Property="FontFamily" Value="/Fonts/#Montserrat"/>
                     <Setter Property="FontSize" Value="16"/>
@@ -61,7 +62,6 @@
                 <Style TargetType="ComboBox" BasedOn="{StaticResource MaterialDesignComboBox}">
                     <Setter Property="FontFamily" Value="/Fonts/#Montserrat"/>
                     <Setter Property="FontSize" Value="16"/>
-                    <Setter Property="Foreground" Value="#BDBDBD"/>
                     <Setter Property="VerticalAlignment" Value="Center"/>
                     <Setter Property="Height" Value="27"/>
                 </Style>
@@ -74,68 +74,90 @@
                     <Setter Property="VerticalAlignment" Value="Center"/>
                     <Setter Property="HorizontalAlignment" Value="Center"/>
                 </Style>
-            </StackPanel.Resources>
+            </TabControl.Resources>
 
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="180"/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock Foreground="White">Audio</TextBlock>
+                </TabItem.Header>
 
-                <TextBlock Grid.Column="0">Select output device</TextBlock>
+                <TabItem.Content>
+                    <StackPanel Margin="30,50,30,0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
 
-                <ComboBox Grid.Column="1" Name="OutputDevicesList" BorderBrush="{DynamicResource PrimaryHueMidBrush}">
-                    <ComboBox.Resources>
-                        <SolidColorBrush x:Key="MaterialDesignPaper" Color="#212128"/>
-                    </ComboBox.Resources>
-                </ComboBox>
-            </Grid>
+                            <TextBlock Grid.Column="0">Select output device</TextBlock>
 
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="180"/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="40"/>
-                </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="1" Name="OutputDevicesList" BorderBrush="{DynamicResource PrimaryHueMidBrush}" Foreground="#BDBDBD">
+                                <ComboBox.Resources>
+                                    <SolidColorBrush x:Key="MaterialDesignPaper" Color="#212128"/>
+                                </ComboBox.Resources>
+                            </ComboBox>
+                        </Grid>
 
-                <TextBlock Grid.Column="0">Downloads folder</TextBlock>
-                <TextBlock Grid.Column="1" Name="DownloadsFolder"/>
-                <Button Grid.Column="2" Style="{StaticResource NoStylingButton}" Click="EditDownloadsFolder">
-                    <materialDesign:PackIcon Kind="PencilOutline" Foreground="White"/>
-                </Button>
-            </Grid>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
 
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="40"/>
-                </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0">Enable mic output to virtual cable</TextBlock>
+                            <ToggleButton Grid.Column="1" Name="MicOutputEnabled"/>
+                        </Grid>
 
-                <TextBlock Grid.Column="0">Enable mic output to virtual cable</TextBlock>
-                <ToggleButton Grid.Column="1" Name="MicOutputEnabled"/>
-            </Grid>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
 
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="40"/>
-                </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0">Enable output to virtual cable</TextBlock>
+                            <ToggleButton Grid.Column="1" Name="VirtualCableOutputEnabled"/>
+                        </Grid>
 
-                <TextBlock Grid.Column="0">Enable output to virtual cable</TextBlock>
-                <ToggleButton Grid.Column="1" Name="VirtualCableOutputEnabled"/>
-            </Grid>
+                        
+                    </StackPanel>
+                </TabItem.Content>
+            </TabItem>
 
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="40"/>
-                </Grid.ColumnDefinitions>
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock Foreground="White">Other</TextBlock>
+                </TabItem.Header>
 
-                <TextBlock Grid.Column="0">Enable sound wave visualization</TextBlock>
-                <ToggleButton Grid.Column="1" Name="VisualizationEnabled"/>
-            </Grid>
-        </StackPanel>
+                <TabItem.Content>
+                    <StackPanel Margin="30,50,30,0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
 
-        <Button Grid.Row="1" Click="Save_Click" Content="Save" Background="Transparent" Width="150" HorizontalAlignment="Right" Margin="15"/>
+                            <TextBlock Grid.Column="0">Downloads folder</TextBlock>
+                            <TextBlock Grid.Column="1" Name="DownloadsFolder"/>
+                            <Button Grid.Column="2" Style="{StaticResource NoStylingButton}" Click="EditDownloadsFolder">
+                                <materialDesign:PackIcon Kind="PencilOutline" Foreground="White"/>
+                            </Button>
+                        </Grid>
+                        
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0">Enable sound wave visualization</TextBlock>
+                            <ToggleButton Grid.Column="1" Name="VisualizationEnabled"/>
+                        </Grid>
+                    </StackPanel>
+                </TabItem.Content>
+            </TabItem>
+        </TabControl>
+
+        <Button Grid.Row="2" Click="Save_Click" Content="Save" Background="Transparent" Width="150" HorizontalAlignment="Right" Margin="15"/>
     </Grid>
 </Window>

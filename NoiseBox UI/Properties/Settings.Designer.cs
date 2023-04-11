@@ -166,5 +166,17 @@ namespace NoiseBox_UI.Properties {
                 this["LastPlaybackMode"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string MainOutputDevice {
+            get {
+                return ((string)(this["MainOutputDevice"]));
+            }
+            set {
+                this["MainOutputDevice"] = value;
+            }
+        }
     }
 }

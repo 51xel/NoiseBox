@@ -55,7 +55,7 @@
                 <ColumnDefinition Width="130"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <!--Background="#393946"-->
+            
             <ComboBox Name="Profiles" 
                       Grid.Column="1" 
                       materialDesign:HintAssist.Hint="Default" 
@@ -73,10 +73,6 @@
             </ComboBox>
 
             <Grid x:Name="ControlButtons" Grid.Column="2">
-                <Grid.Resources>
-                    <Style TargetType="TextBlock" BasedOn="{StaticResource TextBlockFontStyle}"/>
-                </Grid.Resources>
-
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="30"/>
                     <ColumnDefinition Width="30"/>
@@ -107,7 +103,7 @@
                 <Popup x:Name="ReNamePopup" PlacementTarget="{Binding ElementName=RenameButton}" StaysOpen="False"
                Placement="Bottom" Width="150" VerticalOffset="15" HorizontalOffset="0">
                     <Border Background="#393946" Padding="15">
-                        <TextBox Name="ReNamePopupTextBox" FontSize="14" FontWeight="DemiBold" KeyDown="ReNamePopupTextBox_KeyDown"/>
+                        <TextBox Name="ReNamePopupTextBox" FontSize="14" FontWeight="DemiBold" KeyDown="ReNamePopupTextBox_KeyDown" Foreground="#BDBDBD" FontFamily="/Fonts/#Montserrat"/>
                     </Border>
                 </Popup>
                 <Button 
@@ -121,7 +117,7 @@
                 <Popup x:Name="NamePopup" PlacementTarget="{Binding ElementName=NameButton}" StaysOpen="False"
                Placement="Bottom" Width="150" VerticalOffset="15" HorizontalOffset="0">
                     <Border Background="#393946" Padding="15">
-                        <TextBox Name="NamePopupTextBox" FontSize="14" FontWeight="DemiBold" KeyDown="NamePopupTextBox_KeyDown"/>
+                        <TextBox Name="NamePopupTextBox" FontSize="14" FontWeight="DemiBold" KeyDown="NamePopupTextBox_KeyDown" Foreground="#BDBDBD" FontFamily="/Fonts/#Montserrat"/>
                     </Border>
                 </Popup>
                 <Button 
