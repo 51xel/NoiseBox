@@ -15,6 +15,7 @@ using WinForms = System.Windows.Forms;
 using NoiseBox;
 using NoiseBox_UI.View.UserControls;
 using NoiseBox_UI.Utils;
+using MaterialDesignThemes.Wpf;
 
 namespace NoiseBox_UI.View.Windows {
     public partial class SettingsWindow : Window {
@@ -22,12 +23,6 @@ namespace NoiseBox_UI.View.Windows {
             InitializeComponent();
             DataContext = this;
             WinMax.DoSourceInitialized(this);
-
-            TitlebarButtons.CloseButtonPressed += CloseWindow;
-        }
-
-        private void CloseWindow(object sender, RoutedEventArgs e) {
-            Close();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e) {
@@ -49,16 +44,15 @@ namespace NoiseBox_UI.View.Windows {
             VirtualCableOutputEnabled.IsChecked = Properties.Settings.Default.VirtualCableOutputEnabled;
 
             VisualizationEnabled.IsChecked = Properties.Settings.Default.VisualizationEnabled;
+
+            MinimizeToTrayEnabled.IsChecked = Properties.Settings.Default.MinimizeToTrayEnabled;
         }
 
         private void Save_Click(object sender, RoutedEventArgs e) {
             Properties.Settings.Default.DownloadsFolder = DownloadsFolder.Text;
             Properties.Settings.Default.MicOutputEnabled = MicOutputEnabled.IsChecked.GetValueOrDefault();
             Properties.Settings.Default.VirtualCableOutputEnabled = VirtualCableOutputEnabled.IsChecked.GetValueOrDefault();
-            bool visualizationPrevState = Properties.Settings.Default.VisualizationEnabled;
-            Properties.Settings.Default.VisualizationEnabled = VisualizationEnabled.IsChecked.GetValueOrDefault();
-
-            Properties.Settings.Default.Save();
+            Properties.Settings.Default.MinimizeToTrayEnabled = MinimizeToTrayEnabled.IsChecked.GetValueOrDefault();
 
             // TODO: stop output
             var win = (Owner as MainWindow);
@@ -67,7 +61,8 @@ namespace NoiseBox_UI.View.Windows {
             win.BottomControlPanel.VCVolumeSlider.IsEnabled = Properties.Settings.Default.VirtualCableOutputEnabled;
             win.BottomControlPanel.VCVolumeButton.IsEnabled = Properties.Settings.Default.VirtualCableOutputEnabled;
 
-            if (visualizationPrevState != Properties.Settings.Default.VisualizationEnabled) {
+            if (VisualizationEnabled.IsChecked.GetValueOrDefault() != Properties.Settings.Default.VisualizationEnabled) {
+                Properties.Settings.Default.VisualizationEnabled = VisualizationEnabled.IsChecked.GetValueOrDefault();
                 win.VisualizationEnabled = Properties.Settings.Default.VisualizationEnabled;
 
                 if (Properties.Settings.Default.VisualizationEnabled) {
@@ -77,6 +72,10 @@ namespace NoiseBox_UI.View.Windows {
                     win.StopVisualization();
                 }
             }
+
+            Properties.Settings.Default.Save();
+
+            SavedSnackbar.MessageQueue?.Enqueue("Saved!", null, null, null, false, true, TimeSpan.FromSeconds(1));
         }
 
         private void EditDownloadsFolder(object sender, RoutedEventArgs e) {

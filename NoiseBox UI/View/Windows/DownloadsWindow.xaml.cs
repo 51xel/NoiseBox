@@ -52,12 +52,6 @@ namespace NoiseBox_UI.View.Windows {
             else {
                 SelectedDirectory = Properties.Settings.Default.DownloadsFolder;
             }
-
-            TitlebarButtons.CloseButtonPressed += CloseWindow;
-        }
-
-        private void CloseWindow(object sender, RoutedEventArgs e) {
-            Close();
         }
 
         private void Window_StateChanged(object sender, EventArgs e) {
