@@ -22,6 +22,12 @@ namespace NoiseBox_UI.View.Windows {
             InitializeComponent();
             DataContext = this;
             WinMax.DoSourceInitialized(this);
+
+            TitlebarButtons.CloseButtonPressed += CloseWindow;
+        }
+
+        private void CloseWindow(object sender, RoutedEventArgs e) {
+            Close();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e) {

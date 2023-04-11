@@ -65,24 +65,6 @@ namespace NoiseBox_UI.View.Windows {
             //TaskbarIcon.CustomPopupPosition = () => { return new Hardcodet.Wpf.TaskbarNotification.Interop.Point() { X = (int)Mouse.GetPosition(this).X, Y = (int)Mouse.GetPosition(this).Y }; };
         }
 
-        private void TaskbarIcon_Click(object sender, RoutedEventArgs e) {
-            if (Visibility == Visibility.Hidden) {
-                Topmost = true;
-                Visibility = Visibility.Visible;
-            }
-            else {
-                if (WindowState == WindowState.Minimized) {
-                    Topmost = true;
-                    WindowState = WindowState.Normal;
-                }
-                else {
-                    Visibility = Visibility.Hidden;
-                }
-            }
-
-            Topmost = false;
-        }
-
         private void Window_Loaded(object sender, RoutedEventArgs e) {
             var lastSelectedPlaylistName = Properties.Settings.Default.LastSelectedPlaylistName;
 
@@ -486,12 +468,6 @@ namespace NoiseBox_UI.View.Windows {
 
         private void CloseWindow(object sender, RoutedEventArgs e) {
             Visibility = Visibility.Hidden;
-        }
-
-        private void TaskbarIconCloseButton_Click(object sender, RoutedEventArgs e) {//Smth went wrong
-            Close();
-
-            TaskbarIcon.Dispose();
         }
     }
 }

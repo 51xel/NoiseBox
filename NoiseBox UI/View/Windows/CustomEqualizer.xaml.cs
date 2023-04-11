@@ -44,7 +44,7 @@ namespace NoiseBox_UI.View.Windows {
         }
 
         private void CloseWindow(object sender, RoutedEventArgs e) {
-            this.Close();
+            Close();
         }
 
 
