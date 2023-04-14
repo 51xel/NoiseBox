@@ -59,7 +59,7 @@ namespace NoiseBox_UI.View.Windows {
 
             BottomControlPanel.MainVolumeSlider.Value = Properties.Settings.Default.MainVolumeSliderValue;
             BottomControlPanel.MicVolumeSlider.Value = Properties.Settings.Default.MicVolumeSliderValue;
-            BottomControlPanel.AdditionalVolumeSlider.Value = Properties.Settings.Default.AdditionaVolumeSliderValue;
+            BottomControlPanel.AdditionalVolumeSlider.Value = Properties.Settings.Default.AdditionalVolumeSliderValue;
 
             BottomControlPanel.MainVolumeSlider.ValueChanged += MainVolumeSlider_ValueChanged;
             BottomControlPanel.AdditionalVolumeSlider.ValueChanged += AdditionalVolumeSlider_ValueChanged;
@@ -468,7 +468,7 @@ namespace NoiseBox_UI.View.Windows {
         private void Window_Closed(object sender, EventArgs e) {
             Properties.Settings.Default.MainVolumeSliderValue = BottomControlPanel.MainVolumeSlider.Value;
             Properties.Settings.Default.MicVolumeSliderValue = BottomControlPanel.MicVolumeSlider.Value;
-            Properties.Settings.Default.AdditionaVolumeSliderValue = BottomControlPanel.AdditionalVolumeSlider.Value;
+            Properties.Settings.Default.AdditionalVolumeSliderValue = BottomControlPanel.AdditionalVolumeSlider.Value;
 
             Properties.Settings.Default.LastSelectedPlaylistName = SelectedPlaylist != null ? SelectedPlaylist.Name : "";
             Properties.Settings.Default.LastBackgroundPlaylistName = BackgroundPlaylistName != null ? BackgroundPlaylistName : "";

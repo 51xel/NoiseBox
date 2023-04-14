@@ -31,6 +31,12 @@ namespace NoiseBox_UI.View.Windows {
                 AdditionalOutputDevicesList.Items.Add(device);
             }
 
+            MainOutputDevicesList.SelectedItem = Properties.Settings.Default.MainOutputDevice;
+            AdditionalOutputDevicesList.SelectedItem = Properties.Settings.Default.AdditionalOutputDevice;
+
+            MicOutputEnabled.IsChecked = Properties.Settings.Default.MicOutputEnabled;
+            AdditionalOutputEnabled.IsChecked = Properties.Settings.Default.AdditionalOutputEnabled;
+
             if (string.IsNullOrEmpty(Properties.Settings.Default.DownloadsFolder)) {
                 string downloadsFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
 
@@ -39,30 +45,45 @@ namespace NoiseBox_UI.View.Windows {
             else {
                 DownloadsFolder.Text = Properties.Settings.Default.DownloadsFolder;
             }
-
-            MainOutputDevicesList.SelectedItem = Properties.Settings.Default.MainOutputDevice;
-            AdditionalOutputDevicesList.SelectedItem = Properties.Settings.Default.AdditionalOutputDevice;
-
-            MicOutputEnabled.IsChecked = Properties.Settings.Default.MicOutputEnabled;
-            VirtualCableOutputEnabled.IsChecked = Properties.Settings.Default.AdditionalOutputEnabled;
+            
             VisualizationEnabled.IsChecked = Properties.Settings.Default.VisualizationEnabled;
             MinimizeToTrayEnabled.IsChecked = Properties.Settings.Default.MinimizeToTrayEnabled;
         }
 
         private void Save_Click(object sender, RoutedEventArgs e) {
-            Properties.Settings.Default.DownloadsFolder = DownloadsFolder.Text;
-            Properties.Settings.Default.MicOutputEnabled = MicOutputEnabled.IsChecked.GetValueOrDefault();
-            Properties.Settings.Default.AdditionalOutputEnabled = VirtualCableOutputEnabled.IsChecked.GetValueOrDefault();
-            Properties.Settings.Default.MinimizeToTrayEnabled = MinimizeToTrayEnabled.IsChecked.GetValueOrDefault();
-            Properties.Settings.Default.MainOutputDevice = MainOutputDevicesList.SelectedItem.ToString();
+            var win = (Owner as MainWindow); 
+
+            if (MainOutputDevicesList.SelectedItem.ToString() != Properties.Settings.Default.MainOutputDevice) {
+                Properties.Settings.Default.MainOutputDevice = MainOutputDevicesList.SelectedItem.ToString();
+                win.AudioStreamControl.MainMusic.ReselectOutputDevice(Properties.Settings.Default.MainOutputDevice);
+            }
+
             Properties.Settings.Default.AdditionalOutputDevice = AdditionalOutputDevicesList.SelectedItem.ToString();
 
-            // TODO: stop output
-            var win = (Owner as MainWindow);
+            if (AdditionalOutputEnabled.IsChecked.GetValueOrDefault() != Properties.Settings.Default.AdditionalOutputEnabled) {
+                Properties.Settings.Default.AdditionalOutputEnabled = AdditionalOutputEnabled.IsChecked.GetValueOrDefault();
+
+                if (Properties.Settings.Default.AdditionalOutputEnabled) {
+                    if (!string.IsNullOrEmpty(Properties.Settings.Default.AdditionalOutputDevice)) {
+                        win.AudioStreamControl.ActivateAdditionalMusic(Properties.Settings.Default.AdditionalOutputDevice);
+                        win.AudioStreamControl.AdditionalMusic.MusicVolume = (float)win.BottomControlPanel.AdditionalVolumeSlider.Value / 100;
+                    }
+                }
+                else if (win.AudioStreamControl.AdditionalMusic != null) {
+                    win.AudioStreamControl.AdditionalMusic.CloseStream();
+                    win.AudioStreamControl.AdditionalMusic = null;
+                }
+            }
+
+            Properties.Settings.Default.MicOutputEnabled = MicOutputEnabled.IsChecked.GetValueOrDefault();
+
             win.BottomControlPanel.MicVolumeSlider.IsEnabled = Properties.Settings.Default.MicOutputEnabled;
             win.BottomControlPanel.MicVolumeButton.IsEnabled = Properties.Settings.Default.MicOutputEnabled;
             win.BottomControlPanel.AdditionalVolumeSlider.IsEnabled = Properties.Settings.Default.AdditionalOutputEnabled;
             win.BottomControlPanel.AdditionalVolumeButton.IsEnabled = Properties.Settings.Default.AdditionalOutputEnabled;
+
+            Properties.Settings.Default.DownloadsFolder = DownloadsFolder.Text;
+            Properties.Settings.Default.MinimizeToTrayEnabled = MinimizeToTrayEnabled.IsChecked.GetValueOrDefault();
 
             if (VisualizationEnabled.IsChecked.GetValueOrDefault() != Properties.Settings.Default.VisualizationEnabled) {
                 Properties.Settings.Default.VisualizationEnabled = VisualizationEnabled.IsChecked.GetValueOrDefault();
@@ -74,20 +95,6 @@ namespace NoiseBox_UI.View.Windows {
                 else {
                     win.StopVisualization();
                 }
-            }
-
-            if (win.AudioStreamControl.MainMusic.GetOutputDeviceId() != DeviceControll.GetOutputDeviceId(Properties.Settings.Default.MainOutputDevice)) {
-                win.AudioStreamControl.MainMusic.ReselectOutputDevice(Properties.Settings.Default.MainOutputDevice);
-            }
-
-            if (Properties.Settings.Default.AdditionalOutputEnabled) {
-                win.AudioStreamControl.ActivateAdditionalMusic(Properties.Settings.Default.AdditionalOutputDevice);
-
-                win.AudioStreamControl.AdditionalMusic.MusicVolume = (float)win.BottomControlPanel.AdditionalVolumeSlider.Value / 100;
-            }
-            else if(win.AudioStreamControl.AdditionalMusic != null) {
-                win.AudioStreamControl.AdditionalMusic.CloseStream();
-                win.AudioStreamControl.AdditionalMusic = null;
             }
 
             Properties.Settings.Default.Save();

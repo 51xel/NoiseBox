@@ -119,8 +119,8 @@
                                 <ColumnDefinition Width="40"/>
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="0">Enable mic output to virtual cable</TextBlock>
-                            <ToggleButton Grid.Column="1" Name="MicOutputEnabled"/>
+                            <TextBlock Grid.Column="0">Enable output to additional device</TextBlock>
+                            <ToggleButton Grid.Column="1" Name="AdditionalOutputEnabled"/>
                         </Grid>
 
                         <Grid>
@@ -129,8 +129,8 @@
                                 <ColumnDefinition Width="40"/>
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="0">Enable output to virtual cable</TextBlock>
-                            <ToggleButton Grid.Column="1" Name="VirtualCableOutputEnabled"/>
+                            <TextBlock Grid.Column="0">Enable mic output to additional device</TextBlock>
+                            <ToggleButton Grid.Column="1" Name="MicOutputEnabled"/>
                         </Grid>
                     </StackPanel>
                 </TabItem.Content>

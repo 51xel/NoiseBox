@@ -20,7 +20,7 @@
     <Setting Name="MicVolumeSliderValue" Type="System.Double" Scope="User">
       <Value Profile="(Default)">50</Value>
     </Setting>
-    <Setting Name="AdditionaVolumeSliderValue" Type="System.Double" Scope="User">
+    <Setting Name="AdditionalVolumeSliderValue" Type="System.Double" Scope="User">
       <Value Profile="(Default)">50</Value>
     </Setting>
     <Setting Name="LastSelectedPlaylistName" Type="System.String" Scope="User">
