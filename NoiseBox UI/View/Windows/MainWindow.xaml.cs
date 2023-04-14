@@ -32,11 +32,14 @@ namespace NoiseBox_UI.View.Windows {
             DataContext = this;
             WinMax.DoSourceInitialized(this);
 
-            if (Properties.Settings.Default.MainOutputDevice != null) {
-                AudioStreamControl = new AudioStreamControl(Properties.Settings.Default.MainOutputDevice);
+            if (string.IsNullOrEmpty(Properties.Settings.Default.MainOutputDevice)) {
+                Properties.Settings.Default.MainOutputDevice = DeviceControll.GetOutputDeviceNameById(0);
             }
-            else {
-                AudioStreamControl = new AudioStreamControl(DeviceControll.GetOutputDeviceNameById(0));
+
+            AudioStreamControl = new AudioStreamControl(Properties.Settings.Default.MainOutputDevice);
+
+            if (Properties.Settings.Default.AdditionalOutputEnabled) {
+                AudioStreamControl.ActivateAdditionalMusic(Properties.Settings.Default.AdditionalOutputDevice);
             }
 
             AudioStreamControl.MainMusic.StoppedEvent += Music_StoppedEvent;
@@ -51,14 +54,15 @@ namespace NoiseBox_UI.View.Windows {
 
             BottomControlPanel.MicVolumeSlider.IsEnabled = Properties.Settings.Default.MicOutputEnabled;
             BottomControlPanel.MicVolumeButton.IsEnabled = Properties.Settings.Default.MicOutputEnabled;
-            BottomControlPanel.VCVolumeSlider.IsEnabled = Properties.Settings.Default.VirtualCableOutputEnabled;
-            BottomControlPanel.VCVolumeButton.IsEnabled = Properties.Settings.Default.VirtualCableOutputEnabled;
+            BottomControlPanel.AdditionalVolumeSlider.IsEnabled = Properties.Settings.Default.AdditionalOutputEnabled;
+            BottomControlPanel.AdditionalVolumeButton.IsEnabled = Properties.Settings.Default.AdditionalOutputEnabled;
 
             BottomControlPanel.MainVolumeSlider.Value = Properties.Settings.Default.MainVolumeSliderValue;
             BottomControlPanel.MicVolumeSlider.Value = Properties.Settings.Default.MicVolumeSliderValue;
-            BottomControlPanel.VCVolumeSlider.Value = Properties.Settings.Default.VCVolumeSliderValue;
+            BottomControlPanel.AdditionalVolumeSlider.Value = Properties.Settings.Default.AdditionaVolumeSliderValue;
 
             BottomControlPanel.MainVolumeSlider.ValueChanged += MainVolumeSlider_ValueChanged;
+            BottomControlPanel.AdditionalVolumeSlider.ValueChanged += AdditionalVolumeSlider_ValueChanged;
 
             SongList.ClickRowElement += Song_Click;
 
@@ -66,8 +70,6 @@ namespace NoiseBox_UI.View.Windows {
 
             SeekBarTimer.Interval = TimeSpan.FromMilliseconds(50);
             SeekBarTimer.Tick += timer_Tick;
-
-            //TaskbarIcon.CustomPopupPosition = () => { return new Hardcodet.Wpf.TaskbarNotification.Interop.Point() { X = (int)Mouse.GetPosition(this).X, Y = (int)Mouse.GetPosition(this).Y }; };
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e) {
@@ -118,8 +120,12 @@ namespace NoiseBox_UI.View.Windows {
             AudioStreamControl.MainMusic.MusicVolume = (float)BottomControlPanel.MainVolumeSlider.Value / 100;
         }
 
+        private void AdditionalVolumeSlider_ValueChanged(object sender, EventArgs e) {
+            AudioStreamControl.AdditionalMusic.MusicVolume = (float)BottomControlPanel.AdditionalVolumeSlider.Value / 100;
+        }
+
         private void Music_StoppedEvent(object sender, EventArgs e) {
-            if (Math.Abs(AudioStreamControl.MainMusic.CurrentTrackLength - AudioStreamControl.MainMusic.CurrentTrackPosition) <= 0.1) {
+            if (Math.Abs(AudioStreamControl.CurrentTrackLength - AudioStreamControl.CurrentTrackPosition) <= 0.1) {
                 BottomControlPanel.State = BottomControlPanel.ButtonState.Paused;
                 SeekBarTimer.Stop();
 
@@ -155,12 +161,16 @@ namespace NoiseBox_UI.View.Windows {
             else {
                 SelectedSong = song.Clone();
 
-                AudioStreamControl.MainMusic.PathToMusic = SelectedSong.Path;
+                AudioStreamControl.PathToMusic = SelectedSong.Path;
 
-                AudioStreamControl.MainMusic.StopAndPlayFromPosition(0);
+                AudioStreamControl.StopAndPlayFromPosition(0);
                 SeekBarTimer.Start();
 
                 AudioStreamControl.MainMusic.MusicVolume = (float)BottomControlPanel.MainVolumeSlider.Value / 100;
+
+                if (AudioStreamControl.AdditionalMusic != null) {
+                    AudioStreamControl.AdditionalMusic.MusicVolume = (float)BottomControlPanel.AdditionalVolumeSlider.Value / 100;
+                }
 
                 BottomControlPanel.State = BottomControlPanel.ButtonState.Playing;
 
@@ -183,10 +193,10 @@ namespace NoiseBox_UI.View.Windows {
         }
 
         private void SeekBar_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
-            var posInSeekBar = (BottomControlPanel.SeekBar.Value * AudioStreamControl.MainMusic.CurrentTrackLength) / 100;
+            var posInSeekBar = (BottomControlPanel.SeekBar.Value * AudioStreamControl.CurrentTrackLength) / 100;
 
-            if (AudioStreamControl.MainMusic.PathToMusic != null && AudioStreamControl.MainMusic.CurrentTrackPosition != posInSeekBar && !AudioStreamControl.MainMusic.IsPaused) {
-                AudioStreamControl.MainMusic.StopAndPlayFromPosition(posInSeekBar);
+            if (AudioStreamControl.PathToMusic != null && AudioStreamControl.CurrentTrackPosition != posInSeekBar && !AudioStreamControl.MainMusic.IsPaused) {
+                AudioStreamControl.StopAndPlayFromPosition(posInSeekBar);
 
                 BottomControlPanel.State = BottomControlPanel.ButtonState.Playing;
                 SeekBarTimer.Start();
@@ -195,7 +205,7 @@ namespace NoiseBox_UI.View.Windows {
 
         private void SeekBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
             if (SelectedSong != null) {
-                var posInSeekBar = (BottomControlPanel.SeekBar.Value * AudioStreamControl.MainMusic.CurrentTrackLength) / 100;
+                var posInSeekBar = (BottomControlPanel.SeekBar.Value * AudioStreamControl.CurrentTrackLength) / 100;
                 var ts = TimeSpan.FromSeconds(posInSeekBar); 
                 BottomControlPanel.CurrentTime.Text = string.Format("{0}:{1}", (int)ts.TotalMinutes, ts.Seconds.ToString("D2"));
             }
@@ -203,23 +213,23 @@ namespace NoiseBox_UI.View.Windows {
 
         private void timer_Tick(object sender, EventArgs e) {
             if (!(BottomControlPanel.SeekBar.IsMouseOver && Mouse.LeftButton == MouseButtonState.Pressed)) {
-                BottomControlPanel.SeekBar.Value = (AudioStreamControl.MainMusic.CurrentTrackPosition * 100) / AudioStreamControl.MainMusic.CurrentTrackLength;
+                BottomControlPanel.SeekBar.Value = (AudioStreamControl.CurrentTrackPosition * 100) / AudioStreamControl.CurrentTrackLength;
             }
         }
 
         private void PlayPauseButton_Click(object sender, RoutedEventArgs e) {
-            if (AudioStreamControl.MainMusic.PathToMusic != null) {
+            if (AudioStreamControl.PathToMusic != null) {
                 if (BottomControlPanel.State == BottomControlPanel.ButtonState.Paused) {
                     BottomControlPanel.State = BottomControlPanel.ButtonState.Playing;
 
-                    AudioStreamControl.MainMusic.StopAndPlayFromPosition((BottomControlPanel.SeekBar.Value * AudioStreamControl.MainMusic.CurrentTrackLength) / 100);
+                    AudioStreamControl.StopAndPlayFromPosition((BottomControlPanel.SeekBar.Value * AudioStreamControl.CurrentTrackLength) / 100);
 
                     SeekBarTimer.Start();
                 }
                 else {
                     BottomControlPanel.State = BottomControlPanel.ButtonState.Paused;
 
-                    AudioStreamControl.MainMusic.Pause();
+                    AudioStreamControl.Pause();
                     SeekBarTimer.Stop();
                 }
             }
@@ -384,7 +394,7 @@ namespace NoiseBox_UI.View.Windows {
 
         public void SelectedSongRemoved() {
             if (SelectedSong != null) {
-                AudioStreamControl.MainMusic.Stop();
+                AudioStreamControl.Stop();
                 SelectedSong = null;
                 BottomControlPanel.State = BottomControlPanel.ButtonState.Paused;
                 SeekBarTimer.Stop();
@@ -458,7 +468,7 @@ namespace NoiseBox_UI.View.Windows {
         private void Window_Closed(object sender, EventArgs e) {
             Properties.Settings.Default.MainVolumeSliderValue = BottomControlPanel.MainVolumeSlider.Value;
             Properties.Settings.Default.MicVolumeSliderValue = BottomControlPanel.MicVolumeSlider.Value;
-            Properties.Settings.Default.VCVolumeSliderValue = BottomControlPanel.VCVolumeSlider.Value;
+            Properties.Settings.Default.AdditionaVolumeSliderValue = BottomControlPanel.AdditionalVolumeSlider.Value;
 
             Properties.Settings.Default.LastSelectedPlaylistName = SelectedPlaylist != null ? SelectedPlaylist.Name : "";
             Properties.Settings.Default.LastBackgroundPlaylistName = BackgroundPlaylistName != null ? BackgroundPlaylistName : "";

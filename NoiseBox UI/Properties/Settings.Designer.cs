@@ -12,7 +12,7 @@ namespace NoiseBox_UI.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.4.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.5.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -62,12 +62,12 @@ namespace NoiseBox_UI.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool VirtualCableOutputEnabled {
+        public bool AdditionalOutputEnabled {
             get {
-                return ((bool)(this["VirtualCableOutputEnabled"]));
+                return ((bool)(this["AdditionalOutputEnabled"]));
             }
             set {
-                this["VirtualCableOutputEnabled"] = value;
+                this["AdditionalOutputEnabled"] = value;
             }
         }
         
@@ -98,12 +98,12 @@ namespace NoiseBox_UI.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("50")]
-        public double VCVolumeSliderValue {
+        public double AdditionaVolumeSliderValue {
             get {
-                return ((double)(this["VCVolumeSliderValue"]));
+                return ((double)(this["AdditionaVolumeSliderValue"]));
             }
             set {
-                this["VCVolumeSliderValue"] = value;
+                this["AdditionaVolumeSliderValue"] = value;
             }
         }
         
@@ -188,6 +188,18 @@ namespace NoiseBox_UI.Properties {
             }
             set {
                 this["MainOutputDevice"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string AdditionalOutputDevice {
+            get {
+                return ((string)(this["AdditionalOutputDevice"]));
+            }
+            set {
+                this["AdditionalOutputDevice"] = value;
             }
         }
     }

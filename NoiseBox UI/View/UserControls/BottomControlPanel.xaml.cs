@@ -481,10 +481,10 @@ namespace NoiseBox_UI.View.UserControls {
             }
         }
 
-        private void VCVolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
-            var icon = VCVolumeButton.Content as MaterialDesignThemes.Wpf.PackIcon;
+        private void AdditionalVolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+            var icon = AdditionalVolumeButton.Content as MaterialDesignThemes.Wpf.PackIcon;
 
-            if (VCVolumeSlider.Value == 0) {
+            if (AdditionalVolumeSlider.Value == 0) {
                 icon.Kind = MaterialDesignThemes.Wpf.PackIconKind.MicrophoneVariantOff;
             }
             else {
@@ -492,18 +492,15 @@ namespace NoiseBox_UI.View.UserControls {
             }
         }
 
-        double vcVolumeSliderBeforeMuteValue = 0;
-        private void VCVolumeButton_Click(object sender, RoutedEventArgs e) {
-            if (VCVolumeSlider.Value != 0) {
-                vcVolumeSliderBeforeMuteValue = VCVolumeSlider.Value;
-                //VCVolumeSlider.Value = 0;
+        double AdditionalVolumeSliderBeforeMuteValue = 0;
+        private void AdditionalVolumeButton_Click(object sender, RoutedEventArgs e) {
+            if (AdditionalVolumeSlider.Value != 0) {
+                AdditionalVolumeSliderBeforeMuteValue = AdditionalVolumeSlider.Value;
 
-                AnimateVolumeSliderValue(VCVolumeSlider, 0);
+                AnimateVolumeSliderValue(AdditionalVolumeSlider, 0);
             }
             else {
-                //VCVolumeSlider.Value = vcVolumeSliderBeforeMuteValue;
-
-                AnimateVolumeSliderValue(VCVolumeSlider, vcVolumeSliderBeforeMuteValue);
+                AnimateVolumeSliderValue(AdditionalVolumeSlider, AdditionalVolumeSliderBeforeMuteValue);
             }
         }
 

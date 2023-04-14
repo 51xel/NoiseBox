@@ -55,7 +55,9 @@ namespace NoiseBox {
         }
 
         private void PlaybackStopped(object sender, EventArgs e) {
-            StoppedEvent(sender, e);
+            if (StoppedEvent != null) {
+                StoppedEvent(sender, e);
+            }
         }
 
         public virtual void Play() {
@@ -187,6 +189,13 @@ namespace NoiseBox {
             }
         }
 
+        public void CloseStream() {
+            Stop();
+            StopEqualizer();
+
+            _outputDevice.Dispose();
+        }
+
         public string PathToMusic {
             get {
                 return _pathToMusic;
@@ -314,7 +323,7 @@ namespace NoiseBox {
             }
         }
 
-        public void SelectMainOutputDevice(string deviceName) {
+        public void ReselectOutputDevice(string deviceName) {
             if (IsPlaying) {
                 var tempPosition = CurrentTrackPosition;
                 var tempDeviceVolume = OutputDeviceVolume;

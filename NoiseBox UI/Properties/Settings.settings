@@ -11,7 +11,7 @@
     <Setting Name="MicOutputEnabled" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="VirtualCableOutputEnabled" Type="System.Boolean" Scope="User">
+    <Setting Name="AdditionalOutputEnabled" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="MainVolumeSliderValue" Type="System.Double" Scope="User">
@@ -20,7 +20,7 @@
     <Setting Name="MicVolumeSliderValue" Type="System.Double" Scope="User">
       <Value Profile="(Default)">50</Value>
     </Setting>
-    <Setting Name="VCVolumeSliderValue" Type="System.Double" Scope="User">
+    <Setting Name="AdditionaVolumeSliderValue" Type="System.Double" Scope="User">
       <Value Profile="(Default)">50</Value>
     </Setting>
     <Setting Name="LastSelectedPlaylistName" Type="System.String" Scope="User">
@@ -42,6 +42,9 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="MainOutputDevice" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="AdditionalOutputDevice" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>

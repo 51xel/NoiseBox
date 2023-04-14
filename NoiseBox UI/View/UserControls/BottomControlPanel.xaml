@@ -134,8 +134,8 @@
                     <RowDefinition Height="100*"/>
                 </Grid.RowDefinitions>
 
-                <cc:CustomSlider Grid.Row="0" Grid.Column="0" x:Name="VCVolumeSlider" Maximum="100" VerticalAlignment="Center" ValueChanged="VCVolumeSlider_ValueChanged"/>
-                <Button Grid.Row="0" Grid.Column="1" Name="VCVolumeButton" Style="{StaticResource NoStylingButton}" Click="VCVolumeButton_Click" Width="20" Height="20">
+                <cc:CustomSlider Grid.Row="0" Grid.Column="0" x:Name="AdditionalVolumeSlider" Maximum="100" VerticalAlignment="Center" ValueChanged="AdditionalVolumeSlider_ValueChanged"/>
+                <Button Grid.Row="0" Grid.Column="1" Name="AdditionalVolumeButton" Style="{StaticResource NoStylingButton}" Click="AdditionalVolumeButton_Click" Width="20" Height="20">
                     <materialDesign:PackIcon Kind="MicrophoneVariantOff" Foreground="White" Width="20" Height="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 </Button>
 

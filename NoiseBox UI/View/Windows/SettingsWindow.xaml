@@ -85,13 +85,28 @@
                     <StackPanel Margin="30,50,30,0">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition Width="220"/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="0">Select output device</TextBlock>
+                            <TextBlock Grid.Column="0">Select main output device</TextBlock>
 
-                            <ComboBox Grid.Column="1" Name="OutputDevicesList" BorderBrush="{DynamicResource PrimaryHueMidBrush}" Foreground="#BDBDBD">
+                            <ComboBox Grid.Column="1" Name="MainOutputDevicesList" BorderBrush="{DynamicResource PrimaryHueMidBrush}" Foreground="#BDBDBD">
+                                <ComboBox.Resources>
+                                    <SolidColorBrush x:Key="MaterialDesignPaper" Color="#212128"/>
+                                </ComboBox.Resources>
+                            </ComboBox>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="262"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0">Select addiotional output device</TextBlock>
+
+                            <ComboBox Grid.Column="1" Name="AdditionalOutputDevicesList" BorderBrush="{DynamicResource PrimaryHueMidBrush}" Foreground="#BDBDBD">
                                 <ComboBox.Resources>
                                     <SolidColorBrush x:Key="MaterialDesignPaper" Color="#212128"/>
                                 </ComboBox.Resources>
@@ -117,8 +132,6 @@
                             <TextBlock Grid.Column="0">Enable output to virtual cable</TextBlock>
                             <ToggleButton Grid.Column="1" Name="VirtualCableOutputEnabled"/>
                         </Grid>
-
-                        
                     </StackPanel>
                 </TabItem.Content>
             </TabItem>

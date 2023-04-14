@@ -54,7 +54,7 @@ namespace NoiseBox_UI.View.Windows {
         }
 
         private void SetBand(int index, float value) {
-            (Owner as MainWindow).AudioStreamControl.MainMusic.SetBandGain(index, value);
+            (Owner as MainWindow).AudioStreamControl.SetBandGain(index, value);
         }
 
         public float Band0 {
@@ -115,11 +115,11 @@ namespace NoiseBox_UI.View.Windows {
             if (StartStopText.Text == "Start") {
                 var win = Owner as MainWindow;
 
-                if (win.AudioStreamControl.MainMusic.PathToMusic != null) {
-                    win.AudioStreamControl.MainMusic.InitializeEqualizer();
+                if (win.AudioStreamControl.PathToMusic != null) {
+                    win.AudioStreamControl.InitializeEqualizer();
 
                     if (win.AudioStreamControl.MainMusic.IsPlaying) {
-                        win.AudioStreamControl.MainMusic.StopAndPlayFromPosition(win.AudioStreamControl.MainMusic.CurrentTrackPosition);
+                        win.AudioStreamControl.StopAndPlayFromPosition(win.AudioStreamControl.CurrentTrackPosition);
                     }
 
                     SliderSetEnabledState(true);
@@ -133,10 +133,10 @@ namespace NoiseBox_UI.View.Windows {
             else if (StartStopText.Text == "Stop") {
                 var win = Owner as MainWindow;
 
-                win.AudioStreamControl.MainMusic.StopEqualizer();
+                win.AudioStreamControl.StopEqualizer();
 
                 if (win.AudioStreamControl.MainMusic.IsPlaying) {
-                    win.AudioStreamControl.MainMusic.StopAndPlayFromPosition(win.AudioStreamControl.MainMusic.CurrentTrackPosition);
+                    win.AudioStreamControl.StopAndPlayFromPosition(win.AudioStreamControl.CurrentTrackPosition);
                 }
 
                 SliderSetEnabledState(false);
@@ -205,7 +205,7 @@ namespace NoiseBox_UI.View.Windows {
                 var band = _bandsSettings.FirstOrDefault(n => n.Name == Profiles.SelectedItem as String);
 
                 if (band != null) {
-                    (Owner as MainWindow).AudioStreamControl.MainMusic.SetBandsList(band.EqualizerBands);
+                    (Owner as MainWindow).AudioStreamControl.SetBandsList(band.EqualizerBands);
 
                     (Owner as MainWindow).SelectedBandsSettings = band;
 
