@@ -16,7 +16,7 @@ using System.Collections.Generic;
 namespace NoiseBox_UI.View.Windows {
     public partial class MainWindow : Window {
         public AudioStreamControl AudioStreamControl;
-        DispatcherTimer SeekBarTimer = new DispatcherTimer();   //TODO make private or public
+        private DispatcherTimer SeekBarTimer = new DispatcherTimer();
 
         public Playlist? SelectedPlaylist;
         public Song? SelectedSong = null;
@@ -35,10 +35,30 @@ namespace NoiseBox_UI.View.Windows {
             if (string.IsNullOrEmpty(Properties.Settings.Default.MainOutputDevice)) {
                 Properties.Settings.Default.MainOutputDevice = DeviceControll.GetOutputDeviceNameById(0);
             }
+            else if (!DeviceControll.GetOutputDevicesList().Contains(Properties.Settings.Default.MainOutputDevice)) {
+                Properties.Settings.Default.MainOutputDevice = DeviceControll.GetOutputDeviceNameById(0);
+            }
+
+            if (string.IsNullOrEmpty(Properties.Settings.Default.AdditionalOutputDevice)) {
+                foreach (string outputDevice in DeviceControll.GetOutputDevicesList()) {
+                    if (outputDevice.Contains("virtual", StringComparison.OrdinalIgnoreCase)) {
+                        Properties.Settings.Default.AdditionalOutputDevice = outputDevice;
+                    }
+                }
+            }
+            else if (!DeviceControll.GetOutputDevicesList().Contains(Properties.Settings.Default.AdditionalOutputDevice)) {
+                Properties.Settings.Default.AdditionalOutputDevice = "";
+
+                foreach (string outputDevice in DeviceControll.GetOutputDevicesList()) {
+                    if (outputDevice.Contains("virtual", StringComparison.OrdinalIgnoreCase)) {
+                        Properties.Settings.Default.AdditionalOutputDevice = outputDevice;
+                    }
+                }
+            }
 
             AudioStreamControl = new AudioStreamControl(Properties.Settings.Default.MainOutputDevice);
 
-            if (Properties.Settings.Default.AdditionalOutputEnabled) {
+            if (Properties.Settings.Default.AdditionalOutputEnabled && !string.IsNullOrEmpty(Properties.Settings.Default.AdditionalOutputDevice)) {
                 AudioStreamControl.ActivateAdditionalMusic(Properties.Settings.Default.AdditionalOutputDevice);
             }
 
@@ -156,7 +176,8 @@ namespace NoiseBox_UI.View.Windows {
 
         public void SelectSong(Song song) {
             if (!File.Exists(song.Path)) {
-                MessageBox.Show("File does not exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                InfoSnackbar.MessageQueue?.Clear();
+                InfoSnackbar.MessageQueue?.Enqueue($"Song \"{song.Name}\" could not be found", null, null, null, false, true, TimeSpan.FromSeconds(2));
             }
             else {
                 SelectedSong = song.Clone();
@@ -251,10 +272,10 @@ namespace NoiseBox_UI.View.Windows {
 
                             if (selectedSongIndex != -1) {
                                 if (selectedSongIndex == backgroundSongs.Count - 1) {
-                                    SelectSong(backgroundSongs[0] as Song);
+                                    SelectWithSkipping(backgroundSongs[0] as Song, NextButton_Click);
                                 }
                                 else {
-                                    SelectSong(backgroundSongs[selectedSongIndex + 1] as Song);
+                                    SelectWithSkipping(backgroundSongs[selectedSongIndex + 1] as Song, NextButton_Click);
                                 }
                             }
 
@@ -274,10 +295,10 @@ namespace NoiseBox_UI.View.Windows {
                 switch (BottomControlPanel.Mode) {
                     case BottomControlPanel.PlaybackMode.Loop:
                         if (selectedSongIndex == SongList.List.Items.Count - 1) {
-                            SelectSong(SongList.List.Items[0] as Song);
+                            SelectWithSkipping(SongList.List.Items[0] as Song, NextButton_Click);
                         }
                         else {
-                            SelectSong(SongList.List.Items[selectedSongIndex + 1] as Song);
+                            SelectWithSkipping(SongList.List.Items[selectedSongIndex + 1] as Song, NextButton_Click);
                         }
                         break;
 
@@ -307,10 +328,10 @@ namespace NoiseBox_UI.View.Windows {
 
                             if (selectedSongIndex != -1) {
                                 if (selectedSongIndex == 0) {
-                                    SelectSong(backgroundSongs[backgroundSongs.Count - 1] as Song);
+                                    SelectWithSkipping(backgroundSongs[backgroundSongs.Count - 1] as Song, PrevButton_Click);
                                 }
                                 else {
-                                    SelectSong(backgroundSongs[selectedSongIndex - 1] as Song);
+                                    SelectWithSkipping(backgroundSongs[selectedSongIndex - 1] as Song, PrevButton_Click);
                                 }
                             }
 
@@ -331,10 +352,10 @@ namespace NoiseBox_UI.View.Windows {
                 switch (BottomControlPanel.Mode) {
                     case BottomControlPanel.PlaybackMode.Loop:
                         if (selectedSongIndex == 0) {
-                            SelectSong(SongList.List.Items[SongList.List.Items.Count - 1] as Song);
+                            SelectWithSkipping(SongList.List.Items[SongList.List.Items.Count - 1] as Song, PrevButton_Click);
                         }
                         else {
-                            SelectSong(SongList.List.Items[selectedSongIndex - 1] as Song);
+                            SelectWithSkipping(SongList.List.Items[selectedSongIndex - 1] as Song, PrevButton_Click);
                         }
                         break;
 
@@ -346,6 +367,18 @@ namespace NoiseBox_UI.View.Windows {
                         SelectSong(SelectedSong);
                         break;
                 }
+            }
+        }
+
+        private void SelectWithSkipping(Song song, Action<object, RoutedEventArgs> NextPrevButton_Click) { // skips if song doesn't exist
+            if (!File.Exists(song.Path)) {
+                InfoSnackbar.MessageQueue?.Clear();
+                InfoSnackbar.MessageQueue?.Enqueue($"Song \"{song.Name}\" could not be found", null, null, null, false, true, TimeSpan.FromSeconds(2));
+                SelectedSong = song.Clone();
+                NextPrevButton_Click(null, null);
+            }
+            else {
+                SelectSong(song);
             }
         }
 
@@ -465,7 +498,7 @@ namespace NoiseBox_UI.View.Windows {
             }
         }
 
-        private void Window_Closed(object sender, EventArgs e) {
+        public void Window_Closed(object sender, EventArgs e) {
             Properties.Settings.Default.MainVolumeSliderValue = BottomControlPanel.MainVolumeSlider.Value;
             Properties.Settings.Default.MicVolumeSliderValue = BottomControlPanel.MicVolumeSlider.Value;
             Properties.Settings.Default.AdditionalVolumeSliderValue = BottomControlPanel.AdditionalVolumeSlider.Value;

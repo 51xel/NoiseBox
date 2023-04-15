@@ -64,6 +64,8 @@
 
         <userControls:SongList x:Name="SongList" Grid.Row="1" Grid.Column="1"/>
 
+        <materialDesign:Snackbar Grid.Row="1" Grid.ColumnSpan="3" Name="InfoSnackbar" MessageQueue="{materialDesign:MessageQueue}" IsActive="False"/>
+
         <Border Grid.Row="1" Grid.Column="2" Background="Black" Opacity="0.4"/>
         <userControls:FunctionButtons x:Name="FunctionButtons" Grid.Row="1" Grid.Column="2"/>
 

@@ -39,9 +39,9 @@ namespace NoiseBox {
 
         protected void SelectOutputDevice(string deviceName) {
             if (String.IsNullOrWhiteSpace(deviceName)) {
-                _log.Print("Name device can`t be null", LogInfoType.ERROR);
+                _log.Print("Device name can`t be null", LogInfoType.ERROR);
 
-                throw new ArgumentNullException("Name device can`t be null");
+                throw new ArgumentNullException("Device name can`t be null");
             }
             else {
                 _outputDevice = new WaveOutEvent() {
@@ -136,7 +136,7 @@ namespace NoiseBox {
             }
         }
 
-        public MusicStream(string deviceName = "CABLE Input (VB-Audio Virtual C") : base(deviceName) { }
+        public MusicStream(string deviceName) : base(deviceName) { }
 
         public override void Play() {
             if (_pathToMusic != null) {
@@ -379,7 +379,7 @@ namespace NoiseBox {
             }
         }
 
-        public MicrophoneStream(string deviceIn, string deviceOut = "CABLE Input (VB-Audio Virtual C") : base(deviceOut) {
+        public MicrophoneStream(string deviceIn, string deviceOut) : base(deviceOut) {
             SelectInputDevice(deviceIn);
         }
 
@@ -387,7 +387,7 @@ namespace NoiseBox {
             if (String.IsNullOrWhiteSpace(deviceName)) {
                 _log.Print("Name of input device can`t be null", LogInfoType.ERROR);
 
-                throw new ArgumentNullException("Name device can`t be null");
+                throw new ArgumentNullException("Device name can`t be null");
             }
             else {
                 _waveSource = new WaveInEvent() {

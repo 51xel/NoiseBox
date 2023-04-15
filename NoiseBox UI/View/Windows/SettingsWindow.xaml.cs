@@ -58,18 +58,34 @@ namespace NoiseBox_UI.View.Windows {
                 win.AudioStreamControl.MainMusic.ReselectOutputDevice(Properties.Settings.Default.MainOutputDevice);
             }
 
-            Properties.Settings.Default.AdditionalOutputDevice = AdditionalOutputDevicesList.SelectedItem.ToString();
+            bool changedAdditionalDevice = false;
+            bool changedAdditionalEnabled = false;
 
-            if (AdditionalOutputEnabled.IsChecked.GetValueOrDefault() != Properties.Settings.Default.AdditionalOutputEnabled) {
-                Properties.Settings.Default.AdditionalOutputEnabled = AdditionalOutputEnabled.IsChecked.GetValueOrDefault();
+            if (AdditionalOutputDevicesList.SelectedItem != null) {
+                changedAdditionalDevice = AdditionalOutputDevicesList.SelectedItem.ToString() != Properties.Settings.Default.AdditionalOutputDevice;
+                Properties.Settings.Default.AdditionalOutputDevice = AdditionalOutputDevicesList.SelectedItem.ToString();
+            }
 
-                if (Properties.Settings.Default.AdditionalOutputEnabled) {
-                    if (!string.IsNullOrEmpty(Properties.Settings.Default.AdditionalOutputDevice)) {
-                        win.AudioStreamControl.ActivateAdditionalMusic(Properties.Settings.Default.AdditionalOutputDevice);
-                        win.AudioStreamControl.AdditionalMusic.MusicVolume = (float)win.BottomControlPanel.AdditionalVolumeSlider.Value / 100;
-                    }
+            changedAdditionalEnabled = AdditionalOutputEnabled.IsChecked.GetValueOrDefault() != Properties.Settings.Default.AdditionalOutputEnabled;
+
+            if ((changedAdditionalDevice && AdditionalOutputEnabled.IsChecked.GetValueOrDefault()) || 
+                (changedAdditionalEnabled && AdditionalOutputEnabled.IsChecked.GetValueOrDefault())) {
+
+                if (AdditionalOutputDevicesList.SelectedItem != null) {
+                    Properties.Settings.Default.AdditionalOutputEnabled = true;
+
+                    win.AudioStreamControl.ActivateAdditionalMusic(Properties.Settings.Default.AdditionalOutputDevice);
+                    win.AudioStreamControl.AdditionalMusic.MusicVolume = (float)win.BottomControlPanel.AdditionalVolumeSlider.Value / 100;
                 }
-                else if (win.AudioStreamControl.AdditionalMusic != null) {
+                else {
+                    Properties.Settings.Default.AdditionalOutputEnabled = false;
+                    AdditionalOutputEnabled.IsChecked = false;
+                }
+            }
+            else if (changedAdditionalEnabled && !AdditionalOutputEnabled.IsChecked.GetValueOrDefault()) {
+                Properties.Settings.Default.AdditionalOutputEnabled = false;
+
+                if (win.AudioStreamControl.AdditionalMusic != null) {
                     win.AudioStreamControl.AdditionalMusic.CloseStream();
                     win.AudioStreamControl.AdditionalMusic = null;
                 }
@@ -99,6 +115,7 @@ namespace NoiseBox_UI.View.Windows {
 
             Properties.Settings.Default.Save();
 
+            SavedSnackbar.MessageQueue?.Clear();
             SavedSnackbar.MessageQueue?.Enqueue("Saved!", null, null, null, false, true, TimeSpan.FromSeconds(1));
         }
 

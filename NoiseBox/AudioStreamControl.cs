@@ -12,7 +12,7 @@ namespace NoiseBox {
 
         public AudioStreamControl(string mainOutputDevice) {
             if (String.IsNullOrWhiteSpace(mainOutputDevice)) {
-                _log.Print("Name device can`t be null", LogInfoType.ERROR);
+                _log.Print("Device name can`t be null", LogInfoType.ERROR);
             }
             else {
                 MainMusic = new MusicStream(mainOutputDevice);
@@ -21,7 +21,7 @@ namespace NoiseBox {
 
         public void ActivateAdditionalMusic(string additionalOutputDevice) {
             if (String.IsNullOrWhiteSpace(additionalOutputDevice)) {
-                _log.Print("Name device can`t be null", LogInfoType.ERROR);
+                _log.Print("Device name can`t be null", LogInfoType.ERROR);
             }
             else {
                 if (MainMusic != null) {

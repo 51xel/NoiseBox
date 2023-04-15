@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NoiseBox_UI.View.Windows;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -47,7 +48,8 @@ namespace NoiseBox_UI.View.UserControls {
         private void TaskbarIconCloseButton_Click(object sender, RoutedEventArgs e) {
             TaskbarIcon.Dispose();
 
-            var win = Window.GetWindow(this);
+            var win = Window.GetWindow(this) as MainWindow;
+            win.Window_Closed(null, null); // saves settings
             win.Close();
 
             Environment.Exit(0);

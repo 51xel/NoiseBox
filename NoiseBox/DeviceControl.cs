@@ -4,7 +4,7 @@ namespace NoiseBox {
     public class DeviceControll {
         public static int GetOutputDeviceId(string nameDevice) {
             if (String.IsNullOrWhiteSpace(nameDevice)) {
-                throw new ArgumentNullException("Name device can`t be null");
+                throw new ArgumentNullException("Device name can`t be null");
             }
 
             for (int n = -1; n < WaveOut.DeviceCount; n++) {
@@ -18,7 +18,7 @@ namespace NoiseBox {
 
         public static int GetInputDeviceId(string nameDevice) {
             if (String.IsNullOrWhiteSpace(nameDevice)) {
-                throw new ArgumentNullException("Name device can`t be null");
+                throw new ArgumentNullException("Device name can`t be null");
             }
 
             for (int n = -1; n < WaveIn.DeviceCount; n++) {
