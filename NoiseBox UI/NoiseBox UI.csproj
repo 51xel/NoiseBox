@@ -35,8 +35,6 @@
     <None Remove="Images\Icons\settings.png" />
     <None Remove="Images\Icons\shuffle.png" />
     <None Remove="Images\Icons\speaker.png" />
-    <None Remove="Images\Icons\temporary_app_icon.ico" />
-    <None Remove="Images\Icons\temporary_app_icon.png" />
     <None Remove="Images\Icons\tray.ico" />
   </ItemGroup>
 
@@ -85,7 +83,6 @@
     <Resource Include="Images\Icons\settings.png" />
     <Resource Include="Images\Icons\shuffle.png" />
     <Resource Include="Images\Icons\speaker.png" />
-    <Resource Include="Images\Icons\temporary_app_icon.ico" />
     <Resource Include="Images\Icons\tray.ico" />
   </ItemGroup>
 
