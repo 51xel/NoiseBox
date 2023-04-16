@@ -127,6 +127,8 @@ namespace NoiseBox_UI.View.Windows {
 
                             PlayPauseButton_Click(null, null);
 
+                            AudioStreamControl.CurrentTrackPosition = AudioStreamControl.CurrentTrackLength * Properties.Settings.Default.LastSeekBarValue / 100;
+
                             BottomControlPanel.SeekBar.Value = Properties.Settings.Default.LastSeekBarValue;
                         }
                     }
@@ -134,6 +136,8 @@ namespace NoiseBox_UI.View.Windows {
             }
 
             BottomControlPanel.Mode = (BottomControlPanel.PlaybackMode)Properties.Settings.Default.LastPlaybackMode;
+
+            PreviewKeyDown += MainWindow_PreviewKeyDown;
         }
 
         private void MainVolumeSlider_ValueChanged(object sender, EventArgs e) {
@@ -445,6 +449,8 @@ namespace NoiseBox_UI.View.Windows {
 
                 BackgroundPlaylistName = null;
 
+                SelectedSong = null;
+
                 StopVisualization();
             }
         }
@@ -538,6 +544,25 @@ namespace NoiseBox_UI.View.Windows {
             foreach (Window childWindow in childWindows) {
                 childWindow.Visibility = isVisible ? Visibility.Visible : Visibility.Hidden;
                 UpdateChildWindowVisibility(childWindow, isVisible);
+            }
+        }
+
+        private void MainWindow_PreviewKeyDown(object sender, KeyEventArgs e) {
+            if (!(Keyboard.FocusedElement is TextBox)) {
+                switch (e.Key) {
+                    case Key.Space:
+                        PlayPauseButton_Click(null, null);
+                        e.Handled = true;
+                        break;
+                    case Key.Down:
+                        NextButton_Click(null, null);
+                        e.Handled = true;
+                        break;
+                    case Key.Up:
+                        PrevButton_Click(null, null);
+                        e.Handled = true;
+                        break;
+                }
             }
         }
     }
