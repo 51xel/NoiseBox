@@ -76,7 +76,7 @@ namespace NoiseBox_UI.View.Windows {
             }
         }
 
-        private void Window_Closed(object sender, EventArgs e) {
+        private void Window_Closing(object sender, EventArgs e) {
             Cancel_Click(null, null);
         }
 

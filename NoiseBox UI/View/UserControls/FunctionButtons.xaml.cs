@@ -43,6 +43,7 @@ namespace NoiseBox_UI.View.UserControls {
             _settingsWin.Owner = Window.GetWindow(this);
             _settingsWin.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             _settingsWin.Closed += (_, _) => { _isSettingsWindowOpen = false; };
+            _settingsWin.Closing += (_, _) => { _settingsWin.Owner = null; };
             _isSettingsWindowOpen = true;
 
             _settingsWin.Show();
@@ -60,6 +61,7 @@ namespace NoiseBox_UI.View.UserControls {
             _downloadsWin.Owner = Window.GetWindow(this);
             _downloadsWin.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             _downloadsWin.Closed += (_, _) => { _isDownloadsWindowOpen = false; };
+            _downloadsWin.Closing += (_, _) => { _downloadsWin.Owner = null; };
             _isDownloadsWindowOpen = true;
 
             _downloadsWin.Show();
@@ -134,11 +136,17 @@ namespace NoiseBox_UI.View.UserControls {
                 }
                 return;
             }
-            var win = (MainWindow)Window.GetWindow(this);
 
             _equalizerWin = new CustomEqualizer();
             _equalizerWin.Owner = Window.GetWindow(this);
             _equalizerWin.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            _equalizerWin.Closed += (_, _) => { _isEqualizerWindowOpen = false; };
+            _equalizerWin.Closing += (_, _) => { _equalizerWin.Owner = null; };
+            _isEqualizerWindowOpen = true;
+
+            _equalizerWin.Show();
+
+            var win = (MainWindow)Window.GetWindow(this);
 
             if (win.AudioStreamControl.MainMusic.IsEqualizerWorking) {
                 _equalizerWin.StartStopText.Text = "Stop";
@@ -146,13 +154,6 @@ namespace NoiseBox_UI.View.UserControls {
             else {
                 _equalizerWin.StartStopText.Text = "Start";
             }
-
-            _equalizerWin.Closed += (_, _) => { 
-                _isEqualizerWindowOpen = false;
-            };
-            _isEqualizerWindowOpen = true;
-
-            _equalizerWin.Show();
 
             _equalizerWin.LoadSelectedBand(win.SelectedBandsSettings);
 

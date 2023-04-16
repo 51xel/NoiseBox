@@ -12,7 +12,7 @@
         AllowsTransparency="True"
         
         StateChanged="Window_StateChanged"
-        Closed="Window_Closed"
+        Closing="Window_Closing"
         
         MouseDown="Window_MouseDown">
 
