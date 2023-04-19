@@ -16,6 +16,8 @@ using NoiseBox;
 using NoiseBox_UI.View.UserControls;
 using NoiseBox_UI.Utils;
 using MaterialDesignThemes.Wpf;
+using System.Collections;
+using System.Text.RegularExpressions;
 
 namespace NoiseBox_UI.View.Windows {
     public partial class SettingsWindow : Window {
@@ -23,6 +25,8 @@ namespace NoiseBox_UI.View.Windows {
             InitializeComponent();
             DataContext = this;
             WinMax.DoSourceInitialized(this);
+
+            PreviewKeyDown += Window_PreviewKeyDown;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e) {
@@ -48,6 +52,8 @@ namespace NoiseBox_UI.View.Windows {
             
             VisualizationEnabled.IsChecked = Properties.Settings.Default.VisualizationEnabled;
             MinimizeToTrayEnabled.IsChecked = Properties.Settings.Default.MinimizeToTrayEnabled;
+
+            PopulateHotkeyStackPanel();
         }
 
         private void Save_Click(object sender, RoutedEventArgs e) {
@@ -127,6 +133,82 @@ namespace NoiseBox_UI.View.Windows {
 
             if (res == WinForms.DialogResult.OK) {
                 DownloadsFolder.Text = dialog.SelectedPath;
+            }
+        }
+
+        string editedHotkey = "";
+
+        private void Window_PreviewKeyDown(object sender, KeyEventArgs e) { 
+            if (string.IsNullOrEmpty(editedHotkey)) {
+                return;
+            }
+
+            if (!IsModifierKey(e.Key)) {
+                if (e.KeyboardDevice.Modifiers != ModifierKeys.None) {
+                    (FindName(editedHotkey) as TextBlock).Text = e.KeyboardDevice.Modifiers + " + " + e.Key;
+                }
+                else {
+                    (FindName(editedHotkey) as TextBlock).Text = e.Key.ToString();
+                }
+
+                editedHotkey = "";
+            }
+        }
+
+        private void EditHotkey(object sender, RoutedEventArgs e) {
+            string name = (sender as Button).Name;
+            editedHotkey = name.Substring(0, name.Length - 3); // e.g. PlayPauseHotkeyBtn -> PlayPauseHotkey
+        }
+
+        private bool IsModifierKey(Key key) {
+            List<Key> modifierKeys = new List<Key> {
+                Key.LeftCtrl, Key.RightCtrl,
+                Key.LeftAlt, Key.RightAlt,
+                Key.LeftShift, Key.RightShift,
+                Key.LWin, Key.RWin,
+                Key.System
+            };
+
+            return modifierKeys.Contains(key);
+        }
+
+        void PopulateHotkeyStackPanel() {
+            string[] hotkeys = { // names of hotkeys
+                "Play/Pause",
+                "Next Song",
+                "Previous Song",
+                "Increase Main Volume",
+                "Decrease Main Volume"
+            };
+
+            foreach (var hk in hotkeys) {
+                string name = Regex.Replace(hk, @"[^a-zA-Z0-9_]", ""); // e.g. Play/Pause -> PlayPause
+
+                Grid grid = new Grid();
+                grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(200) });
+                grid.ColumnDefinitions.Add(new ColumnDefinition());
+                grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(40) });
+
+                TextBlock tb1 = new TextBlock() { Text = hk, Style = (Style)TabControl.FindResource(typeof(TextBlock)) };
+                Grid.SetColumn(tb1, 0);
+                grid.Children.Add(tb1);
+
+                TextBlock tb2 = new TextBlock() { Name = name + "Hotkey", Style = (Style)TabControl.FindResource(typeof(TextBlock)), TextAlignment = TextAlignment.Center };
+                Grid.SetColumn(tb2, 1);
+                grid.Children.Add(tb2);
+                HotkeyStackPanel.RegisterName(tb2.Name, tb2);
+
+                Button btn = new Button() { Name = name + "HotkeyBtn", Style = (Style)FindResource("NoStylingButton") };
+                btn.Click += EditHotkey;
+
+                PackIcon packIcon = new PackIcon() { Kind = PackIconKind.PencilOutline, Foreground = Brushes.White};
+                btn.Content = packIcon;
+
+                Grid.SetColumn(btn, 2);
+                grid.Children.Add(btn);
+                HotkeyStackPanel.RegisterName(btn.Name, btn);
+
+                HotkeyStackPanel.Children.Add(grid);
             }
         }
 

@@ -563,13 +563,11 @@ namespace NoiseBox_UI.View.Windows {
                         e.Handled = true;
                         break;
                     case Key.OemPlus:
-                    case Key.Add:
                         var val = BottomControlPanel.MainVolumeSlider.Value;
                         BottomControlPanel.MainVolumeSlider.Value = val + 5 > 100 ? 100 : val + 5;
                         e.Handled = true;
                         break;
                     case Key.OemMinus:
-                    case Key.Subtract:
                         val = BottomControlPanel.MainVolumeSlider.Value;
                         BottomControlPanel.MainVolumeSlider.Value = val - 5 < 0 ? 0 : val - 5;
                         e.Handled = true;

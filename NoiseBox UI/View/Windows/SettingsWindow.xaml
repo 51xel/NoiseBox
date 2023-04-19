@@ -50,7 +50,7 @@
 
         <userControls:TitlebarButtons x:Name="TitlebarButtons" Panel.ZIndex="1"/>
 
-        <TabControl Grid.Row="1">
+        <TabControl Grid.Row="1" Name="TabControl">
             <TabControl.Resources>
                 <Style TargetType="TextBlock">
                     <Setter Property="FontFamily" Value="/Fonts/#Montserrat"/>
@@ -133,6 +133,16 @@
                             <ToggleButton Grid.Column="1" Name="MicOutputEnabled"/>
                         </Grid>
                     </StackPanel>
+                </TabItem.Content>
+            </TabItem>
+
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock Foreground="White">Hotkeys</TextBlock>
+                </TabItem.Header>
+
+                <TabItem.Content>
+                    <StackPanel Margin="30,50,30,0" Name="HotkeyStackPanel"/>
                 </TabItem.Content>
             </TabItem>
 
