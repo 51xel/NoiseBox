@@ -246,7 +246,7 @@ namespace NoiseBox_UI.View.Windows {
         }
 
         private void PlayPauseButton_Click(object sender, RoutedEventArgs e) {
-            if (AudioStreamControl.PathToMusic != null) {
+            if (SelectedSong != null) {
                 if (BottomControlPanel.State == BottomControlPanel.ButtonState.Paused) {
                     BottomControlPanel.State = BottomControlPanel.ButtonState.Playing;
 
@@ -552,30 +552,37 @@ namespace NoiseBox_UI.View.Windows {
 
         private void MainWindow_PreviewKeyDown(object sender, KeyEventArgs e) {
             if (!(Keyboard.FocusedElement is TextBox)) {
-                switch (e.Key) {
-                    case Key.Space:
-                        PlayPauseButton_Click(null, null);
-                        e.Handled = true;
-                        break;
-                    case Key.Down:
-                        NextButton_Click(null, null);
-                        e.Handled = true;
-                        break;
-                    case Key.Up:
-                        PrevButton_Click(null, null);
-                        e.Handled = true;
-                        break;
-                    case Key.OemPlus:
-                        var val = BottomControlPanel.MainVolumeSlider.Value;
-                        BottomControlPanel.MainVolumeSlider.Value = val + 5 > 100 ? 100 : val + 5;
-                        e.Handled = true;
-                        break;
-                    case Key.OemMinus:
-                        val = BottomControlPanel.MainVolumeSlider.Value;
-                        BottomControlPanel.MainVolumeSlider.Value = val - 5 < 0 ? 0 : val - 5;
-                        e.Handled = true;
-                        break;
+                var enteredHotkey = "";
+
+                if (e.KeyboardDevice.Modifiers != ModifierKeys.None) {
+                    enteredHotkey = e.KeyboardDevice.Modifiers + " + " + e.Key;
                 }
+                else {
+                    enteredHotkey = e.Key.ToString();
+                }
+
+                if (enteredHotkey == Properties.Settings.Default["PlayPauseHotkey"].ToString()) {
+                    PlayPauseButton_Click(null, null);
+                    e.Handled = true;
+                }
+                else if (enteredHotkey == Properties.Settings.Default["NextSongHotkey"].ToString()) {
+                    NextButton_Click(null, null);
+                    e.Handled = true;
+                }
+                else if (enteredHotkey == Properties.Settings.Default["PreviousSongHotkey"].ToString()) {
+                    PrevButton_Click(null, null);
+                    e.Handled = true;
+                }
+                else if (enteredHotkey == Properties.Settings.Default["IncreaseMainVolumeHotkey"].ToString()) {
+                    var val = BottomControlPanel.MainVolumeSlider.Value;
+                    BottomControlPanel.MainVolumeSlider.Value = val + 5 > 100 ? 100 : val + 5;
+                    e.Handled = true;
+                }
+                else if (enteredHotkey == Properties.Settings.Default["DecreaseMainVolumeHotkey"].ToString()) {
+                    var val = BottomControlPanel.MainVolumeSlider.Value;
+                    BottomControlPanel.MainVolumeSlider.Value = val - 5 < 0 ? 0 : val - 5;
+                    e.Handled = true;
+                }                
             }
         }
     }

@@ -202,5 +202,65 @@ namespace NoiseBox_UI.Properties {
                 this["AdditionalOutputDevice"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Space")]
+        public string PlayPauseHotkey {
+            get {
+                return ((string)(this["PlayPauseHotkey"]));
+            }
+            set {
+                this["PlayPauseHotkey"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Down")]
+        public string NextSongHotkey {
+            get {
+                return ((string)(this["NextSongHotkey"]));
+            }
+            set {
+                this["NextSongHotkey"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Up")]
+        public string PreviousSongHotkey {
+            get {
+                return ((string)(this["PreviousSongHotkey"]));
+            }
+            set {
+                this["PreviousSongHotkey"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("OemPlus")]
+        public string IncreaseMainVolumeHotkey {
+            get {
+                return ((string)(this["IncreaseMainVolumeHotkey"]));
+            }
+            set {
+                this["IncreaseMainVolumeHotkey"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("OemMinus")]
+        public string DecreaseMainVolumeHotkey {
+            get {
+                return ((string)(this["DecreaseMainVolumeHotkey"]));
+            }
+            set {
+                this["DecreaseMainVolumeHotkey"] = value;
+            }
+        }
     }
 }

@@ -47,5 +47,20 @@
     <Setting Name="AdditionalOutputDevice" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="PlayPauseHotkey" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Space</Value>
+    </Setting>
+    <Setting Name="NextSongHotkey" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Down</Value>
+    </Setting>
+    <Setting Name="PreviousSongHotkey" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Up</Value>
+    </Setting>
+    <Setting Name="IncreaseMainVolumeHotkey" Type="System.String" Scope="User">
+      <Value Profile="(Default)">OemPlus</Value>
+    </Setting>
+    <Setting Name="DecreaseMainVolumeHotkey" Type="System.String" Scope="User">
+      <Value Profile="(Default)">OemMinus</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
