@@ -192,6 +192,6 @@
         </TabControl>
 
         <Button Grid.Row="2" Click="Save_Click" Content="Save" Background="Transparent" Width="150" HorizontalAlignment="Right" Margin="15"/>
-        <materialDesign:Snackbar Grid.Row="1" Name="SavedSnackbar" MessageQueue="{materialDesign:MessageQueue}" IsActive="False"/>
+        <materialDesign:Snackbar Grid.Row="1" Name="InfoSnackbar" MessageQueue="{materialDesign:MessageQueue}" IsActive="False"/>
     </Grid>
 </Window>

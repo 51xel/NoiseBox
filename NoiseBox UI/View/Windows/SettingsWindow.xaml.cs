@@ -18,6 +18,9 @@ using NoiseBox_UI.Utils;
 using MaterialDesignThemes.Wpf;
 using System.Collections;
 using System.Text.RegularExpressions;
+using System.Configuration;
+using System.Xml.Linq;
+using System.Xml;
 
 namespace NoiseBox_UI.View.Windows {
     public partial class SettingsWindow : Window {
@@ -119,10 +122,16 @@ namespace NoiseBox_UI.View.Windows {
                 }
             }
 
+            foreach (KeyValuePair<string, string> prop in tempHotkeys) {
+                if (prop.Key.EndsWith("Hotkey")) {
+                    Properties.Settings.Default[prop.Key] = tempHotkeys[prop.Key];
+                }
+            }
+
             Properties.Settings.Default.Save();
 
-            SavedSnackbar.MessageQueue?.Clear();
-            SavedSnackbar.MessageQueue?.Enqueue("Saved!", null, null, null, false, true, TimeSpan.FromSeconds(1));
+            InfoSnackbar.MessageQueue?.Clear();
+            InfoSnackbar.MessageQueue?.Enqueue("Saved!", null, null, null, false, true, TimeSpan.FromSeconds(1));
         }
 
         private void EditDownloadsFolder(object sender, RoutedEventArgs e) {
@@ -137,6 +146,7 @@ namespace NoiseBox_UI.View.Windows {
         }
 
         string editedHotkey = "";
+        Dictionary<string, string> tempHotkeys = new Dictionary<string, string>();
 
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e) { 
             if (string.IsNullOrEmpty(editedHotkey)) {
@@ -144,20 +154,52 @@ namespace NoiseBox_UI.View.Windows {
             }
 
             if (!IsModifierKey(e.Key)) {
+                var newHotkey = "";
+
                 if (e.KeyboardDevice.Modifiers != ModifierKeys.None) {
-                    (FindName(editedHotkey) as TextBlock).Text = e.KeyboardDevice.Modifiers + " + " + e.Key;
+                    newHotkey = e.KeyboardDevice.Modifiers + " + " + e.Key;
                 }
                 else {
-                    (FindName(editedHotkey) as TextBlock).Text = e.Key.ToString();
+                    newHotkey = e.Key.ToString();
                 }
 
-                editedHotkey = "";
+                if (tempHotkeys[editedHotkey] == newHotkey) {
+                    editedHotkey = "";
+                    e.Handled = true;
+                    return;
+                }
+
+                bool hotkeyIsUsed = false;
+
+                foreach (KeyValuePair<string, string> prop in tempHotkeys) {
+                    if (prop.Key.EndsWith("Hotkey")) {
+                        if (prop.Value == newHotkey) {
+                            hotkeyIsUsed = true;
+
+                            InfoSnackbar.MessageQueue?.Clear();
+                            InfoSnackbar.MessageQueue?.Enqueue($"This one is already used by {prop.Key}, try another one", null, null, null, false, true, TimeSpan.FromSeconds(1));
+
+                            break;
+                        }
+                    }
+                }
+
+                if (!hotkeyIsUsed) {
+                    (FindName(editedHotkey) as TextBlock).Text = newHotkey;
+                    tempHotkeys[editedHotkey] = newHotkey;
+                    editedHotkey = "";
+                }
             }
+
+            e.Handled = true;
         }
 
         private void EditHotkey(object sender, RoutedEventArgs e) {
             string name = (sender as Button).Name;
             editedHotkey = name.Substring(0, name.Length - 3); // e.g. PlayPauseHotkeyBtn -> PlayPauseHotkey
+
+            InfoSnackbar.MessageQueue?.Clear();
+            InfoSnackbar.MessageQueue?.Enqueue("Press new key combination", null, null, null, false, true, TimeSpan.FromSeconds(1));
         }
 
         private bool IsModifierKey(Key key) {
@@ -194,6 +236,8 @@ namespace NoiseBox_UI.View.Windows {
                 grid.Children.Add(tb1);
 
                 TextBlock tb2 = new TextBlock() { Name = name + "Hotkey", Style = (Style)TabControl.FindResource(typeof(TextBlock)), TextAlignment = TextAlignment.Center };
+                tb2.Text = Properties.Settings.Default[name + "Hotkey"].ToString();
+                tempHotkeys[name + "Hotkey"] = tb2.Text;
                 Grid.SetColumn(tb2, 1);
                 grid.Children.Add(tb2);
                 HotkeyStackPanel.RegisterName(tb2.Name, tb2);
