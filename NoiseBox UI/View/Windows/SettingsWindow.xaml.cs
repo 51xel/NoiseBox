@@ -36,10 +36,17 @@ namespace NoiseBox_UI.View.Windows {
             foreach (var device in DeviceControll.GetOutputDevicesList()) {
                 MainOutputDevicesList.Items.Add(device);
                 AdditionalOutputDevicesList.Items.Add(device);
+                MicroOutputDevicesList.Items.Add(device);
+            }
+
+            foreach (var device in DeviceControll.GetInputDevicesList()) {
+                InputDevicesList.Items.Add(device);
             }
 
             MainOutputDevicesList.SelectedItem = Properties.Settings.Default.MainOutputDevice;
             AdditionalOutputDevicesList.SelectedItem = Properties.Settings.Default.AdditionalOutputDevice;
+            MicroOutputDevicesList.SelectedItem = Properties.Settings.Default.MicroOutputDevice;
+            InputDevicesList.SelectedItem = Properties.Settings.Default.InputDevice;
 
             MicOutputEnabled.IsChecked = Properties.Settings.Default.MicOutputEnabled;
             AdditionalOutputEnabled.IsChecked = Properties.Settings.Default.AdditionalOutputEnabled;
@@ -65,6 +72,28 @@ namespace NoiseBox_UI.View.Windows {
             if (MainOutputDevicesList.SelectedItem.ToString() != Properties.Settings.Default.MainOutputDevice) {
                 Properties.Settings.Default.MainOutputDevice = MainOutputDevicesList.SelectedItem.ToString();
                 win.AudioStreamControl.MainMusic.ReselectOutputDevice(Properties.Settings.Default.MainOutputDevice);
+            }
+
+            if (MicroOutputDevicesList.SelectedItem != null) {
+                Properties.Settings.Default.MicroOutputDevice = MicroOutputDevicesList.SelectedItem.ToString();
+            }
+
+            if (InputDevicesList.SelectedItem != null) {
+                Properties.Settings.Default.InputDevice = InputDevicesList.SelectedItem.ToString();
+            }
+
+            if (MicOutputEnabled.IsChecked.GetValueOrDefault()) {
+                if (win.AudioStreamControl.Microphone != null) {
+                    win.AudioStreamControl.Microphone.CloseStream();
+                    win.AudioStreamControl.Microphone = null;
+                }
+
+                win.AudioStreamControl.ActivateMicro(Properties.Settings.Default.InputDevice, Properties.Settings.Default.MicroOutputDevice);
+                win.AudioStreamControl.Microphone.InputDeviceVolume = (float)Properties.Settings.Default.MicVolumeSliderValue / 100;
+            }
+            else if(win.AudioStreamControl.Microphone != null) {
+                win.AudioStreamControl.Microphone.CloseStream();
+                win.AudioStreamControl.Microphone = null;
             }
 
             bool changedAdditionalDevice = false;

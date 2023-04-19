@@ -8,7 +8,7 @@ namespace NoiseBox {
         public MusicStream MainMusic;
         public MusicStream AdditionalMusic;
 
-        public readonly MicrophoneStream Microphone;
+        public MicrophoneStream Microphone;
 
         public AudioStreamControl(string mainOutputDevice) {
             if (String.IsNullOrWhiteSpace(mainOutputDevice)) {
@@ -43,6 +43,17 @@ namespace NoiseBox {
                 else {
                     _log.Print("MainMusic should be initialised", LogInfoType.ERROR);
                 }
+            }
+        }
+
+        public void ActivateMicro(string inputDevice, string outputDevice) {
+            if (String.IsNullOrWhiteSpace(inputDevice) || String.IsNullOrWhiteSpace(outputDevice)) {
+                _log.Print("Device name can`t be null", LogInfoType.ERROR);
+            }
+            else {
+                Microphone = new MicrophoneStream(inputDevice, outputDevice);
+
+                Microphone.Play();
             }
         }
 

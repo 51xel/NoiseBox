@@ -58,8 +58,16 @@ namespace NoiseBox_UI.View.Windows {
 
             AudioStreamControl = new AudioStreamControl(Properties.Settings.Default.MainOutputDevice);
 
+            AudioStreamControl.MainMusic.MusicVolume = (float)Properties.Settings.Default.MainVolumeSliderValue / 100;
+
             if (Properties.Settings.Default.AdditionalOutputEnabled && !string.IsNullOrEmpty(Properties.Settings.Default.AdditionalOutputDevice)) {
                 AudioStreamControl.ActivateAdditionalMusic(Properties.Settings.Default.AdditionalOutputDevice);
+                AudioStreamControl.AdditionalMusic.MusicVolume = (float)Properties.Settings.Default.AdditionalVolumeSliderValue / 100;
+            }
+
+            if (Properties.Settings.Default.MicOutputEnabled && !string.IsNullOrEmpty(Properties.Settings.Default.MicroOutputDevice) && !string.IsNullOrEmpty(Properties.Settings.Default.InputDevice)) {
+                AudioStreamControl.ActivateMicro(Properties.Settings.Default.InputDevice, Properties.Settings.Default.MicroOutputDevice);
+                AudioStreamControl.Microphone.InputDeviceVolume = (float)Properties.Settings.Default.MicVolumeSliderValue / 100;
             }
 
             AudioStreamControl.MainMusic.StoppedEvent += Music_StoppedEvent;
@@ -81,17 +89,9 @@ namespace NoiseBox_UI.View.Windows {
             BottomControlPanel.MicVolumeSlider.Value = Properties.Settings.Default.MicVolumeSliderValue;
             BottomControlPanel.AdditionalVolumeSlider.Value = Properties.Settings.Default.AdditionalVolumeSliderValue;
 
-            AudioStreamControl.MainMusic.MusicVolume = (float)Properties.Settings.Default.MainVolumeSliderValue / 100;
-
-            if (AudioStreamControl.AdditionalMusic != null) {
-                AudioStreamControl.AdditionalMusic.MusicVolume = (float)Properties.Settings.Default.AdditionalVolumeSliderValue / 100;
-            }
-            if (AudioStreamControl.Microphone != null) {
-                AudioStreamControl.Microphone.InputDeviceVolume = (float)Properties.Settings.Default.MicVolumeSliderValue / 100;
-            }
-
             BottomControlPanel.MainVolumeSlider.ValueChanged += MainVolumeSlider_ValueChanged;
             BottomControlPanel.AdditionalVolumeSlider.ValueChanged += AdditionalVolumeSlider_ValueChanged;
+            BottomControlPanel.MicVolumeSlider.ValueChanged += MicVolumeSlider_ValueChanged;
 
             SongList.ClickRowElement += Song_Click;
 
@@ -155,6 +155,10 @@ namespace NoiseBox_UI.View.Windows {
 
         private void AdditionalVolumeSlider_ValueChanged(object sender, EventArgs e) {
             AudioStreamControl.AdditionalMusic.MusicVolume = (float)BottomControlPanel.AdditionalVolumeSlider.Value / 100;
+        }
+
+        private void MicVolumeSlider_ValueChanged(object sender, EventArgs e) {
+            AudioStreamControl.Microphone.InputDeviceVolume = (float)BottomControlPanel.MicVolumeSlider.Value / 100;
         }
 
         private void Music_StoppedEvent(object sender, EventArgs e) {

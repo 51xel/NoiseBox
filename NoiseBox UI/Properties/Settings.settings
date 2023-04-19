@@ -62,5 +62,11 @@
     <Setting Name="DecreaseMainVolumeHotkey" Type="System.String" Scope="User">
       <Value Profile="(Default)">OemMinus</Value>
     </Setting>
+    <Setting Name="InputDevice" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="MicroOutputDevice" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -78,6 +78,11 @@ namespace NoiseBox {
             _outputDevice.Pause();
         }
 
+        public virtual void CloseStream() {
+            _log.Print("Stream was closed", LogInfoType.INFO);
+            _outputDevice.Dispose();
+        }
+
         public bool IsPlaying {
             get {
                 return _outputDevice.PlaybackState == PlaybackState.Playing;
@@ -193,11 +198,10 @@ namespace NoiseBox {
             }
         }
 
-        public void CloseStream() {
+        public override void CloseStream() {
             Stop();
             StopEqualizer();
-
-            _outputDevice.Dispose();
+            base.CloseStream();
         }
 
         public string PathToMusic {
@@ -426,6 +430,12 @@ namespace NoiseBox {
             base.Pause();
 
             _waveSource.StopRecording();
+        }
+
+        public override void CloseStream() {
+            Stop();
+            _waveSource.Dispose();
+            base.CloseStream();
         }
     }
 }
