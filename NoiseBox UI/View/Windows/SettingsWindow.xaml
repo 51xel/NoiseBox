@@ -85,7 +85,7 @@
                     <StackPanel Margin="30,50,30,0">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="220"/>
+                                <ColumnDefinition Width="265"/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
@@ -100,11 +100,11 @@
 
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="262"/>
+                                <ColumnDefinition Width="265"/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="0">Select addiotional output device</TextBlock>
+                            <TextBlock Grid.Column="0">Select additional output device</TextBlock>
 
                             <ComboBox Grid.Column="1" Name="AdditionalOutputDevicesList" BorderBrush="{DynamicResource PrimaryHueMidBrush}" Foreground="#BDBDBD">
                                 <ComboBox.Resources>
@@ -115,13 +115,13 @@
 
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="262"/>
+                                <ColumnDefinition Width="265"/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="0">Select micro output device</TextBlock>
+                            <TextBlock Grid.Column="0">Select mic input device</TextBlock>
 
-                            <ComboBox Grid.Column="1" Name="MicroOutputDevicesList" BorderBrush="{DynamicResource PrimaryHueMidBrush}" Foreground="#BDBDBD">
+                            <ComboBox Grid.Column="1" Name="InputDevicesList" BorderBrush="{DynamicResource PrimaryHueMidBrush}" Foreground="#BDBDBD">
                                 <ComboBox.Resources>
                                     <SolidColorBrush x:Key="MaterialDesignPaper" Color="#212128"/>
                                 </ComboBox.Resources>
@@ -130,13 +130,13 @@
 
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="262"/>
+                                <ColumnDefinition Width="265"/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="0">Select micro input device</TextBlock>
+                            <TextBlock Grid.Column="0">Select mic output device</TextBlock>
 
-                            <ComboBox Grid.Column="1" Name="InputDevicesList" BorderBrush="{DynamicResource PrimaryHueMidBrush}" Foreground="#BDBDBD">
+                            <ComboBox Grid.Column="1" Name="MicOutputDevicesList" BorderBrush="{DynamicResource PrimaryHueMidBrush}" Foreground="#BDBDBD">
                                 <ComboBox.Resources>
                                     <SolidColorBrush x:Key="MaterialDesignPaper" Color="#212128"/>
                                 </ComboBox.Resources>
@@ -159,7 +159,7 @@
                                 <ColumnDefinition Width="40"/>
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="0">Enable mic output to additional device</TextBlock>
+                            <TextBlock Grid.Column="0">Enable mic output</TextBlock>
                             <ToggleButton Grid.Column="1" Name="MicOutputEnabled"/>
                         </Grid>
                     </StackPanel>

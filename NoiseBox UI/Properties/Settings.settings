@@ -65,7 +65,7 @@
     <Setting Name="InputDevice" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="MicroOutputDevice" Type="System.String" Scope="User">
+    <Setting Name="MicOutputDevice" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>

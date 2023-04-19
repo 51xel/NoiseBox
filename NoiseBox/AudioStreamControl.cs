@@ -46,7 +46,7 @@ namespace NoiseBox {
             }
         }
 
-        public void ActivateMicro(string inputDevice, string outputDevice) {
+        public void ActivateMic(string inputDevice, string outputDevice) {
             if (String.IsNullOrWhiteSpace(inputDevice) || String.IsNullOrWhiteSpace(outputDevice)) {
                 _log.Print("Device name can`t be null", LogInfoType.ERROR);
             }

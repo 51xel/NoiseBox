@@ -36,7 +36,7 @@ namespace NoiseBox_UI.View.Windows {
             foreach (var device in DeviceControll.GetOutputDevicesList()) {
                 MainOutputDevicesList.Items.Add(device);
                 AdditionalOutputDevicesList.Items.Add(device);
-                MicroOutputDevicesList.Items.Add(device);
+                MicOutputDevicesList.Items.Add(device);
             }
 
             foreach (var device in DeviceControll.GetInputDevicesList()) {
@@ -45,7 +45,7 @@ namespace NoiseBox_UI.View.Windows {
 
             MainOutputDevicesList.SelectedItem = Properties.Settings.Default.MainOutputDevice;
             AdditionalOutputDevicesList.SelectedItem = Properties.Settings.Default.AdditionalOutputDevice;
-            MicroOutputDevicesList.SelectedItem = Properties.Settings.Default.MicroOutputDevice;
+            MicOutputDevicesList.SelectedItem = Properties.Settings.Default.MicOutputDevice;
             InputDevicesList.SelectedItem = Properties.Settings.Default.InputDevice;
 
             MicOutputEnabled.IsChecked = Properties.Settings.Default.MicOutputEnabled;
@@ -74,27 +74,40 @@ namespace NoiseBox_UI.View.Windows {
                 win.AudioStreamControl.MainMusic.ReselectOutputDevice(Properties.Settings.Default.MainOutputDevice);
             }
 
-            if (MicroOutputDevicesList.SelectedItem != null) {
-                Properties.Settings.Default.MicroOutputDevice = MicroOutputDevicesList.SelectedItem.ToString();
+            if (MicOutputDevicesList.SelectedItem != null) {
+                Properties.Settings.Default.MicOutputDevice = MicOutputDevicesList.SelectedItem.ToString();
             }
 
             if (InputDevicesList.SelectedItem != null) {
                 Properties.Settings.Default.InputDevice = InputDevicesList.SelectedItem.ToString();
             }
 
-            if (MicOutputEnabled.IsChecked.GetValueOrDefault()) {
+            Properties.Settings.Default.MicOutputEnabled = MicOutputEnabled.IsChecked.GetValueOrDefault();
+
+            if (Properties.Settings.Default.MicOutputEnabled &&
+                !string.IsNullOrEmpty(Properties.Settings.Default.MicOutputDevice) &&
+                !string.IsNullOrEmpty(Properties.Settings.Default.InputDevice)) {
+
                 if (win.AudioStreamControl.Microphone != null) {
                     win.AudioStreamControl.Microphone.CloseStream();
                     win.AudioStreamControl.Microphone = null;
                 }
 
-                win.AudioStreamControl.ActivateMicro(Properties.Settings.Default.InputDevice, Properties.Settings.Default.MicroOutputDevice);
+                win.AudioStreamControl.ActivateMic(Properties.Settings.Default.InputDevice, Properties.Settings.Default.MicOutputDevice);
                 win.AudioStreamControl.Microphone.InputDeviceVolume = (float)Properties.Settings.Default.MicVolumeSliderValue / 100;
             }
-            else if(win.AudioStreamControl.Microphone != null) {
-                win.AudioStreamControl.Microphone.CloseStream();
-                win.AudioStreamControl.Microphone = null;
+            else {
+                if (win.AudioStreamControl.Microphone != null) {
+                    win.AudioStreamControl.Microphone.CloseStream();
+                    win.AudioStreamControl.Microphone = null;
+                }
+
+                Properties.Settings.Default.MicOutputEnabled = false;
+                MicOutputEnabled.IsChecked = false;
             }
+
+            win.BottomControlPanel.MicVolumeSlider.IsEnabled = Properties.Settings.Default.MicOutputEnabled;
+            win.BottomControlPanel.MicVolumeButton.IsEnabled = Properties.Settings.Default.MicOutputEnabled;
 
             bool changedAdditionalDevice = false;
             bool changedAdditionalEnabled = false;
@@ -129,10 +142,6 @@ namespace NoiseBox_UI.View.Windows {
                 }
             }
 
-            Properties.Settings.Default.MicOutputEnabled = MicOutputEnabled.IsChecked.GetValueOrDefault();
-
-            win.BottomControlPanel.MicVolumeSlider.IsEnabled = Properties.Settings.Default.MicOutputEnabled;
-            win.BottomControlPanel.MicVolumeButton.IsEnabled = Properties.Settings.Default.MicOutputEnabled;
             win.BottomControlPanel.AdditionalVolumeSlider.IsEnabled = Properties.Settings.Default.AdditionalOutputEnabled;
             win.BottomControlPanel.AdditionalVolumeButton.IsEnabled = Properties.Settings.Default.AdditionalOutputEnabled;
 

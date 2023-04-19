@@ -56,6 +56,22 @@ namespace NoiseBox_UI.View.Windows {
                 }
             }
 
+            if (string.IsNullOrEmpty(Properties.Settings.Default.InputDevice)) {
+                Properties.Settings.Default.InputDevice = DeviceControll.GetInputDeviceNameById(0);
+            }
+            else if (!DeviceControll.GetInputDevicesList().Contains(Properties.Settings.Default.InputDevice)) {
+                Properties.Settings.Default.InputDevice = DeviceControll.GetInputDeviceNameById(0);
+            }
+
+            if (string.IsNullOrEmpty(Properties.Settings.Default.MicOutputDevice)) {
+                if (!string.IsNullOrEmpty(Properties.Settings.Default.AdditionalOutputDevice)) {
+                    Properties.Settings.Default.MicOutputDevice = Properties.Settings.Default.AdditionalOutputDevice;
+                }
+            }
+            else if (!DeviceControll.GetOutputDevicesList().Contains(Properties.Settings.Default.MicOutputDevice)) {
+                Properties.Settings.Default.MicOutputDevice = "";
+            }
+
             AudioStreamControl = new AudioStreamControl(Properties.Settings.Default.MainOutputDevice);
 
             AudioStreamControl.MainMusic.MusicVolume = (float)Properties.Settings.Default.MainVolumeSliderValue / 100;
@@ -65,8 +81,8 @@ namespace NoiseBox_UI.View.Windows {
                 AudioStreamControl.AdditionalMusic.MusicVolume = (float)Properties.Settings.Default.AdditionalVolumeSliderValue / 100;
             }
 
-            if (Properties.Settings.Default.MicOutputEnabled && !string.IsNullOrEmpty(Properties.Settings.Default.MicroOutputDevice) && !string.IsNullOrEmpty(Properties.Settings.Default.InputDevice)) {
-                AudioStreamControl.ActivateMicro(Properties.Settings.Default.InputDevice, Properties.Settings.Default.MicroOutputDevice);
+            if (Properties.Settings.Default.MicOutputEnabled && !string.IsNullOrEmpty(Properties.Settings.Default.MicOutputDevice) && !string.IsNullOrEmpty(Properties.Settings.Default.InputDevice)) {
+                AudioStreamControl.ActivateMic(Properties.Settings.Default.InputDevice, Properties.Settings.Default.MicOutputDevice);
                 AudioStreamControl.Microphone.InputDeviceVolume = (float)Properties.Settings.Default.MicVolumeSliderValue / 100;
             }
 
@@ -99,6 +115,8 @@ namespace NoiseBox_UI.View.Windows {
 
             SeekBarTimer.Interval = TimeSpan.FromMilliseconds(50);
             SeekBarTimer.Tick += timer_Tick;
+
+            Properties.Settings.Default.Save();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e) {
