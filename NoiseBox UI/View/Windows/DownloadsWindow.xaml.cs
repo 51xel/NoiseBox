@@ -94,9 +94,7 @@ namespace NoiseBox_UI.View.Windows {
                 return;
             }
 
-            var directory = System.AppContext.BaseDirectory.Split(Path.DirectorySeparatorChar);
-            var slice = new ArraySegment<string>(directory, 0, directory.Length - 4);
-            var BinariesDirPath = Path.Combine(Path.Combine(slice.ToArray()), "Binaries");
+            var BinariesDirPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Binaries");
             var ffmpegLocation = Path.Combine(BinariesDirPath, @"ffmpeg\bin");
 
             string downloadedFileDir = SelectedDirectory;

@@ -88,9 +88,7 @@ namespace NoiseBox_UI.View.UserControls {
 
                 var fileName = openFileDialog.FileNames[0];
 
-                var directory = System.AppContext.BaseDirectory.Split(Path.DirectorySeparatorChar);
-                var slice = new ArraySegment<string>(directory, 0, directory.Length - 4);
-                var BinariesDirPath = Path.Combine(Path.Combine(slice.ToArray()), "Binaries");
+                var BinariesDirPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Binaries");
                 var ffmpegLocation = Path.Combine(BinariesDirPath, @"ffmpeg\bin");
 
                 await MusicLibrary.ConvertToMp3(fileName, ffmpegLocation);

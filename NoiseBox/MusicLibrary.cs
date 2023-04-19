@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -40,12 +41,14 @@ namespace NoiseBox {
         }
     }
     public class MusicLibrary {
-        private const string _jsonFilePath = "music_library.json";
+        private static string _jsonFilePath;
         private static List<Song> _songs = new List<Song>();
         private static List<Playlist> _playlists = new List<Playlist>();
         private static ILog _log = LogSettings.SelectedLog;
 
         static MusicLibrary() {
+            _jsonFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NoiseBox", "music_library.json");
+
             LoadFromJson();
         }
 
@@ -63,6 +66,7 @@ namespace NoiseBox {
                 }
             }
             else {
+                Directory.CreateDirectory(Path.GetDirectoryName(_jsonFilePath));
                 File.Create(_jsonFilePath).Close();
 
                 _log.Print("Empty json file created", LogInfoType.INFO);

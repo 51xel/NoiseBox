@@ -29,13 +29,15 @@ using NoiseBox_UI.Utils;
 namespace NoiseBox_UI.View.Windows {
     public partial class CustomEqualizer : Window, INotifyPropertyChanged {
         private List<BandsSettings> _bandsSettings = new List<BandsSettings>();
-        private string _jsonFilePath = "bandsSettings.json";
+        private string _jsonFilePath;
         protected ILog _log = LogSettings.SelectedLog;
 
         public CustomEqualizer() {
             InitializeComponent();
             WinMax.DoSourceInitialized(this);
             DataContext = this;
+
+            _jsonFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NoiseBox", "bandsSettings.json");
 
             LoadFromJson();
             UpdateProfiles();
@@ -259,6 +261,7 @@ namespace NoiseBox_UI.View.Windows {
                 _log.Print("Load from json", LogInfoType.INFO);
             }
             else {
+                Directory.CreateDirectory(Path.GetDirectoryName(_jsonFilePath));
                 File.Create(_jsonFilePath).Close();
             }
         }

@@ -42,17 +42,15 @@ namespace NoiseBox {
             private string _pathToFile;
             private long _fileSizeLimit = 100000; // 100 KB
 
-            public LogIntoFile(string path = "./Logs/logs.txt") {
+            public LogIntoFile(string path = "Logs/logs.txt") {
                 if (path == null || String.IsNullOrWhiteSpace(path)) {
                     throw new ArgumentNullException("Path can`t be null");
                 }
 
-                _pathToFile = path;
+                _pathToFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NoiseBox", path);
 
                 if (!File.Exists(_pathToFile)) {
-                    if (!Directory.Exists(Path.GetDirectoryName(path))) {
-                        Directory.CreateDirectory(Path.GetDirectoryName(path));
-                    }
+                    Directory.CreateDirectory(Path.GetDirectoryName(_pathToFile));
 
                     File.Create(_pathToFile).Close();
                 }
