@@ -81,6 +81,15 @@ namespace NoiseBox_UI.View.Windows {
             BottomControlPanel.MicVolumeSlider.Value = Properties.Settings.Default.MicVolumeSliderValue;
             BottomControlPanel.AdditionalVolumeSlider.Value = Properties.Settings.Default.AdditionalVolumeSliderValue;
 
+            AudioStreamControl.MainMusic.MusicVolume = (float)Properties.Settings.Default.MainVolumeSliderValue / 100;
+
+            if (AudioStreamControl.AdditionalMusic != null) {
+                AudioStreamControl.AdditionalMusic.MusicVolume = (float)Properties.Settings.Default.AdditionalVolumeSliderValue / 100;
+            }
+            if (AudioStreamControl.Microphone != null) {
+                AudioStreamControl.Microphone.InputDeviceVolume = (float)Properties.Settings.Default.MicVolumeSliderValue / 100;
+            }
+
             BottomControlPanel.MainVolumeSlider.ValueChanged += MainVolumeSlider_ValueChanged;
             BottomControlPanel.AdditionalVolumeSlider.ValueChanged += AdditionalVolumeSlider_ValueChanged;
 
@@ -190,12 +199,6 @@ namespace NoiseBox_UI.View.Windows {
 
                 AudioStreamControl.StopAndPlayFromPosition(0);
                 SeekBarTimer.Start();
-
-                AudioStreamControl.MainMusic.MusicVolume = (float)BottomControlPanel.MainVolumeSlider.Value / 100;
-
-                if (AudioStreamControl.AdditionalMusic != null) {
-                    AudioStreamControl.AdditionalMusic.MusicVolume = (float)BottomControlPanel.AdditionalVolumeSlider.Value / 100;
-                }
 
                 BottomControlPanel.State = BottomControlPanel.ButtonState.Playing;
 

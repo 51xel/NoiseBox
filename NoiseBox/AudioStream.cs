@@ -108,30 +108,34 @@ namespace NoiseBox {
         private Equalizer _equalizer;
         private EqualizerBand[] _bands;
 
+        private float _musicVolume;
+
         public float MusicVolume {
             get {
                 if (_audioFile != null) {
                     return _audioFile.Volume;
                 }
                 else {
-                    return 0;
+                    return _musicVolume;
                 }
             }
             set {
-                if (_audioFile != null) {
-                    if (value < 0f || value > 1f) {
-                        _log.Print("Volume < 0.0 or > 1.0", LogInfoType.ERROR);
+                if (value < 0f || value > 1f) {
+                    _log.Print("Volume < 0.0 or > 1.0", LogInfoType.ERROR);
 
-                        if (value < 0) {
-                            _audioFile.Volume = 0f;
-                        }
-                        else {
-                            _audioFile.Volume = 1f;
-                        }
+                    if (value < 0) {
+                        _musicVolume = 0f;
                     }
                     else {
-                        _audioFile.Volume = value;
+                        _musicVolume = 1f;
                     }
+                }
+                else {
+                    _musicVolume = value;
+                }
+
+                if (_audioFile != null) {
+                    _audioFile.Volume = _musicVolume;
                 }
             }
         }

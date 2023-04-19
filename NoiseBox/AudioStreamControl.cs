@@ -30,7 +30,10 @@ namespace NoiseBox {
 
                         if (PathToMusic != null) {
                             AdditionalMusic.PathToMusic = PathToMusic;
-                            StopAndPlayFromPosition(CurrentTrackPosition);
+
+                            if (MainMusic.IsPlaying) {
+                                StopAndPlayFromPosition(CurrentTrackPosition);
+                            }
                         }
                     }
                     else {
