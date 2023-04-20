@@ -36,8 +36,8 @@
 
                             <Button.ContextMenu>
                                 <ContextMenu Background="#212121" Foreground="#BDBDBD" FontFamily="/Fonts/#Montserrat" FontWeight="DemiBold">
-                                    <MenuItem Header="Remove from playlist" Click="MenuItem_Click" Foreground="IndianRed"/>
                                     <MenuItem Header="Rename" Click="MenuItem_Click"/>
+                                    <MenuItem Header="Remove from playlist" Click="MenuItem_Click" Foreground="IndianRed"/>
                                 </ContextMenu>
                             </Button.ContextMenu>
                         </Button>

@@ -41,6 +41,10 @@ namespace NoiseBox_UI.View.UserControls
 
                         win.SelectPlaylistByName(popupTextBoxText);
                     }
+                    else {
+                        win.InfoSnackbar.MessageQueue?.Clear();
+                        win.InfoSnackbar.MessageQueue?.Enqueue($"Playlist named {popupTextBoxText} already exists", null, null, null, false, true, TimeSpan.FromSeconds(2));
+                    }
 
                     PopupTextBox.Text = "";
                     EnterNamePopup.IsOpen = false;

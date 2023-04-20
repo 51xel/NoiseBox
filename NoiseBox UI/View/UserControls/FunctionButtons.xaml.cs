@@ -77,53 +77,57 @@ namespace NoiseBox_UI.View.UserControls {
             await Task.Run(() => { // because ShowDialog blocks animations
                 openFileDialog = new OpenFileDialog();
                 openFileDialog.Filter = "All Supported Formats (*.wav;*.aiff;*.flac;*.ogg;*.aac;*.wma;*.m4a;*.ac3;*.amr;*.mp2;*.avi;*.mpeg;*.wmv;*.mp4;*.mov;*.flv;*.mkv;*.3gp;*.asf;*.gxf;*.m2ts;*.ts;*.mxf;*.ogv)|*.wav;*.aiff;*.flac;*.ogg;*.aac;*.wma;*.m4a;*.ac3;*.amr;*.mp2;*.avi;*.mpeg;*.wmv;*.mp4;*.mov;*.flv;*.mkv;*.3gp;*.asf;*.gxf;*.m2ts;*.ts;*.mxf;*.ogv";
+                openFileDialog.Multiselect = true;
+                openFileDialog.Title = "Select file(s)";
 
                 fileDialogRes = openFileDialog.ShowDialog();
             });
 
             ConvertButton.IsHitTestVisible = true;
 
+            var BinariesDirPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Binaries");
+            var ffmpegLocation = Path.Combine(BinariesDirPath, @"ffmpeg\bin");
+
             if (fileDialogRes == true) {
-                ConvertingProgress.Visibility = Visibility.Visible;
+                foreach (var fileName in openFileDialog.FileNames) {
+                    ConvertingProgress.Visibility = Visibility.Visible;
 
-                var fileName = openFileDialog.FileNames[0];
+                    await MusicLibrary.ConvertToMp3(fileName, ffmpegLocation);
 
-                var BinariesDirPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Binaries");
-                var ffmpegLocation = Path.Combine(BinariesDirPath, @"ffmpeg\bin");
+                    var newFileName = Path.ChangeExtension(fileName, ".mp3");
 
-                await MusicLibrary.ConvertToMp3(fileName, ffmpegLocation);
+                    if (File.Exists(newFileName)) {
+                        Song song = new Song { Path = newFileName };
 
-                fileName = Path.ChangeExtension(fileName, ".mp3");
+                        if (MusicLibrary.AddSong(song)) {
+                            var win = (MainWindow)Window.GetWindow(this);
 
-                if (File.Exists(fileName)) {
-                    Song song = new Song { Path = fileName };
+                            Playlist selectedPlaylist = win.SelectedPlaylist;
 
-                    if (MusicLibrary.AddSong(song)) {
-                        var win = (MainWindow)Window.GetWindow(this);
+                            if (selectedPlaylist == null) {
+                                selectedPlaylist = MusicLibrary.GetPlaylists().FirstOrDefault();
 
-                        Playlist selectedPlaylist = win.SelectedPlaylist;
+                                if (selectedPlaylist != null) {
+                                    win.SelectPlaylistByName(selectedPlaylist.Name);
 
-                        if (selectedPlaylist == null) {
-                            selectedPlaylist = MusicLibrary.GetPlaylists().FirstOrDefault();
-
-                            if (selectedPlaylist != null) {
-                                win.SelectPlaylistByName(selectedPlaylist.Name);
-
+                                    MusicLibrary.AddSongToPlaylist(song.Id, selectedPlaylist.Name);
+                                    win.SongList.List.Items.Add(song);
+                                }
+                            }
+                            else {
                                 MusicLibrary.AddSongToPlaylist(song.Id, selectedPlaylist.Name);
                                 win.SongList.List.Items.Add(song);
                             }
                         }
-                        else {
-                            MusicLibrary.AddSongToPlaylist(song.Id, selectedPlaylist.Name);
-                            win.SongList.List.Items.Add(song);
-                        }
                     }
-                }
-                else {
-                    MessageBox.Show("Error while converting", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                    else {
+                        var win = (MainWindow)Window.GetWindow(this);
+                        win.InfoSnackbar.MessageQueue?.Clear();
+                        win.InfoSnackbar.MessageQueue?.Enqueue($"Error while converting {fileName}", null, null, null, false, true, TimeSpan.FromSeconds(2));
+                    }
 
-                ConvertingProgress.Visibility = Visibility.Collapsed;
+                    ConvertingProgress.Visibility = Visibility.Collapsed;
+                }
             }
         }
 

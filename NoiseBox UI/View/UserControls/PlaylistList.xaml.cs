@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using NoiseBox_UI.View.Windows;
 using NoiseBox_UI.Utils;
+using Microsoft.Win32;
 
 namespace NoiseBox_UI.View.UserControls
 {
@@ -59,19 +60,23 @@ namespace NoiseBox_UI.View.UserControls
             else if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
 
-                var songToAdd = new Song() { Path = files[0] };
+                List<string> mp3Files = Helper.GetAllMp3Files(files);
 
-                if (MusicLibrary.AddSong(songToAdd)) {
-                    MusicLibrary.AddSongToPlaylist(songToAdd.Id, target.ToString());
+                foreach (var mp3File in mp3Files) {
+                    var songToAdd = new Song() { Path = mp3File };
 
-                    if (win.SelectedPlaylist == null) {
-                        win.SelectPlaylistByName(target.ToString());
-                    }
-                    else if (win.SelectedPlaylist.Name == target.ToString()) {
-                        win.SongList.List.Items.Add(songToAdd);
-                    }
-                    else {
-                        win.SelectPlaylistByName(target.ToString());
+                    if (MusicLibrary.AddSong(songToAdd)) {
+                        MusicLibrary.AddSongToPlaylist(songToAdd.Id, target.ToString());
+
+                        if (win.SelectedPlaylist == null) {
+                            win.SelectPlaylistByName(target.ToString());
+                        }
+                        else if (win.SelectedPlaylist.Name == target.ToString()) {
+                            win.SongList.List.Items.Add(songToAdd);
+                        }
+                        else {
+                            win.SelectPlaylistByName(target.ToString());
+                        }
                     }
                 }
             }
@@ -138,6 +143,38 @@ namespace NoiseBox_UI.View.UserControls
                     //textBox.FontWeight = FontWeights.ExtraBold;
 
                     _oldTextBoxText = textBox.Text;
+                }
+                else if (Equals(menuItem.Header, "Add song(s)")) {
+                    var openFileDialog = new OpenFileDialog();
+                    openFileDialog.Multiselect = true;
+                    openFileDialog.Title = "Select mp3 file(s)";
+                    openFileDialog.Filter = "MP3 files (*.mp3)|*.mp3";
+
+                    if (openFileDialog.ShowDialog() == true) {
+                        string[] files = openFileDialog.FileNames;
+
+                        List<string> mp3Files = Helper.GetAllMp3Files(files);
+
+                        foreach (var mp3File in mp3Files) {
+                            var songToAdd = new Song() { Path = mp3File };
+
+                            string playlistName = (menuItem.DataContext as Playlist).Name;
+
+                            if (MusicLibrary.AddSong(songToAdd)) {
+                                MusicLibrary.AddSongToPlaylist(songToAdd.Id, playlistName);
+
+                                if (win.SelectedPlaylist == null) {
+                                    win.SelectPlaylistByName(playlistName);
+                                }
+                                else if (win.SelectedPlaylist.Name == playlistName) {
+                                    win.SongList.List.Items.Add(songToAdd);
+                                }
+                                else {
+                                    win.SelectPlaylistByName(playlistName);
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

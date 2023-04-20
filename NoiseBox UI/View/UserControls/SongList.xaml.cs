@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +14,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 using NoiseBox;
 using NoiseBox_UI.Utils;
 using NoiseBox_UI.View.Windows;
@@ -95,11 +95,16 @@ namespace NoiseBox_UI.View.UserControls {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
                 int targetIdx = List.Items.IndexOf(target);
 
-                var songToAdd = new Song() {Path = files[0]};
+                List<string> mp3Files = Helper.GetAllMp3Files(files);
+                mp3Files.Reverse();
 
-                if (MusicLibrary.AddSong(songToAdd)) {
-                    MusicLibrary.AddSongToPlaylist(songToAdd.Id, win.SelectedPlaylist.Name, targetIdx);
-                    List.Items.Insert(targetIdx, songToAdd);
+                foreach (var mp3File in mp3Files) {
+                    var songToAdd = new Song() { Path = mp3File };
+
+                    if (MusicLibrary.AddSong(songToAdd)) {
+                        MusicLibrary.AddSongToPlaylist(songToAdd.Id, win.SelectedPlaylist.Name, targetIdx);
+                        List.Items.Insert(targetIdx, songToAdd);
+                    }
                 }
             }
 
@@ -178,14 +183,20 @@ namespace NoiseBox_UI.View.UserControls {
             if (e.Data.GetDataPresent(DataFormats.FileDrop) && selectedPlaylist != null) {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
 
-                var songToAdd = new Song() { Path = files[0] };
+                List<string> mp3Files = Helper.GetAllMp3Files(files);
 
-                if (MusicLibrary.AddSong(songToAdd)) {
-                    MusicLibrary.AddSongToPlaylist(songToAdd.Id, selectedPlaylist.Name);
-                    List.Items.Add(songToAdd);
+                foreach (var mp3File in mp3Files) {
+                    var songToAdd = new Song() { Path = mp3File };
+
+                    if (MusicLibrary.AddSong(songToAdd)) {
+                        MusicLibrary.AddSongToPlaylist(songToAdd.Id, selectedPlaylist.Name);
+                        List.Items.Add(songToAdd);
+                    }
                 }
             }
         }
+
+        
 
         private void MenuItem_Click(object sender, RoutedEventArgs e) {
             MenuItem menuItem = sender as MenuItem;
