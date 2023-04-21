@@ -7,13 +7,12 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>True</UseWindowsForms>
-    <ApplicationIcon>Images\Icons\app.ico</ApplicationIcon>
+    <ApplicationIcon>Images\Icons\app64.ico</ApplicationIcon>
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Fonts\Montserrat.ttf" />
-    <None Remove="Images\Icons\app.ico" />
     <None Remove="Images\Icons\close.png" />
     <None Remove="Images\Icons\convert.png" />
     <None Remove="Images\Icons\download.png" />
@@ -36,11 +35,8 @@
     <None Remove="Images\Icons\settings.png" />
     <None Remove="Images\Icons\shuffle.png" />
     <None Remove="Images\Icons\speaker.png" />
-    <None Remove="Images\Icons\tray.ico" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Images\Icons\app.ico" />
+    <None Remove="Images\Icons\tray32.ico" />
+    <None Remove="Images\Icons\tray64.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -61,7 +57,6 @@
 
   <ItemGroup>
     <Resource Include="Fonts\Montserrat.ttf" />
-    <Resource Include="Images\Icons\app.ico" />
     <Resource Include="Images\Icons\close.png" />
     <Resource Include="Images\Icons\convert.png" />
     <Resource Include="Images\Icons\download.png" />
@@ -84,7 +79,8 @@
     <Resource Include="Images\Icons\settings.png" />
     <Resource Include="Images\Icons\shuffle.png" />
     <Resource Include="Images\Icons\speaker.png" />
-    <Resource Include="Images\Icons\tray.ico" />
+    <Resource Include="Images\Icons\tray32.ico" />
+    <Resource Include="Images\Icons\tray64.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -106,6 +102,10 @@
   	<Content Include="Binaries\**">
   	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Images\Icons\app64.ico" />
   </ItemGroup>
 
 </Project>

@@ -15,6 +15,18 @@
     {
         "Entry"
         {
+        "MsmKey" = "8:_4F1BF1FBF4DC49DEB9BA61873B9327D1"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_9A57B3DB0E724A3780D7D3297D31E6D4"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_DF047147F6724BE9AC46BDEC260A47B5"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -76,6 +88,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
     }
@@ -108,6 +128,46 @@
         }
         "File"
         {
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4F1BF1FBF4DC49DEB9BA61873B9327D1"
+            {
+            "SourcePath" = "8:..\\NoiseBox UI\\Images\\Icons\\app32.ico"
+            "TargetName" = "8:app32.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_8BFCC37CEDAF466A820879F7F7BFDFDE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9A57B3DB0E724A3780D7D3297D31E6D4"
+            {
+            "SourcePath" = "8:..\\NoiseBox UI\\Images\\Icons\\app64.ico"
+            "TargetName" = "8:app64.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_8BFCC37CEDAF466A820879F7F7BFDFDE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
         }
         "FileType"
         {
@@ -165,7 +225,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:NoiseBox"
         "ProductCode" = "8:{36322015-9358-4B04-8D54-C7A393856553}"
-        "PackageCode" = "8:{60711BB4-5798-4639-BFAF-48476F2D1F1E}"
+        "PackageCode" = "8:{3355DBEC-10A0-466B-BD42-75F111200C75}"
         "UpgradeCode" = "8:{B811D7D3-C78D-460C-B4CF-BF28A680F71C}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
@@ -285,6 +345,34 @@
         }
         "Shortcut"
         {
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_06FF8BF544684083B8FE53B8193A1557"
+            {
+            "Name" = "8:NoiseBox"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_DF047147F6724BE9AC46BDEC260A47B5"
+            "Folder" = "8:_0C6C147F6AF94618BC83D8D509D07E8F"
+            "WorkingFolder" = "8:_8BFCC37CEDAF466A820879F7F7BFDFDE"
+            "Icon" = "8:_9A57B3DB0E724A3780D7D3297D31E6D4"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_495E5F04502443249E122DEDE1B119EE"
+            {
+            "Name" = "8:NoiseBox"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_DF047147F6724BE9AC46BDEC260A47B5"
+            "Folder" = "8:_654B47DBEBAF43C991D8EE2D87DB7C7C"
+            "WorkingFolder" = "8:_8BFCC37CEDAF466A820879F7F7BFDFDE"
+            "Icon" = "8:_4F1BF1FBF4DC49DEB9BA61873B9327D1"
+            "Feature" = "8:"
+            }
         }
         "UserInterface"
         {
@@ -686,7 +774,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_DF047147F6724BE9AC46BDEC260A47B5"
             {
-            "SourcePath" = "8:..\\NoiseBox UI\\obj\\x64\\Debug\\net6.0-windows\\apphost.exe"
+            "SourcePath" = "8:..\\NoiseBox UI\\obj\\Debug\\net6.0-windows\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_8BFCC37CEDAF466A820879F7F7BFDFDE"

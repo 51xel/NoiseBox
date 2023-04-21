@@ -14,7 +14,7 @@
     <Grid>
         <tb:TaskbarIcon Name="TaskbarIcon"
                         Visibility="Visible" 
-                        IconSource="/Images/Icons/tray.ico" 
+                        IconSource="/Images/Icons/tray32.ico" 
                         TrayLeftMouseDown="TaskbarIcon_Click"
                         PopupActivation="RightClick">
             <tb:TaskbarIcon.TrayPopup>
