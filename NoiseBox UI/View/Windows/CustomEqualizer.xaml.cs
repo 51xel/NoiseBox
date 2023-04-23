@@ -1,35 +1,23 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
 using System.Windows;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using WinForms = System.Windows.Forms;
-using NoiseBox;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Media.Animation;
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using System.Windows.Markup;
-using Newtonsoft.Json.Linq;
-using System.Reflection;
+using NoiseBox;
 using NoiseBox.Log;
-using System.Windows.Threading;
 using NoiseBox_UI.Utils;
 
 namespace NoiseBox_UI.View.Windows {
     public partial class CustomEqualizer : Window, INotifyPropertyChanged {
-        private List<BandsSettings> _bandsSettings = new List<BandsSettings>();
-        private string _jsonFilePath;
         protected ILog _log = LogSettings.SelectedLog;
 
         public CustomEqualizer() {
@@ -37,9 +25,7 @@ namespace NoiseBox_UI.View.Windows {
             WinMax.DoSourceInitialized(this);
             DataContext = this;
 
-            _jsonFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NoiseBox", "bandsSettings.json");
-
-            LoadFromJson();
+            EqualizerLibrary.LoadFromJson();
             UpdateProfiles();
         }
 
@@ -159,11 +145,11 @@ namespace NoiseBox_UI.View.Windows {
         private void SaveButton_Click(object sender, RoutedEventArgs e) {
             if (StartStopText.Text == "Stop") {
                 if (!String.IsNullOrEmpty(Profiles.SelectedItem as String)) {
-                    var band = _bandsSettings.FirstOrDefault(n => n.Name == Profiles.SelectedItem as String);
+                    var band = EqualizerLibrary.BandsSettings.FirstOrDefault(n => n.Name == Profiles.SelectedItem as String);
 
                     band.EqualizerBands = (Owner as MainWindow).AudioStreamControl.MainMusic.GetBandsList();
 
-                    SaveToJson();
+                    EqualizerLibrary.SaveToJson();
                 }
             }
         }
@@ -171,7 +157,7 @@ namespace NoiseBox_UI.View.Windows {
         private void DeleteButton_Click(object sender, RoutedEventArgs e) {
             if (StartStopText.Text == "Stop") {
                 if (!String.IsNullOrEmpty(Profiles.SelectedItem as String)) {
-                    _bandsSettings.Remove(_bandsSettings.FirstOrDefault(n => n.Name == Profiles.SelectedItem as String));
+                    EqualizerLibrary.BandsSettings.Remove(EqualizerLibrary.BandsSettings.FirstOrDefault(n => n.Name == Profiles.SelectedItem as String));
 
                     Profiles.SelectedItem = -1;
 
@@ -183,7 +169,7 @@ namespace NoiseBox_UI.View.Windows {
 
                     _log.Print("Delete profile", LogInfoType.INFO);
 
-                    SaveToJson();
+                    EqualizerLibrary.SaveToJson();
                 }
             }
         }
@@ -204,7 +190,7 @@ namespace NoiseBox_UI.View.Windows {
 
         private void Profiles_SelectionChanged(object sender, RoutedEventArgs e) {
             if (StartStopText.Text == "Stop") {
-                var band = _bandsSettings.FirstOrDefault(n => n.Name == Profiles.SelectedItem as String);
+                var band = EqualizerLibrary.BandsSettings.FirstOrDefault(n => n.Name == Profiles.SelectedItem as String);
 
                 if (band != null) {
                     (Owner as MainWindow).AudioStreamControl.SetBandsList(band.EqualizerBands);
@@ -223,7 +209,7 @@ namespace NoiseBox_UI.View.Windows {
         private void UpdateProfiles(string bandNameToSelect = null) {
             Profiles.Items.Clear();
 
-            foreach (var profile in _bandsSettings) {
+            foreach (var profile in EqualizerLibrary.BandsSettings) {
                 Profiles.Items.Add(profile.Name);
             }
 
@@ -238,50 +224,22 @@ namespace NoiseBox_UI.View.Windows {
             }
         }
 
-        private void SaveToJson() { 
-            var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
-            string json = JsonConvert.SerializeObject(_bandsSettings, Formatting.Indented, settings);
-            File.WriteAllText(_jsonFilePath, json);
-
-            _log.Print("Save to json", LogInfoType.INFO);
-        }
-
-        private void LoadFromJson() {
-            if (File.Exists(_jsonFilePath)) {
-                string jsonString = File.ReadAllText(_jsonFilePath);
-
-                var tempBands = JsonConvert.DeserializeObject<List<BandsSettings>>(jsonString);
-                if (tempBands != null) {
-                    _bandsSettings = JsonConvert.DeserializeObject<List<BandsSettings>>(jsonString);
-                }
-                else {
-                    _log.Print("Json is empty", LogInfoType.WARNING);
-                }
-
-                _log.Print("Load from json", LogInfoType.INFO);
-            }
-            else {
-                Directory.CreateDirectory(Path.GetDirectoryName(_jsonFilePath));
-                File.Create(_jsonFilePath).Close();
-            }
-        }
-
         private void NamePopupTextBox_KeyDown(object sender, KeyEventArgs e) {
             if (e.Key == Key.Enter) {
                 string popupTextBoxText = NamePopupTextBox.Text.Trim();
 
                 if (!string.IsNullOrEmpty(popupTextBoxText)) {
-                    if (_bandsSettings.FirstOrDefault(n => n.Name == popupTextBoxText) == null) {
+                    if (EqualizerLibrary.BandsSettings.FirstOrDefault(n => n.Name == popupTextBoxText) == null) {
                         var band = new BandsSettings();
 
                         band.Name = popupTextBoxText;
                         band.EqualizerBands = (Owner as MainWindow).AudioStreamControl.MainMusic.GetBandsList();
 
-                        _bandsSettings.Add(band);
+                        EqualizerLibrary.BandsSettings.Add(band);
 
                         _log.Print("New profile created", LogInfoType.INFO);
 
-                        SaveToJson();
+                        EqualizerLibrary.SaveToJson();
 
                         (Owner as MainWindow).SelectedBandsSettings = band;
 
@@ -299,14 +257,14 @@ namespace NoiseBox_UI.View.Windows {
                 string popupTextBoxText = ReNamePopupTextBox.Text.Trim();
 
                 if (!string.IsNullOrEmpty(popupTextBoxText)) {
-                    var band = _bandsSettings.FirstOrDefault(n => n.Name == Profiles.SelectedItem as String);
+                    var band = EqualizerLibrary.BandsSettings.FirstOrDefault(n => n.Name == Profiles.SelectedItem as String);
 
-                    if (band != null && _bandsSettings.FirstOrDefault(n => n.Name == popupTextBoxText) == null) {
+                    if (band != null && EqualizerLibrary.BandsSettings.FirstOrDefault(n => n.Name == popupTextBoxText) == null) {
                         _log.Print($"Profile \"{band.Name}\" was renamed to \"{popupTextBoxText}\"", LogInfoType.INFO);
 
                         band.Name = popupTextBoxText;
 
-                        SaveToJson();
+                        EqualizerLibrary.SaveToJson();
 
                         (Owner as MainWindow).SelectedBandsSettings = band;
 

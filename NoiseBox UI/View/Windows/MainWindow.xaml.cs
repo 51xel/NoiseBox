@@ -105,6 +105,14 @@ namespace NoiseBox_UI.View.Windows {
             BottomControlPanel.MicVolumeSlider.Value = Properties.Settings.Default.MicVolumeSliderValue;
             BottomControlPanel.AdditionalVolumeSlider.Value = Properties.Settings.Default.AdditionalVolumeSliderValue;
 
+            if (Properties.Settings.Default.EqualizerOnStartEnabled) {
+                if (!String.IsNullOrEmpty(Properties.Settings.Default.EqualizerBandName)) {
+                    SelectedBandsSettings = new BandsSettings() { Name = Properties.Settings.Default.EqualizerBandName};
+
+                    AudioStreamControl.InitializeEqualizer(Properties.Settings.Default.EqualizerBandName);
+                }
+            }
+
             BottomControlPanel.MainVolumeSlider.ValueChanged += MainVolumeSlider_ValueChanged;
             BottomControlPanel.AdditionalVolumeSlider.ValueChanged += AdditionalVolumeSlider_ValueChanged;
             BottomControlPanel.MicVolumeSlider.ValueChanged += MicVolumeSlider_ValueChanged;
@@ -150,13 +158,16 @@ namespace NoiseBox_UI.View.Windows {
                         SelectedSong = MusicLibrary.GetSongsFromPlaylist(BackgroundPlaylistName).Find(s => s.Id == lastSelectedSongId);
 
                         if (SelectedSong != null) {
-                            SelectSong(SelectedSong);
+                            if (SelectSong(SelectedSong)) {
+                                PlayPauseButton_Click(null, null);
 
-                            PlayPauseButton_Click(null, null);
+                                AudioStreamControl.CurrentTrackPosition = AudioStreamControl.CurrentTrackLength * Properties.Settings.Default.LastSeekBarValue / 100;
 
-                            AudioStreamControl.CurrentTrackPosition = AudioStreamControl.CurrentTrackLength * Properties.Settings.Default.LastSeekBarValue / 100;
-
-                            BottomControlPanel.SeekBar.Value = Properties.Settings.Default.LastSeekBarValue;
+                                BottomControlPanel.SeekBar.Value = Properties.Settings.Default.LastSeekBarValue;
+                            }
+                            else {
+                                SelectedSong = null;
+                            }
                         }
                     }
                 }
@@ -209,10 +220,12 @@ namespace NoiseBox_UI.View.Windows {
             }
         }
 
-        public void SelectSong(Song song) {
+        public bool SelectSong(Song song) {
             if (!File.Exists(song.Path)) {
                 InfoSnackbar.MessageQueue?.Clear();
                 InfoSnackbar.MessageQueue?.Enqueue($"Song \"{song.Name}\" could not be found", null, null, null, false, true, TimeSpan.FromSeconds(2));
+
+                return false;
             }
             else {
                 SelectedSong = song.Clone();
@@ -239,6 +252,8 @@ namespace NoiseBox_UI.View.Windows {
                 }
 
                 StartVisualization();
+
+                return true;
             }
         }
 
@@ -541,6 +556,15 @@ namespace NoiseBox_UI.View.Windows {
             Properties.Settings.Default.LastSeekBarValue = BottomControlPanel.SeekBar.Value;
 
             Properties.Settings.Default.LastPlaybackMode = (int)BottomControlPanel.Mode;
+
+            if (Properties.Settings.Default.EqualizerOnStartEnabled) {
+                if (SelectedBandsSettings != null) {
+                    Properties.Settings.Default.EqualizerBandName = SelectedBandsSettings.Name;
+                }
+                else {
+                    Properties.Settings.Default.EqualizerBandName = null;
+                }
+            }
 
             Properties.Settings.Default.Save();
         }

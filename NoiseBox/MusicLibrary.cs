@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NoiseBox.Log;
@@ -277,6 +270,44 @@ namespace NoiseBox {
             }
 
             return songsFromPlaylist;
+        }
+    }
+
+    public class EqualizerLibrary {
+        public static List<BandsSettings> BandsSettings = new List<BandsSettings>();
+        private static string _jsonFilePath;
+        protected static ILog _log = LogSettings.SelectedLog;
+
+        static EqualizerLibrary(){
+            _jsonFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NoiseBox", "bandsSettings.json");
+        }
+
+        public static void LoadFromJson() {
+            if (File.Exists(_jsonFilePath)) {
+                string jsonString = File.ReadAllText(_jsonFilePath);
+
+                var tempBands = JsonConvert.DeserializeObject<List<BandsSettings>>(jsonString);
+                if (tempBands != null) {
+                    BandsSettings = JsonConvert.DeserializeObject<List<BandsSettings>>(jsonString);
+                }
+                else {
+                    _log.Print("Json is empty", LogInfoType.WARNING);
+                }
+
+                _log.Print("Load from json", LogInfoType.INFO);
+            }
+            else {
+                Directory.CreateDirectory(Path.GetDirectoryName(_jsonFilePath));
+                File.Create(_jsonFilePath).Close();
+            }
+        }
+
+        public static void SaveToJson() {
+            var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
+            string json = JsonConvert.SerializeObject(BandsSettings, Formatting.Indented, settings);
+            File.WriteAllText(_jsonFilePath, json);
+
+            _log.Print("Save to json", LogInfoType.INFO);
         }
     }
 }

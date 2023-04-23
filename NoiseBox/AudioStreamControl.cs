@@ -10,6 +10,9 @@ namespace NoiseBox {
 
         public MicrophoneStream Microphone;
 
+        private bool _delayedEqualizerInitialization = false;
+        private string _selectedBandName;
+
         public AudioStreamControl(string mainOutputDevice) {
             if (String.IsNullOrWhiteSpace(mainOutputDevice)) {
                 _log.Print("Device name can`t be null", LogInfoType.ERROR);
@@ -87,6 +90,24 @@ namespace NoiseBox {
             if (AdditionalMusic != null) {
                 AdditionalMusic.StopAndPlayFromPosition(startingPosition);
             }
+
+            if (_delayedEqualizerInitialization && !String.IsNullOrEmpty(_selectedBandName)) {
+                InitializeEqualizer();
+
+                if (MainMusic.IsEqualizerWorking) {
+                    EqualizerLibrary.LoadFromJson();
+
+                    var band = EqualizerLibrary.BandsSettings.FirstOrDefault(n => n.Name == _selectedBandName);
+
+                    if (band != null) {
+                        SetBandsList(band.EqualizerBands);
+
+                        _log.Print("Profile has been selected", LogInfoType.INFO);
+                    }
+                }
+            }
+
+            _delayedEqualizerInitialization = false;
         }
 
         public string PathToMusic {
@@ -129,11 +150,16 @@ namespace NoiseBox {
             }
         }
 
-        public void InitializeEqualizer() {
+        public void InitializeEqualizer(string selectedBandName = null) {
             MainMusic.InitializeEqualizer();
 
             if (AdditionalMusic != null) {
                 AdditionalMusic.InitializeEqualizer();
+            }
+
+            if (!MainMusic.IsEqualizerWorking) {
+                _delayedEqualizerInitialization = true;
+                _selectedBandName = selectedBandName;
             }
         }
 

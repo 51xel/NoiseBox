@@ -216,6 +216,16 @@
                             <TextBlock Grid.Column="0">On Close, minimize to Tray</TextBlock>
                             <ToggleButton Grid.Column="1" Name="MinimizeToTrayEnabled"/>
                         </Grid>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0">Enable equalizer on start</TextBlock>
+                            <ToggleButton Grid.Column="1" Name="EqualizerOnStartEnabled"/>
+                        </Grid>
                     </StackPanel>
                 </TabItem.Content>
             </TabItem>

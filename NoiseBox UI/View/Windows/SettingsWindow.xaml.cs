@@ -50,6 +50,7 @@ namespace NoiseBox_UI.View.Windows {
 
             MicOutputEnabled.IsChecked = Properties.Settings.Default.MicOutputEnabled;
             AdditionalOutputEnabled.IsChecked = Properties.Settings.Default.AdditionalOutputEnabled;
+            EqualizerOnStartEnabled.IsChecked = Properties.Settings.Default.EqualizerOnStartEnabled;
 
             if (string.IsNullOrEmpty(Properties.Settings.Default.DownloadsFolder)) {
                 string downloadsFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
@@ -147,6 +148,7 @@ namespace NoiseBox_UI.View.Windows {
 
             Properties.Settings.Default.DownloadsFolder = DownloadsFolder.Text;
             Properties.Settings.Default.MinimizeToTrayEnabled = MinimizeToTrayEnabled.IsChecked.GetValueOrDefault();
+            Properties.Settings.Default.EqualizerOnStartEnabled = EqualizerOnStartEnabled.IsChecked.GetValueOrDefault();
 
             if (VisualizationEnabled.IsChecked.GetValueOrDefault() != Properties.Settings.Default.VisualizationEnabled) {
                 Properties.Settings.Default.VisualizationEnabled = VisualizationEnabled.IsChecked.GetValueOrDefault();
