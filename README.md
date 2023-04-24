@@ -1,7 +1,7 @@
 
 # NoiseBox
 
-NoiseBox is an open source .NET music player with some additional features
+NoiseBox is an open source music player with some additional features
 
 ![Logo](https://i.imgur.com/asWeMw2.png)
 
