@@ -51,6 +51,9 @@ namespace NoiseBox {
         }
 
         public static string GetOutputDeviceNameById(int id) {
+            if(WaveOut.DeviceCount <= id){
+                return WaveOut.GetCapabilities(0).ProductName;
+            }
             return WaveOut.GetCapabilities(id).ProductName;
         }
 

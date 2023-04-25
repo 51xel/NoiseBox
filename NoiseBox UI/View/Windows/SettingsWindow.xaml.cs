@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -16,11 +12,7 @@ using NoiseBox;
 using NoiseBox_UI.View.UserControls;
 using NoiseBox_UI.Utils;
 using MaterialDesignThemes.Wpf;
-using System.Collections;
 using System.Text.RegularExpressions;
-using System.Configuration;
-using System.Xml.Linq;
-using System.Xml;
 
 namespace NoiseBox_UI.View.Windows {
     public partial class SettingsWindow : Window {
@@ -33,6 +25,8 @@ namespace NoiseBox_UI.View.Windows {
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e) {
+            var win = (Owner as MainWindow);
+
             foreach (var device in DeviceControll.GetOutputDevicesList()) {
                 MainOutputDevicesList.Items.Add(device);
                 AdditionalOutputDevicesList.Items.Add(device);
@@ -43,8 +37,20 @@ namespace NoiseBox_UI.View.Windows {
                 InputDevicesList.Items.Add(device);
             }
 
-            MainOutputDevicesList.SelectedItem = Properties.Settings.Default.MainOutputDevice;
-            AdditionalOutputDevicesList.SelectedItem = Properties.Settings.Default.AdditionalOutputDevice;
+            if (MainOutputDevicesList.Items.Contains(Properties.Settings.Default.MainOutputDevice)) {
+                MainOutputDevicesList.SelectedItem = Properties.Settings.Default.MainOutputDevice;
+            }
+            else {
+                MainOutputDevicesList.SelectedItem = DeviceControll.GetOutputDeviceNameById(win.AudioStreamControl.MainMusic.GetOutputDeviceId());
+            }
+
+            if (AdditionalOutputDevicesList.Items.Contains(Properties.Settings.Default.AdditionalOutputDevice)) {
+                AdditionalOutputDevicesList.SelectedItem = Properties.Settings.Default.AdditionalOutputDevice;
+            }
+            else {
+                AdditionalOutputDevicesList.SelectedItem = DeviceControll.GetOutputDeviceNameById(0);
+            }
+
             MicOutputDevicesList.SelectedItem = Properties.Settings.Default.MicOutputDevice;
             InputDevicesList.SelectedItem = Properties.Settings.Default.InputDevice;
 
@@ -70,7 +76,7 @@ namespace NoiseBox_UI.View.Windows {
         private void Save_Click(object sender, RoutedEventArgs e) {
             var win = (Owner as MainWindow); 
 
-            if (MainOutputDevicesList.SelectedItem.ToString() != Properties.Settings.Default.MainOutputDevice) {
+            if (MainOutputDevicesList.SelectedItem.ToString() != Properties.Settings.Default.MainOutputDevice || MainOutputDevicesList.SelectedItem.ToString() != DeviceControll.GetOutputDeviceNameById(win.AudioStreamControl.MainMusic.GetOutputDeviceId())) {
                 Properties.Settings.Default.MainOutputDevice = MainOutputDevicesList.SelectedItem.ToString();
                 win.AudioStreamControl.MainMusic.ReselectOutputDevice(Properties.Settings.Default.MainOutputDevice);
             }
@@ -114,7 +120,8 @@ namespace NoiseBox_UI.View.Windows {
             bool changedAdditionalEnabled = false;
 
             if (AdditionalOutputDevicesList.SelectedItem != null) {
-                changedAdditionalDevice = AdditionalOutputDevicesList.SelectedItem.ToString() != Properties.Settings.Default.AdditionalOutputDevice;
+                changedAdditionalDevice = (AdditionalOutputDevicesList.SelectedItem.ToString() != Properties.Settings.Default.AdditionalOutputDevice) 
+                    || (AdditionalOutputDevicesList.SelectedItem.ToString() != DeviceControll.GetOutputDeviceNameById(win.AudioStreamControl.AdditionalMusic.GetOutputDeviceId()));
                 Properties.Settings.Default.AdditionalOutputDevice = AdditionalOutputDevicesList.SelectedItem.ToString();
             }
 

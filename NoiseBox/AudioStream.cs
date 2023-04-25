@@ -56,6 +56,17 @@ namespace NoiseBox {
 
         private void PlaybackStopped(object sender, EventArgs e) {
             if (StoppedEvent != null) {
+                try {
+                    var tempVol = OutputDeviceVolume;
+                }
+                catch (Exception ex) {
+                    if (ex.Message == "NoDriver calling waveOutGetVolume") {
+                        sender = null;
+
+                        SelectOutputDevice(DeviceControll.GetOutputDeviceNameById(0));
+                    }
+                }
+
                 StoppedEvent(sender, e);
             }
         }

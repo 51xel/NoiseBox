@@ -87,6 +87,7 @@ namespace NoiseBox_UI.View.Windows {
             }
 
             AudioStreamControl.MainMusic.StoppedEvent += Music_StoppedEvent;
+            AudioStreamControl.AdditionalMusic.StoppedEvent += Music_StoppedEvent;
 
             DisplayPlaylists();
 
@@ -196,6 +197,11 @@ namespace NoiseBox_UI.View.Windows {
                 SeekBarTimer.Stop();
 
                 NextButton_Click(null, null);
+            }else if (sender == null) {
+                AudioStreamControl.Pause();
+
+                BottomControlPanel.State = BottomControlPanel.ButtonState.Paused;
+                SeekBarTimer.Stop();
             }
         }
 
