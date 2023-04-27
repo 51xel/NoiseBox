@@ -1,0 +1,175 @@
+﻿<UserControl x:Class="NoiseBox_UI.View.UserControls.FunctionButtons"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NoiseBox_UI.View.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="60">
+    <UserControl.Resources>
+        <Style TargetType="{x:Type ListView}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <ListView Name="List" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                  ScrollViewer.CanContentScroll="False">
+            <ListViewItem Padding="5">
+                <Button x:Name="SettingsButton" Width="50" Height="50" Background="#212128" BorderBrush="Transparent" Padding="15"
+                        Click="SettingsButton_Click">
+                    <Image Source="/Images/Icons/settings.png" RenderOptions.BitmapScalingMode ="HighQuality" RenderTransformOrigin="0.5,0.5">
+                        <Image.RenderTransform>
+                            <RotateTransform Angle="0" x:Name="CogRotateAnim"/>
+                        </Image.RenderTransform>
+                    </Image>
+                    <Button.Triggers>
+                        <EventTrigger RoutedEvent="Button.Click">
+                            <EventTrigger.Actions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation From ="0" To="135" Duration="0:0:0.5"
+                                                         Storyboard.TargetName="CogRotateAnim"
+                                                         Storyboard.TargetProperty="(RotateTransform.Angle)">
+                                            <DoubleAnimation.EasingFunction>
+                                                <CubicEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger.Actions>
+                        </EventTrigger>
+                    </Button.Triggers>
+                </Button>
+            </ListViewItem>
+
+            <ListViewItem Padding="5">
+                <Button x:Name="DownloadButton" Width="50" Height="50" Background="#212128" BorderBrush="Transparent" Padding="15"
+                        Click="DownloadButton_Click">
+                    <Grid>
+                        <ProgressBar Name="DownloadingProgress" Style="{StaticResource MaterialDesignCircularProgressBar}"
+                                     Width="40" Height="40" Value="0" Maximum="100" Margin="-15" Visibility="Collapsed"/>
+                        <Image Source="/Images/Icons/download.png" RenderOptions.BitmapScalingMode ="HighQuality" RenderTransformOrigin="0.5,1">
+                            <Image.RenderTransform>
+                                <ScaleTransform x:Name="DownloadArrowAnim"/>
+                            </Image.RenderTransform>
+                        </Image>
+                    </Grid>
+                    <Button.Triggers>
+                        <EventTrigger RoutedEvent="Button.Click">
+                            <EventTrigger.Actions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation From ="1" To="0.8" Duration="0:0:0.2"
+                                                         Storyboard.TargetName="DownloadArrowAnim"
+                                                         Storyboard.TargetProperty="(ScaleTransform.ScaleY)"
+                                                         AutoReverse="True">
+                                            <DoubleAnimation.EasingFunction>
+                                                <CubicEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <DoubleAnimation From ="1" To="1.2" Duration="0:0:0.2"
+                                                         Storyboard.TargetName="DownloadArrowAnim"
+                                                         Storyboard.TargetProperty="(ScaleTransform.ScaleX)"
+                                                         AutoReverse="True">
+                                            <DoubleAnimation.EasingFunction>
+                                                <CubicEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger.Actions>
+                        </EventTrigger>
+                    </Button.Triggers>
+                </Button>
+            </ListViewItem>
+
+            <ListViewItem Padding="5">
+                <Button x:Name="ConvertButton" Width="50" Height="50" Background="#212128" BorderBrush="Transparent" Padding="10"
+                        Click="ConvertButton_Click">
+                    <Grid>
+                        <ProgressBar Name="ConvertingProgress" Style="{StaticResource MaterialDesignCircularProgressBar}"
+                                     Width="40" Height="40" Margin="-15" Visibility="Collapsed" IsIndeterminate="True"/>
+                        <Image Source="/Images/Icons/convert.png" RenderOptions.BitmapScalingMode ="HighQuality" RenderTransformOrigin="0.5,0.5">
+                            <Image.RenderTransform>
+                                <RotateTransform Angle="0" x:Name="ConvertRotateAnim"/>
+                            </Image.RenderTransform>
+                        </Image>
+                    </Grid>
+
+                    <Button.Triggers>
+                        <EventTrigger RoutedEvent="Button.Click">
+                            <EventTrigger.Actions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation From ="0" To="360" Duration="0:0:0.5"
+                                                         Storyboard.TargetName="ConvertRotateAnim"
+                                                         Storyboard.TargetProperty="(RotateTransform.Angle)">
+                                            <DoubleAnimation.EasingFunction>
+                                                <CubicEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger.Actions>
+                        </EventTrigger>
+                    </Button.Triggers>
+                </Button>
+            </ListViewItem>
+
+            <ListViewItem Padding="5">
+                <Button x:Name="EqualizerButton" Width="50" Height="50" Background="#212128" BorderBrush="Transparent" Padding="8"
+                        Click="EqualizerButton_Click">
+
+                    <Canvas>
+                        <Border Background="White" CornerRadius="1" Width="3" Height="28" Canvas.Left="-13.5" Canvas.Top="-14"/>
+                        <Border Background="White" CornerRadius="1" Width="3" Height="28" Canvas.Left="10.5" Canvas.Top="-14"/>
+                        <Border Background="White" CornerRadius="1" Width="3" Height="28" Canvas.Left="-1.5" Canvas.Top="-14"/>
+
+                        <Ellipse Name="EqCircle1" Fill="#212128" Stroke="White" StrokeThickness="2" Width="9" Height="9" Canvas.Left="-16.5" Canvas.Top="-10"/>
+                        <Ellipse Name="EqCircle2" Fill="#212128" Stroke="White" StrokeThickness="2" Width="9" Height="9" Canvas.Left="-4.5" Canvas.Top="3"/>
+                        <Ellipse Name="EqCircle3" Fill="#212128" Stroke="White" StrokeThickness="2" Width="9" Height="9" Canvas.Left="7.5" Canvas.Top="-6"/>
+                    </Canvas>
+
+                    <Button.Triggers>
+                        <EventTrigger RoutedEvent="Button.Click">
+                            <EventTrigger.Actions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation From="-10" To="3" Duration="0:0:0.4"
+                                                         Storyboard.TargetName="EqCircle1"
+                                                         Storyboard.TargetProperty="(Canvas.Top)"
+                                                         AutoReverse="True">
+                                            <DoubleAnimation.EasingFunction>
+                                                <CubicEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+
+                                        <DoubleAnimation From="3" To="-10" Duration="0:0:0.4"
+                                                         Storyboard.TargetName="EqCircle2"
+                                                         Storyboard.TargetProperty="(Canvas.Top)"
+                                                         AutoReverse="True">
+                                            <DoubleAnimation.EasingFunction>
+                                                <CubicEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+
+                                        <DoubleAnimation From="-6" To="3" Duration="0:0:0.25"
+                                                         Storyboard.TargetName="EqCircle3"
+                                                         Storyboard.TargetProperty="(Canvas.Top)"
+                                                         AutoReverse="True">
+                                            <DoubleAnimation.EasingFunction>
+                                                <CubicEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger.Actions>
+                        </EventTrigger>
+                    </Button.Triggers>
+                </Button>
+            </ListViewItem>
+        </ListView>
+    </Grid>
+</UserControl>

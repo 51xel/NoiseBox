@@ -3,18 +3,42 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoiseBox", "NoiseBox\NoiseBox.csproj", "{87E7D439-403D-42E8-881E-AA0083060332}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NoiseBox", "NoiseBox\NoiseBox.csproj", "{87E7D439-403D-42E8-881E-AA0083060332}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NoiseBox UI", "NoiseBox UI\NoiseBox UI.csproj", "{6FF9DCAC-0492-4207-8AFD-7F3C02A2B21F}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "NoiseBoxSetup", "NoiseBoxSetup\NoiseBoxSetup.vdproj", "{F2FCBCEF-0E5E-4617-ABC5-D388D61E46ED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
 		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{87E7D439-403D-42E8-881E-AA0083060332}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{87E7D439-403D-42E8-881E-AA0083060332}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87E7D439-403D-42E8-881E-AA0083060332}.Debug|x64.ActiveCfg = Debug|x64
+		{87E7D439-403D-42E8-881E-AA0083060332}.Debug|x64.Build.0 = Debug|x64
 		{87E7D439-403D-42E8-881E-AA0083060332}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{87E7D439-403D-42E8-881E-AA0083060332}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87E7D439-403D-42E8-881E-AA0083060332}.Release|x64.ActiveCfg = Release|x64
+		{87E7D439-403D-42E8-881E-AA0083060332}.Release|x64.Build.0 = Release|x64
+		{6FF9DCAC-0492-4207-8AFD-7F3C02A2B21F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FF9DCAC-0492-4207-8AFD-7F3C02A2B21F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FF9DCAC-0492-4207-8AFD-7F3C02A2B21F}.Debug|x64.ActiveCfg = Debug|x64
+		{6FF9DCAC-0492-4207-8AFD-7F3C02A2B21F}.Debug|x64.Build.0 = Debug|x64
+		{6FF9DCAC-0492-4207-8AFD-7F3C02A2B21F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FF9DCAC-0492-4207-8AFD-7F3C02A2B21F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6FF9DCAC-0492-4207-8AFD-7F3C02A2B21F}.Release|x64.ActiveCfg = Release|x64
+		{6FF9DCAC-0492-4207-8AFD-7F3C02A2B21F}.Release|x64.Build.0 = Release|x64
+		{F2FCBCEF-0E5E-4617-ABC5-D388D61E46ED}.Debug|Any CPU.ActiveCfg = Debug
+		{F2FCBCEF-0E5E-4617-ABC5-D388D61E46ED}.Debug|x64.ActiveCfg = Debug
+		{F2FCBCEF-0E5E-4617-ABC5-D388D61E46ED}.Debug|x64.Build.0 = Debug
+		{F2FCBCEF-0E5E-4617-ABC5-D388D61E46ED}.Release|Any CPU.ActiveCfg = Release
+		{F2FCBCEF-0E5E-4617-ABC5-D388D61E46ED}.Release|x64.ActiveCfg = Release
+		{F2FCBCEF-0E5E-4617-ABC5-D388D61E46ED}.Release|x64.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

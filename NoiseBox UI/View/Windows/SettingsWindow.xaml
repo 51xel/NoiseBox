@@ -1,0 +1,244 @@
+﻿<Window x:Class="NoiseBox_UI.View.Windows.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NoiseBox_UI.View.Windows"
+        xmlns:userControls="clr-namespace:NoiseBox_UI.View.UserControls"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
+        mc:Ignorable="d"
+        WindowStyle="None"
+        Title="Settings" Height="600" Width="500"
+        MinHeight="250" MinWidth="500"
+        AllowsTransparency="True"
+        
+        StateChanged="Window_StateChanged"
+        Closing="Window_Closing"
+        
+        MouseDown="Window_MouseDown"
+        
+        Loaded="Window_Loaded">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="25"/>
+    </WindowChrome.WindowChrome>
+
+    <Window.Resources>
+        <Style x:Key="NoStylingButton" TargetType="{x:Type Button}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="Transparent" CornerRadius="10">
+                            <ContentPresenter/>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#3b3b42"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            
+        </Style>
+    </Window.Resources>
+
+    <Grid Focusable="True">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <Grid.Background>
+            <SolidColorBrush Color="#212128"/>
+        </Grid.Background>
+
+        <userControls:TitlebarButtons x:Name="TitlebarButtons" Panel.ZIndex="1"/>
+
+        <TabControl Grid.Row="1" Name="TabControl">
+            <TabControl.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="FontFamily" Value="/Fonts/#Montserrat"/>
+                    <Setter Property="FontSize" Value="16"/>
+                    <Setter Property="Foreground" Value="#BDBDBD"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                </Style>
+
+                <Style TargetType="ComboBox" BasedOn="{StaticResource MaterialDesignComboBox}">
+                    <Setter Property="FontFamily" Value="/Fonts/#Montserrat"/>
+                    <Setter Property="FontSize" Value="16"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="Height" Value="27"/>
+                </Style>
+
+                <Style TargetType="Grid">
+                    <Setter Property="Margin" Value="0,0,0,20"/>
+                </Style>
+
+                <Style TargetType="materialDesign:PackIcon">
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                </Style>
+            </TabControl.Resources>
+
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock Foreground="White">Audio</TextBlock>
+                </TabItem.Header>
+
+                <TabItem.Content>
+                    <StackPanel Margin="30,50,30,0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="265"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0">Select main output device</TextBlock>
+
+                            <ComboBox Grid.Column="1" Name="MainOutputDevicesList" BorderBrush="{DynamicResource PrimaryHueMidBrush}" Foreground="#BDBDBD">
+                                <ComboBox.Resources>
+                                    <SolidColorBrush x:Key="MaterialDesignPaper" Color="#212128"/>
+                                </ComboBox.Resources>
+                            </ComboBox>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="265"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0">Select additional output device</TextBlock>
+
+                            <ComboBox Grid.Column="1" Name="AdditionalOutputDevicesList" BorderBrush="{DynamicResource PrimaryHueMidBrush}" Foreground="#BDBDBD">
+                                <ComboBox.Resources>
+                                    <SolidColorBrush x:Key="MaterialDesignPaper" Color="#212128"/>
+                                </ComboBox.Resources>
+                            </ComboBox>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="265"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0">Select mic input device</TextBlock>
+
+                            <ComboBox Grid.Column="1" Name="InputDevicesList" BorderBrush="{DynamicResource PrimaryHueMidBrush}" Foreground="#BDBDBD">
+                                <ComboBox.Resources>
+                                    <SolidColorBrush x:Key="MaterialDesignPaper" Color="#212128"/>
+                                </ComboBox.Resources>
+                            </ComboBox>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="265"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0">Select mic output device</TextBlock>
+
+                            <ComboBox Grid.Column="1" Name="MicOutputDevicesList" BorderBrush="{DynamicResource PrimaryHueMidBrush}" Foreground="#BDBDBD">
+                                <ComboBox.Resources>
+                                    <SolidColorBrush x:Key="MaterialDesignPaper" Color="#212128"/>
+                                </ComboBox.Resources>
+                            </ComboBox>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0">Enable output to additional device</TextBlock>
+                            <ToggleButton Grid.Column="1" Name="AdditionalOutputEnabled"/>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0">Enable mic output</TextBlock>
+                            <ToggleButton Grid.Column="1" Name="MicOutputEnabled"/>
+                        </Grid>
+                    </StackPanel>
+                </TabItem.Content>
+            </TabItem>
+
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock Foreground="White">Hotkeys</TextBlock>
+                </TabItem.Header>
+
+                <TabItem.Content>
+                    <StackPanel Margin="30,50,30,0" Name="HotkeyStackPanel"/>
+                </TabItem.Content>
+            </TabItem>
+
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock Foreground="White">Other</TextBlock>
+                </TabItem.Header>
+
+                <TabItem.Content>
+                    <StackPanel Margin="30,50,30,0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0">Downloads folder</TextBlock>
+                            <TextBlock Grid.Column="1" Name="DownloadsFolder"/>
+                            <Button Grid.Column="2" Style="{StaticResource NoStylingButton}" Click="EditDownloadsFolder">
+                                <materialDesign:PackIcon Kind="PencilOutline" Foreground="White"/>
+                            </Button>
+                        </Grid>
+                        
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0">Enable sound wave visualization</TextBlock>
+                            <ToggleButton Grid.Column="1" Name="VisualizationEnabled"/>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0">On Close, minimize to Tray</TextBlock>
+                            <ToggleButton Grid.Column="1" Name="MinimizeToTrayEnabled"/>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0">Enable equalizer on start</TextBlock>
+                            <ToggleButton Grid.Column="1" Name="EqualizerOnStartEnabled"/>
+                        </Grid>
+                    </StackPanel>
+                </TabItem.Content>
+            </TabItem>
+        </TabControl>
+
+        <Button Grid.Row="2" Click="Save_Click" Content="Save" Background="Transparent" Width="150" HorizontalAlignment="Right" Margin="15"/>
+        <materialDesign:Snackbar Grid.Row="1" Name="InfoSnackbar" MessageQueue="{materialDesign:MessageQueue}" IsActive="False"/>
+    </Grid>
+</Window>
