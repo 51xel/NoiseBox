@@ -51,7 +51,13 @@ namespace NoiseBox_UI.View.Windows {
                 AdditionalOutputDevicesList.SelectedItem = DeviceControll.GetOutputDeviceNameById(0);
             }
 
-            MicOutputDevicesList.SelectedItem = Properties.Settings.Default.MicOutputDevice;
+            if (MicOutputDevicesList.Items.Contains(Properties.Settings.Default.MicOutputDevice)) {
+                MicOutputDevicesList.SelectedItem = Properties.Settings.Default.MicOutputDevice;
+            }
+            else {
+                MicOutputDevicesList.SelectedItem = DeviceControll.GetOutputDeviceNameById(0);
+            }
+
             InputDevicesList.SelectedItem = Properties.Settings.Default.InputDevice;
 
             MicOutputEnabled.IsChecked = Properties.Settings.Default.MicOutputEnabled;
@@ -121,7 +127,7 @@ namespace NoiseBox_UI.View.Windows {
 
             if (AdditionalOutputDevicesList.SelectedItem != null) {
                 changedAdditionalDevice = (AdditionalOutputDevicesList.SelectedItem.ToString() != Properties.Settings.Default.AdditionalOutputDevice) 
-                    || (AdditionalOutputDevicesList.SelectedItem.ToString() != DeviceControll.GetOutputDeviceNameById(win.AudioStreamControl.AdditionalMusic.GetOutputDeviceId()));
+                    || (AdditionalOutputDevicesList.SelectedItem.ToString() != DeviceControll.GetOutputDeviceNameById(0));
                 Properties.Settings.Default.AdditionalOutputDevice = AdditionalOutputDevicesList.SelectedItem.ToString();
             }
 
@@ -135,6 +141,7 @@ namespace NoiseBox_UI.View.Windows {
 
                     win.AudioStreamControl.ActivateAdditionalMusic(Properties.Settings.Default.AdditionalOutputDevice);
                     win.AudioStreamControl.AdditionalMusic.MusicVolume = (float)win.BottomControlPanel.AdditionalVolumeSlider.Value / 100;
+                    win.AudioStreamControl.AdditionalMusic.StoppedEvent += win.Music_StoppedEvent;
                 }
                 else {
                     Properties.Settings.Default.AdditionalOutputEnabled = false;

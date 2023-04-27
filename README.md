@@ -7,7 +7,7 @@ NoiseBox is an open source music player with some additional features.
 
 ## Features
 
-- Audio playback.
+- Audio playback with [NAudio](https://github.com/naudio/NAudio).
 - Audio playback to an additional device (e.g. [virtual cable](https://vb-audio.com/Cable/) for use as a soundpad).
 - Microphone output capturing and forwarding to a device.
 - Songs organization into playlists.

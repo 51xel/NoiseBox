@@ -87,7 +87,10 @@ namespace NoiseBox_UI.View.Windows {
             }
 
             AudioStreamControl.MainMusic.StoppedEvent += Music_StoppedEvent;
-            AudioStreamControl.AdditionalMusic.StoppedEvent += Music_StoppedEvent;
+
+            if (AudioStreamControl.AdditionalMusic != null) {
+                AudioStreamControl.AdditionalMusic.StoppedEvent += Music_StoppedEvent;
+            }
 
             DisplayPlaylists();
 
@@ -191,7 +194,7 @@ namespace NoiseBox_UI.View.Windows {
             AudioStreamControl.Microphone.InputDeviceVolume = (float)BottomControlPanel.MicVolumeSlider.Value / 100;
         }
 
-        private void Music_StoppedEvent(object sender, EventArgs e) {
+        public void Music_StoppedEvent(object sender, EventArgs e) {
             if (Math.Abs(AudioStreamControl.CurrentTrackLength - AudioStreamControl.CurrentTrackPosition) <= 0.1) {
                 BottomControlPanel.State = BottomControlPanel.ButtonState.Paused;
                 SeekBarTimer.Stop();
@@ -570,6 +573,17 @@ namespace NoiseBox_UI.View.Windows {
                 else {
                     Properties.Settings.Default.EqualizerBandName = null;
                 }
+            }
+
+            Properties.Settings.Default.MainOutputDevice = DeviceControll.GetOutputDeviceNameById(AudioStreamControl.MainMusic.GetOutputDeviceId());
+
+            if (AudioStreamControl.AdditionalMusic != null) {
+                Properties.Settings.Default.AdditionalOutputDevice = DeviceControll.GetOutputDeviceNameById(AudioStreamControl.AdditionalMusic.GetOutputDeviceId());
+            }
+
+            if (AudioStreamControl.Microphone != null) {
+                Properties.Settings.Default.MicOutputDevice = DeviceControll.GetOutputDeviceNameById(AudioStreamControl.Microphone.GetOutputDeviceId());
+                Properties.Settings.Default.InputDevice = DeviceControll.GetInputDeviceNameById(AudioStreamControl.Microphone.GetInputDeviceId());
             }
 
             Properties.Settings.Default.Save();

@@ -1,9 +1,6 @@
 ﻿using NAudio.Extras;
 using NAudio.Wave;
 using NoiseBox.Log;
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.Numerics;
 
 namespace NoiseBox {
     public class AudioStream {
@@ -54,7 +51,7 @@ namespace NoiseBox {
             }
         }
 
-        private void PlaybackStopped(object sender, EventArgs e) {
+        protected virtual void PlaybackStopped(object sender, EventArgs e) {
             if (StoppedEvent != null) {
                 try {
                     var tempVol = OutputDeviceVolume;
@@ -62,7 +59,6 @@ namespace NoiseBox {
                 catch (Exception ex) {
                     if (ex.Message == "NoDriver calling waveOutGetVolume") {
                         sender = null;
-
                         SelectOutputDevice(DeviceControll.GetOutputDeviceNameById(0));
                     }
                 }
@@ -416,6 +412,19 @@ namespace NoiseBox {
             }
         }
 
+        protected override void PlaybackStopped(object sender, EventArgs e) {
+            try {
+                var tempOutputVol = OutputDeviceVolume;
+            }
+            catch (Exception ex) {
+                if (ex.Message == "NoDriver calling waveOutGetVolume") {
+                    Stop();
+                    SelectOutputDevice(DeviceControll.GetOutputDeviceNameById(0));
+                    Play();
+                }
+            }
+        }
+
         public override void Play() {
             if (!IsPlaying && !IsPaused) {
                 _waveIn = new WaveInProvider(_waveSource);
@@ -444,6 +453,10 @@ namespace NoiseBox {
             Stop();
             _waveSource.Dispose();
             base.CloseStream();
+        }
+
+        public int GetInputDeviceId() {
+            return _waveSource.DeviceNumber;
         }
     }
 }
