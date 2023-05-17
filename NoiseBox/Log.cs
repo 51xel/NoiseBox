@@ -59,7 +59,7 @@ namespace NoiseBox {
             }
 
             public void Print(string message, LogInfoType logType, [CallerMemberName] string callerName = "") {
-                WriteMessageIntoFile($"[{DateTime.Now}][{logType.ToString()}][{callerName}] " + message);
+                WriteMessageIntoFile($"[{DateTime.Now}][{logType.ToString()}][{callerName}] " + message.Replace("\n", ""));
             }
 
             private void WriteMessageIntoFile(string message) {
