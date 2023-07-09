@@ -1,4 +1,7 @@
-﻿using System;
+﻿using NoiseBox;
+using NoiseBox.Log;
+using NoiseBox_UI.Utils;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
@@ -7,15 +10,12 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using WinForms = System.Windows.Forms;
-using NoiseBox;
-using System.Windows.Controls;
-using NoiseBox.Log;
-using NoiseBox_UI.Utils;
 
 namespace NoiseBox_UI.View.Windows {
     public partial class DownloadsWindow : Window, INotifyPropertyChanged {
@@ -25,7 +25,7 @@ namespace NoiseBox_UI.View.Windows {
         private static ILog _log = LogSettings.SelectedLog;
 
         private string _selectedDirectory;
-        public string SelectedDirectory { 
+        public string SelectedDirectory {
             get {
                 return _selectedDirectory;
             }
@@ -82,7 +82,7 @@ namespace NoiseBox_UI.View.Windows {
 
         private async void Download_Click(object sender, RoutedEventArgs e) {
             yt_dlp_Output.Text = "Starting to download...";
-            
+
             LinkTextBox.Text = LinkTextBox.Text.Trim();
 
             if (!Uri.IsWellFormedUriString(LinkTextBox.Text, UriKind.Absolute) &&
@@ -158,7 +158,8 @@ namespace NoiseBox_UI.View.Windows {
 
             process.ErrorDataReceived += (_, e) => {
                 if (!string.IsNullOrEmpty(e.Data)) {
-                    hadErrors = true;
+                    if (e.Data.StartsWith("ERROR"))
+                        hadErrors = true;
 
                     errorMessage += e.Data + "\n";
                 }
@@ -187,7 +188,14 @@ namespace NoiseBox_UI.View.Windows {
 
                 _log.Print(errorMessage, LogInfoType.ERROR);
 
-                yt_dlp_Output.Inlines.Add(new Run("\nSee logs for more info"));
+                if (!(_log is LogIntoFile)) {
+                    yt_dlp_Output.Inlines.Add(new Run("\nSee logs for more info"));
+                }
+                else {
+                    yt_dlp_Output.Inlines.Add(new Run("\nSee "));
+                    yt_dlp_Output.Inlines.Add(GetLogsHyperlink());
+                    yt_dlp_Output.Inlines.Add(new Run(" for more info"));
+                }
             }
 
             DownloadColumn.Width = new GridLength(100, GridUnitType.Star);
@@ -195,6 +203,21 @@ namespace NoiseBox_UI.View.Windows {
 
             (Owner as MainWindow).FunctionButtons.DownloadingProgress.Visibility = Visibility.Collapsed;
             DownloadingProgress.Visibility = Visibility.Collapsed;
+        }
+
+        private Hyperlink GetLogsHyperlink() {
+            var hyperlink = new Hyperlink();
+            hyperlink.Inlines.Add("logs");
+            hyperlink.NavigateUri = new Uri(((LogIntoFile)_log).LogsPath, UriKind.Absolute);
+
+            hyperlink.RequestNavigate += (_, _) => {
+                Process.Start(new ProcessStartInfo {
+                    FileName = "notepad.exe",
+                    Arguments = hyperlink.NavigateUri.AbsolutePath,
+                });
+            };
+
+            return hyperlink;
         }
 
         private void LinkTextBox_KeyDown(object sender, KeyEventArgs e) {
@@ -236,7 +259,7 @@ namespace NoiseBox_UI.View.Windows {
             if (File.Exists(downloadedFilePath)) {
                 File.Delete(downloadedFilePath);
             }
-            
+
             File.Move(downloadedFilePathOld, downloadedFilePath);
 
             Song song = new Song { Path = downloadedFilePath };

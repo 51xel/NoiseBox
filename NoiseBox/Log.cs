@@ -7,20 +7,20 @@ namespace NoiseBox {
             WARNING,
             ERROR
         }
-      
+
         public class LogSettings {
             private static ILog _selectedLog;
             public static ILog SelectedLog {
                 get {
                     return _selectedLog;
                 }
-                set { 
+                set {
                     if (value == null) {
                         throw new ArgumentNullException("Log can`t be null");
                     }
 
                     _selectedLog = value;
-                } 
+                }
             }
 
             static LogSettings() {
@@ -64,7 +64,7 @@ namespace NoiseBox {
 
             private void WriteMessageIntoFile(string message) {
                 if (File.Exists(_pathToFile) && new FileInfo(_pathToFile).Length > _fileSizeLimit) {
-                    
+
                     string pathToOldFile = Path.Combine(Path.GetDirectoryName(_pathToFile), Path.GetFileNameWithoutExtension(_pathToFile)) + "_old.txt";
 
                     if (File.Exists(pathToOldFile)) {
@@ -80,6 +80,8 @@ namespace NoiseBox {
                     writer.WriteLine(message);
                 }
             }
+
+            public string LogsPath => _pathToFile;
         }
     }
 }
