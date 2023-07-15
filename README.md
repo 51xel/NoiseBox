@@ -20,6 +20,10 @@ NoiseBox is an open source music player with some additional features.
 - Settings window.
 - Modifiable hotkeys.
 
+## Screenshots
+
+![image](https://github.com/51xel/NoiseBox/assets/85559317/f28ec8fc-4ab2-46de-a85e-390178c52963)
+
 ## Authors
 
 - [@51xel](https://github.com/51xel/)
